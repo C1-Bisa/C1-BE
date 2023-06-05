@@ -5,6 +5,7 @@ const apiRouter = express.Router();
 
 
 apiRouter.get("/api/v1/user", controllers.api.v1.userController.list);
+apiRouter.post("/api/v1/users/register", controllers.api.v1.userController.register);
 
 apiRouter.get("/api/v1/errors", () => {
   throw new Error(
