@@ -17,12 +17,12 @@ module.exports = {
     }
   },
 
-  async create(reqBody) { 
-    const name = reqBody.name;
-    const email = reqBody.email;
-    const noTelp = reqBody.noTelepon;
+  // async create(reqBody) { 
+  //   const name = reqBody.name;
+  //   const email = reqBody.email;
+  //   const noTelp = reqBody.noTelepon;
 
     
-  }
+  // }
   
 };
