@@ -117,7 +117,8 @@ module.exports = {
   },
 
   async check(reqBody) {
-    const OTPinput = reqBody.OTPinput;
+    try {
+      const OTPinput = reqBody.OTPinput;
     // find otp in database
     const OTPdatabase = await userRepository.findOtp(OTPinput);
     const newDate = Date.now();
@@ -137,12 +138,22 @@ module.exports = {
       isVerified: true
     }
     const updateDataUser = await userRepository.updateUser(OTPdatabase.userId, verif)
+
+    const createNotification = await userRepository.createNotif({
+      headNotif: "Registrasion Success",
+      message: "Proses verifikasi akun berhasil, order tiket pesawat sakpenakmu",
+      userId: OTPdatabase.userId,
+      isRead: false
+    })
+
     return{
       subject: "Verification OTP",
       message: "Registrasi Berhasil",
       data: updateDataUser
     }
-
+    } catch (error) {
+      throw error
+    }
   },
 
   async resendCode(reqBody) {

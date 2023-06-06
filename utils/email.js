@@ -21,8 +21,9 @@ exports.sendMail = (email, token) => {
       const options = {
         from: "'FlywUs' <no-reply@gmail.com>",
         to: email,
-        subject: "Testing Email",
-        text: `token: ${token}`,
+        subject: "OTP Code for Verification",
+        html: `<b style="text-align: center;">OTP Token</b> <br></br>
+                ${token}`
       };
   
       transporter.sendMail(options, (err, info)=>{

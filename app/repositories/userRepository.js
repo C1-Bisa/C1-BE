@@ -1,5 +1,6 @@
 const { User } = require("../models");
 const { verified } = require("../models");
+const {Notification} = require("../models");
 
 module.exports = {
 
@@ -25,6 +26,10 @@ module.exports = {
 
   create(createArgs){
     return User.create(createArgs);
+  },
+
+  createNotif(createnotifArgs){
+    return Notification.create(createnotifArgs);
   },
 
   deleteUser(id){
