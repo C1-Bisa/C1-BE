@@ -60,7 +60,7 @@ module.exports = {
     });
   },
 
-  find(id) {
+  findById(id){
     return User.findByPk(id);
   },
 
