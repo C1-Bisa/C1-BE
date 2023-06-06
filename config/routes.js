@@ -5,7 +5,8 @@ const apiRouter = express.Router();
 
 
 apiRouter.get("/api/v1/user", controllers.api.v1.userController.list);
-apiRouter.post("/api/v1/users/register", controllers.api.v1.userController.register);
+// apiRouter.post("/api/v1/users/register",controllers.api.v1.authController.register);
+apiRouter.post("/api/v1/users/login", controllers.api.v1.authController.login);
 
 apiRouter.get("/api/v1/errors", () => {
   throw new Error(
