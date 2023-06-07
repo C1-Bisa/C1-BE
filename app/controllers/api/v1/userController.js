@@ -49,7 +49,6 @@ module.exports = {
       });
   },
 
-
   verifikasi(req, res) {
     userService
       .check(req.body)

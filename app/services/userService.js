@@ -25,8 +25,9 @@ const comparePassword = async (password, encryptedPassword) =>{
 }
 
 const createToken = (payload) => {
-  return jwt.sign(payload,JWT_SIGNATURE_KEY, {expiresIn : '1800s'} );
+  return jwt.sign(payload,JWT_SIGNATURE_KEY,{ expiresIn: '3600s'} );
 }
+
 const refreshToken = (payload) => {
   return jwt.sign(payload,JWT_SIGNATURE_KEY, {expiresIn : '5d'} );
 }
