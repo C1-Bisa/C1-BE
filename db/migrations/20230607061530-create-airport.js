@@ -15,6 +15,9 @@ module.exports = {
       airport_name: {
         type: Sequelize.STRING
       },
+      airport_location: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

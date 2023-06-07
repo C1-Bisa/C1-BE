@@ -192,6 +192,14 @@ module.exports = {
       }
     }
 
+    if(!OTPdatabase){
+      return{
+        data: null,
+        message: "Wrong OTP code, please input again!",
+        status: "Failed"
+      }
+    }
+
     const verif = {
       isVerified: true
     }
