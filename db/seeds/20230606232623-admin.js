@@ -14,14 +14,14 @@ const encryptPassword = async (encryptedPassword) => {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    const password = await encryptPassword('risa123');
+    const password = await encryptPassword('admin123');
 
     return queryInterface.bulkInsert('Users', [{
-      nama: 'risa',
-      email: 'risa@gmail.com',
+      nama: 'admin',
+      email: 'admin@gmail.com',
       password:  password,
-      phone: "08123421242",
-      role: 'User',
+      phone: "08123312412",
+      role: 'Admin',
       isVerified: true,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -29,6 +29,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    return queryInterface.bulkDelete('Users', {role:'User'}, {});
+    return queryInterface.bulkDelete('Users', {role:'Admin'}, {});
   }
 };

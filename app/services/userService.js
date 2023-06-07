@@ -180,7 +180,7 @@ module.exports = {
     // find otp in database
     const OTPdatabase = await userRepository.findOtp(OTPinput);
     const newDate = Date.now();
-    // the token will expired in 6 hours
+    // the token will expired in 1 minute
     const limitExpired = OTPdatabase.expiredDate;
     
 
