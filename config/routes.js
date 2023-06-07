@@ -20,13 +20,16 @@ apiRouter.get('/', (req,res)=>{
 
 })
 
-
+//USER
 apiRouter.get("/api/v1/user", controllers.api.v1.userController.list);
 apiRouter.post("/api/v1/user/register", controllers.api.v1.userController.register);
 apiRouter.get("/api/v1/user/verification", controllers.api.v1.userController.verifikasi);
 apiRouter.get("/api/v1/user/resendcode/:id", controllers.api.v1.userController.resend);
 apiRouter.post("/api/v1/users/login", controllers.api.v1.authController.login);
 apiRouter.get("/api/v1/users/logout", controllers.api.v1.authController.logout);
+
+//FLIGHT
+apiRouter.get("/api/v1/flight", controllers.api.v1.flightController.list);
 
 
 apiRouter.get("/api/v1/errors", () => {

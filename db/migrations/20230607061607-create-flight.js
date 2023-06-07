@@ -27,9 +27,6 @@ module.exports = {
           key: 'id'
         }
       },
-      airplane: {
-        type: Sequelize.STRING
-      },
       departure_date: {
         type: Sequelize.DATE
       },
