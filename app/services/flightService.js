@@ -37,6 +37,48 @@ module.exports = {
                     data: null,
                 };
             }
+
+            const airportId = reqBody.airport_id;
+            const getdataAirport = await flightRepository.find(airportId);
+
+            const from = reqBody.from;
+            const to = reqBody.to;
+            const searchFrom = await flightRepository.findLocation(from);
+            const searchTo = await flightRepository.findLocation(to);
+
+            if(!searchFrom){
+                return {
+                    status: "Failed",
+                    message: "from location did'nt found please choose the other location!",
+                    data: null,
+                };
+            }
+
+            if(!searchTo){
+                return {
+                    status: "Failed",
+                    message: "To location did'nt found please choose the other location!",
+                    data: null,
+                };
+            }
+
+            if(from.toLowerCase() === to.toLowerCase()){
+                return {
+                    status: "Failed",
+                    message: "Location must be different!",
+                    data: null,
+                };
+            }
+
+            if(getdataAirport.airport_location !== from){
+                return {
+                    status: "Failed",
+                    message: "Airport ID did'nt match with from location",
+                    data: null,
+                };
+            }
+
+
             const ticket = await flightRepository.create({
                 airline_id: reqBody.airline_id,
                 airport_id: reqBody.airport_id,
@@ -51,10 +93,12 @@ module.exports = {
                 description: reqBody.description,
             });
 
+            const flight = await flightRepository.findTicketFilter(ticket.id);
+
             return {
                 status: "Success",
                 message: "Flight data successfuly create!",
-                data: ticket,
+                data: flight,
             };
         } catch (err) {
             throw err;

@@ -16,6 +16,24 @@ module.exports = {
             ]
             });
       },
+
+    findTicketFilter(id) {
+        return Flight.findAll({
+            where: {id:id},
+            include: [
+                {
+                    model: Airline
+                },   
+                {
+                    model: Airport
+                }   
+            ]
+            });
+      },
+
+      find(id) {
+        return Airport.findByPk(id);
+    },
       
       getTotalFlight() {
         return Flight.count();
@@ -39,5 +57,11 @@ module.exports = {
                 id,
             },
         })
-      }
+      },
+
+      findLocation(loc){
+        return Airport.findOne({
+          where : {airport_location: loc}
+        })
+      },
 };
