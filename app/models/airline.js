@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   Airline.init({
     airline_code: DataTypes.STRING,
-    airline_name: DataTypes.STRING
+    airline_name: DataTypes.STRING,
+    
   }, {
     sequelize,
     modelName: 'Airline',

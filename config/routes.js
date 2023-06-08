@@ -14,7 +14,22 @@ apiRouter.post("/api/v1/user/login", controllers.api.v1.authController.login);
 apiRouter.get("/api/v1/user/logout", controllers.api.v1.authController.logout);
 
 //FLIGHT
-apiRouter.get("/api/v1/flight", controllers.api.v1.flightController.list);
+// apiRouter.get("/api/v1/flight", controllers.api.v1.flightController.list);
+
+
+
+
+
+
+
+
+// Airline
+apiRouter.post("/api/v1/airline/create", controllers.api.v1.airlineController.create);
+apiRouter.get("/api/v1/airline", controllers.api.v1.airlineController.list);
+apiRouter.get("/api/v1/airline/:id", controllers.api.v1.airlineController.getById);
+apiRouter.put("/api/v1/airline/update/:id", controllers.api.v1.airlineController.update);
+apiRouter.delete("/api/v1/airline/delete/:id", controllers.api.v1.airlineController.checkAirline,controllers.api.v1.airlineController.destroy);
+
 
 
 apiRouter.get("/api/v1/errors", () => {
