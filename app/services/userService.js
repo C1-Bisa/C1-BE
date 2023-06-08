@@ -48,6 +48,10 @@ module.exports = {
     }
   },
 
+  async get(id) {
+    return userRepository.find(id);
+},
+
   async login(requestBody){
     const {email,password} = requestBody;
     const user = await userRepository.finsUserByEmail(email);
@@ -174,6 +178,28 @@ module.exports = {
     }
 
   },
+
+  update(id, requestBody) {
+    return userRepository.update(id, requestBody);
+  },
+
+
+  async delete (id) {
+    try{
+      const userPayload = await userRepository.findUser(id);
+      if (!userPayload) {
+        throw new Error(`User not found`);
+      }
+      await userRepository.delete(id);
+      return { message: 'User deleted successfully' };
+
+    }catch{
+      throw new Error('Failed to check and delete user');
+
+    } 
+  },
+
+
 
   async check(reqBody) {
     try {
