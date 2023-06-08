@@ -20,12 +20,6 @@ apiRouter.put("/api/v1/flight/updateflight/:id", controllers.api.v1.flightContro
 apiRouter.delete("/api/v1/flight/deleteflight/:id", controllers.api.v1.flightController.deleteflight);
 
 
-
-
-
-
-
-
 // Airline
 apiRouter.post("/api/v1/airline/create", controllers.api.v1.airlineController.create);
 apiRouter.get("/api/v1/airline", controllers.api.v1.airlineController.list);

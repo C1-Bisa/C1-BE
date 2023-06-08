@@ -7,4 +7,6 @@ const flightController = require("./flightController")
 module.exports = {
   userController,
   authController,
+  airlineController,
+  flightController
 };
