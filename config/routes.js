@@ -3,30 +3,15 @@ const controllers = require("../app/controllers");
 
 const apiRouter = express.Router();
 
-apiRouter.get('/', (req,res)=>{
-
-  // read cookies
-  console.log(req.cookies) 
-
-  let options = {
-      maxAge: 1000 * 60 * 15, // would expire after 15 minutes
-      httpOnly: true, // The cookie only accessible by the web server
-      signed: true // Indicates if the cookie should be signed
-  }
-
-  // Set cookie
-  res.cookie('cookieName', 'cookieValue', options) // options is optional
-  res.send('')
-
-})
-
-//USER
-apiRouter.get("/api/v1/user", controllers.api.v1.userController.list);
-apiRouter.post("/api/v1/user/register", controllers.api.v1.userController.register);
+apiRouter.get("/api/v1/user",controllers.api.v1.userController.list);
+apiRouter.post("/api/v1/user/register",controllers.api.v1.userController.register);
+apiRouter.put("/api/v1/user/update/:id",controllers.api.v1.userController.update);
+apiRouter.delete("/api/v1/user/delete/:id", controllers.api.v1.userController.destroy);
+apiRouter.get("/api/v1/user/:id", controllers.api.v1.userController.checkUser);
 apiRouter.get("/api/v1/user/verification", controllers.api.v1.userController.verifikasi);
 apiRouter.get("/api/v1/user/resendcode/:id", controllers.api.v1.userController.resend);
-apiRouter.post("/api/v1/users/login", controllers.api.v1.authController.login);
-apiRouter.get("/api/v1/users/logout", controllers.api.v1.authController.logout);
+apiRouter.post("/api/v1/user/login", controllers.api.v1.authController.login);
+apiRouter.get("/api/v1/user/logout", controllers.api.v1.authController.logout);
 
 //FLIGHT
 apiRouter.get("/api/v1/flight", controllers.api.v1.flightController.list);
