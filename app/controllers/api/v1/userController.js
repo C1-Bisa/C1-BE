@@ -66,19 +66,20 @@ module.exports = {
       });
   },
 
-  async destroy(req, res) {
-    try {
-      await userService.delete(req.params.id);
-      res.status(200).json({
-        message: "User deleted successfully" 
+  destroy(req, res) {
+    userService
+      .delete(req.params.id)
+      .then(() => {
+        res.status(200).json({
+          message: "User deleted successfully"
+        });
+      })
+      .catch((error) => {
+        res.status(500).json({
+          message: "Failed to delete user"
+        });
       });
-    } catch (error) {
-      res.status(500).json({
-        message: "Failed to delete user" 
-      });
-    }
   },
-
 
   verifikasi(req, res) {
     userService
@@ -132,29 +133,28 @@ module.exports = {
       });
   },
 
+  checkUser(req, res, next) {
+    const id = req.params.id;
+    userService.get(id)
+      .then(userPayload => {
+        if (!userPayload) {
+          res.status(404).json({
+            status: "FAIL",
+            message: `user not found!`,
+          });
+          return;
+        }
   
-  async checkUser (req, res, next) {
-    try {
-      const id = req.params.id;
-      const userPayload = await userService.get(id);
+        req.user = userPayload;
   
-      if (!userPayload) {
-        res.status(404).json({
+        next();
+      })
+      .catch(err => {
+        res.status(500).json({
           status: "FAIL",
-          message: `user not found!`,
+          message: "server error!",
         });
-        return;
-      }
-  
-      req.user = userPayload;
-
-      next();
-    } catch (err) {
-      res.status(500).json({
-        status: "FAIL",
-        message: "server error!",
       });
-    }
-  },
+  },  
   
 };
