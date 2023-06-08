@@ -39,7 +39,7 @@ module.exports = {
             }
 
             const airportId = reqBody.airport_id;
-            const getdataAirport = await flightRepository.find(airportId);
+            const getdataAirport = await flightRepository.findAirport(airportId);
 
             const from = reqBody.from;
             const to = reqBody.to;
@@ -107,6 +107,119 @@ module.exports = {
 
     async update(id, reqBody) {
         try {
+
+            const from = reqBody.from;
+            const to = reqBody.to;
+            const airportId = reqBody.airport_id;
+            const data = await flightRepository.findFlight(id);
+            const getdataAirport = await flightRepository.findAirport(data.airport_id);
+
+            if(to && from && airportId ){
+                const searchTo = await flightRepository.findLocation(to);
+                const searchFrom = await flightRepository.findLocation(from);
+                const aiportDataReq = await flightRepository.findAirport(airportId);
+
+                if(!searchFrom){
+                    return {
+                        status: "Failed",
+                        message: "from location did'nt found please choose the other location!",
+                        data: null,
+                    };
+                }
+
+                if(!searchTo){
+                    return {
+                        status: "Failed",
+                        message: "To location did'nt found please choose the other location!",
+                        data: null,
+                    };
+                }
+
+                if(from.toLowerCase() === to.toLowerCase()){
+                    return {
+                        status: "Failed",
+                        message: "Location must be different!",
+                        data: null,
+                    };
+                }
+
+                if(searchFrom && searchFrom.airport_location !== aiportDataReq.airport_location){
+                    return {
+                        status: "Failed",
+                        message: "Airport ID did'nt match with from location, You must change airport_id too!",
+                        data: null,
+                    };
+                }
+            }
+
+            if(to&&from&&!airportId){
+                const searchTo = await flightRepository.findLocation(to);
+                const searchFrom = await flightRepository.findLocation(from);
+
+                if(!searchFrom){
+                    return {
+                        status: "Failed",
+                        message: "from location did'nt found please choose the other location!",
+                        data: null,
+                    };
+                }
+
+                if(!searchTo){
+                    return {
+                        status: "Failed",
+                        message: "To location did'nt found please choose the other location!",
+                        data: null,
+                    };
+                }
+
+                if(from.toLowerCase() === to.toLowerCase()){
+                    return {
+                        status: "Failed",
+                        message: "Location must be different!",
+                        data: null,
+                    };
+                }
+
+                if(searchFrom && searchFrom.airport_location !== getdataAirport.airport_location){
+                    return {
+                        status: "Failed",
+                        message: "Airports ID did'nt match with from location, You must change airport_id too!",
+                        data: null,
+                    };
+                }
+            }
+
+            if(from && !airportId){
+                const searchFrom = await flightRepository.findLocation(from);
+                if(!searchFrom){
+                    return {
+                        status: "Failed",
+                        message: "from location did'nt found please choose the other location!",
+                        data: null,
+                    };
+                }
+
+                if(searchFrom && searchFrom.airport_location !== getdataAirport.airport_location){
+                    return {
+                        status: "Failed",
+                        message: "Airportss ID did'nt match with from location, You must change airport_id too!",
+                        data: null,
+                    };
+                }
+            }
+
+            if(to){
+                const searchTo = await flightRepository.findLocation(to);
+                if(!searchTo){
+                    return {
+                        status: "Failed",
+                        message: "To location did'nt found please choose the other location!",
+                        data: null,
+                    };
+                }
+            }
+
+
             const ticket = await flightRepository
                 .update(id, {
                     airline_id: reqBody.airline_id,

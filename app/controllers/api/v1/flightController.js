@@ -52,13 +52,13 @@ updateflight(req, res) {
     flightService
       .update(req.params.id, req.body)
       .then((flight) => {
-        // if(!flight.data){
-        //     res.status(422).json({
-        //       status: flight.status,
-        //       message: flight.message,
-        //     });
-        //     return;
-        //   }
+        if(!flight.data){
+            res.status(422).json({
+              status: flight.status,
+              message: flight.message,
+            });
+            return;
+          }
   
           res.status(201).json({
             status: flight.status,

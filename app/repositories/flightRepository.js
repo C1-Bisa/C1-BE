@@ -31,9 +31,13 @@ module.exports = {
             });
       },
 
-      find(id) {
+      findAirport(id) {
         return Airport.findByPk(id);
-    },
+      },
+      
+      findFlight(id) {
+        return Flight.findByPk(id);
+      },
       
       getTotalFlight() {
         return Flight.count();
