@@ -5,6 +5,8 @@ require('dotenv').config()
 const jwt = require("jsonwebtoken")
 const {JWT_SIGNATURE_KEY} = process.env;
 
+const regexGmail = /[\w]*@*[a-z]*\.*[\w]{5,}(\.)*(@gmail\.com)/g;
+
 
 const encryptPassword = async (encryptedPassword) => {
   try{
@@ -121,6 +123,15 @@ module.exports = {
       return{
         data: null,
         message: "email is required !!",
+        status: "Failed"
+      }
+    }
+
+    const checkingEmail = email.match(regexGmail);
+    if (!checkingEmail) {
+      return{
+        data: null,
+        message: "Use gmail pattern for register Email!",
         status: "Failed"
       }
     }
