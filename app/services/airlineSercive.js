@@ -64,24 +64,29 @@ module.exports={
       }
     },
 
-    async update(idAirline, request) {
-      const {airline_code, airline_name} = request.body  
-
-      if (airline_code || airline_name){
-        return{
-          airline_code,
-          airline_name
-        }
-      }
-  
-      newAirline = await airlineRepository.update(idAirline, {airline_code, airline_name});
-      if(airline_code || airline_name){
-        return{
-          data: newAirline,
-        }
+    async update(id, requestBody) {
+      try {
+        const updatedAirline = await airlineRepository
+          .update(id,{
+            airline_id: requestBody.airline_id,
+            airline_code: requestBody.airline_code,
+            airline_name: requestBody.airline_name
+          })
+          .then((result) => {
+            return result;
+          });
+        
+        return {
+            status: "Success",
+            message: "Flight data successfuly updated!",
+            data: updatedAirline,
+        };
+           
+      } catch (error) {
+        throw new Error("Failed to update airline");
       }
     },
-
+    
     async delete (airlineId) {
       try {
         await airlineRepository.update(airlineId);
@@ -98,5 +103,4 @@ module.exports={
       return airlineRepository.find(id);
     },
 
-    
 }

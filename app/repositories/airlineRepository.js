@@ -29,4 +29,10 @@ module.exports = {
         }
       });
     },
+
+    findAirline(id){
+      return Airline.findOne({
+        where: {id}
+      })
+    },
 }

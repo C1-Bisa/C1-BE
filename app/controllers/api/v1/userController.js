@@ -52,9 +52,10 @@ module.exports = {
   update(req, res) {
     userService
       .update(req.params.id, req.body)
-      .then(() => {
+      .then((user) => {
         res.status(200).json({
           status: "OK",
+          message: user.message
 
         });
       })

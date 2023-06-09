@@ -179,10 +179,16 @@ module.exports = {
 
   },
 
-  update(id, requestBody) {
-    return userRepository.update(id, requestBody);
+  async update(id, requestBody) {
+    try {
+      const updatedUser = await userRepository.update(id, requestBody);
+      return { 
+        message: 'User updated successfully', 
+        data: updatedUser };
+    } catch (error) {
+      throw new Error("Failed to update user");
+    }
   },
-
 
   async delete (id) {
     try{
@@ -198,8 +204,6 @@ module.exports = {
 
     } 
   },
-
-
 
   async check(reqBody) {
     try {
