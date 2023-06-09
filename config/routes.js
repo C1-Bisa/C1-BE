@@ -4,12 +4,12 @@ const controllers = require("../app/controllers");
 const apiRouter = express.Router();
 
 // Reset Password
-apiRouter.get("/api/v1/user/resetPassword",controllers.api.v1.userController.resetpass); //s
-apiRouter.put("/api/v1/user/createNewPassword/:id/:token",controllers.api.v1.userController.updatepass);//s
+apiRouter.get("/api/v1/user/resetPassword",controllers.api.v1.userController.resetpass);
+apiRouter.put("/api/v1/user/createNewPassword/:id/:token",controllers.api.v1.userController.updatepass);
 
 //USER
-apiRouter.get("/api/v1/user/verification", controllers.api.v1.userController.verifikasi); //s
-apiRouter.get("/api/v1/user/logout", controllers.api.v1.authController.logout); //s
+apiRouter.get("/api/v1/user/verification", controllers.api.v1.userController.verifikasi); 
+apiRouter.get("/api/v1/user/logout", controllers.api.v1.authController.logout);
 apiRouter.get("/api/v1/user",controllers.api.v1.userController.list);
 apiRouter.post("/api/v1/user/register",controllers.api.v1.userController.register);
 apiRouter.put("/api/v1/user/update/:id",controllers.api.v1.userController.update);
@@ -26,12 +26,18 @@ apiRouter.delete("/api/v1/flight/deleteflight/:id", controllers.api.v1.authContr
 
 
 // Airline
-apiRouter.post("/api/v1/airline/create", controllers.api.v1.airlineController.create);
 apiRouter.get("/api/v1/airline", controllers.api.v1.airlineController.list);
 apiRouter.get("/api/v1/airline/:id", controllers.api.v1.airlineController.getById);
-apiRouter.put("/api/v1/airline/update/:id", controllers.api.v1.airlineController.update);
+apiRouter.post("/api/v1/airline/create", controllers.api.v1.airlineController.create);
+apiRouter.put("/api/v1/airline/update/:id",controllers.api.v1.airlineController.checkAirline,controllers.api.v1.airlineController.update);
 apiRouter.delete("/api/v1/airline/delete/:id", controllers.api.v1.airlineController.checkAirline,controllers.api.v1.airlineController.destroy);
 
+// Airport
+apiRouter.get("/api/v1/airport",controllers.api.v1.airportController.list);
+apiRouter.get("/api/v1/airport/:id",controllers.api.v1.airportController.getById);
+apiRouter.post("/api/v1/airport/create",controllers.api.v1.airportController.create);
+apiRouter.put("/api/v1/airport/update/:id",controllers.api.v1.airportController.checkAirport,controllers.api.v1.airportController.update);
+apiRouter.delete("/api/v1/airport/delete/:id",controllers.api.v1.airportController.checkAirport,controllers.api.v1.airportController.destroy);
 
 
 apiRouter.get("/api/v1/errors", () => {
