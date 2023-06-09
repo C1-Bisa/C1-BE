@@ -14,10 +14,10 @@ apiRouter.post("/api/v1/user/login", controllers.api.v1.authController.login);
 apiRouter.get("/api/v1/user/logout", controllers.api.v1.authController.logout);
 
 //FLIGHT
-apiRouter.get("/api/v1/flight/getflight", controllers.api.v1.flightController.listflight);
-apiRouter.post("/api/v1/flight/createflight", controllers.api.v1.flightController.createflight);
-apiRouter.put("/api/v1/flight/updateflight/:id", controllers.api.v1.flightController.updateflight);
-apiRouter.delete("/api/v1/flight/deleteflight/:id", controllers.api.v1.flightController.deleteflight);
+apiRouter.get("/api/v1/flight/getflight", controllers.api.v1.authController.authorizeAdmin, controllers.api.v1.flightController.listflight);
+apiRouter.post("/api/v1/flight/createflight", controllers.api.v1.authController.authorizeAdmin, controllers.api.v1.flightController.createflight);
+apiRouter.put("/api/v1/flight/updateflight/:id", controllers.api.v1.authController.authorizeAdmin, controllers.api.v1.flightController.updateflight);
+apiRouter.delete("/api/v1/flight/deleteflight/:id", controllers.api.v1.authController.authorizeAdmin, controllers.api.v1.flightController.deleteflight);
 
 
 // Airline

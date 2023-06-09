@@ -250,7 +250,16 @@ module.exports = {
 
     async delete(id) {
         try {
+            const findDataDelete = await flightRepository.findFlight(id);
             const ticket = await flightRepository.delete(id);
+            if(!findDataDelete){
+                return {
+                    status: "Failed",
+                    message: "Flight data Not Found!",
+                    data: null,
+                }
+            }
+
             return {
                 status: "Success",
                 message: "Flight data successfuly deleted!",

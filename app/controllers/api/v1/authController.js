@@ -47,6 +47,24 @@ module.exports ={
     }
   },
 
+  authorizeAdmin(req,res,next) {
+    userService
+      .authorize(req.headers.authorization)
+      .then((user) => {
+        if(user.role === "Admin"){
+          req.user = user;
+        }else{
+          throw new Error()
+        }
+        next()
+      })
+      .catch((err) => {
+        res.status(401).json({
+          message:  "Unauthorized",
+        });
+      });
+  },
+
   login(req, res) {
     userService
       .login(req.body)
