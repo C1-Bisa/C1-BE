@@ -6,7 +6,7 @@ const apiRouter = express.Router();
 apiRouter.get("/api/v1/user",controllers.api.v1.userController.list);
 apiRouter.post("/api/v1/user/register",controllers.api.v1.userController.register);
 apiRouter.put("/api/v1/user/update/:id",controllers.api.v1.userController.update);
-apiRouter.delete("/api/v1/user/delete/:id", controllers.api.v1.userController.destroy);
+apiRouter.delete("/api/v1/user/delete/:id",controllers.api.v1.userController.checkUser ,controllers.api.v1.userController.destroy);
 apiRouter.get("/api/v1/user/:id", controllers.api.v1.userController.checkUser);
 apiRouter.get("/api/v1/user/verification", controllers.api.v1.userController.verifikasi);
 apiRouter.get("/api/v1/user/resendcode/:id", controllers.api.v1.userController.resend);
