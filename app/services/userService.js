@@ -199,6 +199,22 @@ module.exports = {
     } 
   },
 
+  async authorize (requestHeader) {
+    try{
+   // mendapatkan token 
+    const bearerToken = requestHeader; 
+    const token = bearerToken.split("Bearer ")[1];
+
+    const tokenPayload = jwt.verify(token,JWT_SIGNATURE_KEY);
+
+    return tokenPayload
+
+    }catch{
+      throw new Error('Failed to check and delete user');
+
+    } 
+  },
+
 
 
   async check(reqBody) {
