@@ -221,8 +221,6 @@ module.exports = {
     } 
   },
 
-
-
   async check(reqBody) {
     try {
       const OTPinput = reqBody.OTPinput;
