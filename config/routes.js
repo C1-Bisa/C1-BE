@@ -3,14 +3,14 @@ const controllers = require("../app/controllers");
 
 const apiRouter = express.Router();
 
-apiRouter.get("/api/v1/user",controllers.api.v1.userController.list);
 apiRouter.post("/api/v1/user/login", controllers.api.v1.authController.login);
-apiRouter.get("/api/v1/user/logout", controllers.api.v1.authController.logout);
+apiRouter.get("/api/v1/user/logout",controllers.api.v1.authController.logout);
 apiRouter.post("/api/v1/user/register",controllers.api.v1.userController.register);
 apiRouter.get("/api/v1/user/resendcode/:id", controllers.api.v1.userController.resend);
 apiRouter.get("/api/v1/user/verification", controllers.api.v1.userController.verifikasi);
-apiRouter.put("/api/v1/user/update/:id",controllers.api.v1.userController.checkUser,controllers.api.v1.userController.update);
-apiRouter.delete("/api/v1/user/delete/:id",controllers.api.v1.userController.checkUser ,controllers.api.v1.userController.destroy);
+apiRouter.get("/api/v1/user",controllers.api.v1.authController.authorizeAdmin,controllers.api.v1.userController.list);
+apiRouter.put("/api/v1/user/update/:id",controllers.api.v1.authController.authorize,controllers.api.v1.userController.checkUser,controllers.api.v1.userController.update);
+apiRouter.delete("/api/v1/user/delete/:id",controllers.api.v1.authController.authorizeAdmin,controllers.api.v1.userController.checkUser ,controllers.api.v1.userController.destroy);
 
 //FLIGHT
 apiRouter.get("/api/v1/flight/getflight", controllers.api.v1.authController.authorizeAdmin, controllers.api.v1.flightController.listflight);
