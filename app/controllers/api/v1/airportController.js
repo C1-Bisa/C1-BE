@@ -59,8 +59,7 @@ module.exports = {
         .then((airport) => {
           res.status(200).json({
             status: "OK",
-            massage: airport.message,
-            data: airport.data
+            massage: airport.message
           });
         })
         .catch((err) => {

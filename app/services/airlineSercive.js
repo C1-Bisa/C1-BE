@@ -78,7 +78,7 @@ module.exports={
         
         return {
             status: "Success",
-            message: "Flight data successfuly updated!",
+            message: "Airline data successfuly updated!",
             data: updatedAirline,
         };
            

@@ -43,8 +43,8 @@ module.exports = {
             }
             return airportPayload;
           
-        } catch (err) {
-          throw err;
+        } catch (error) {
+          throw new Error("Car not found!");
         }
     },
 

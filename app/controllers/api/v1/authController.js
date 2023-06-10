@@ -41,7 +41,7 @@ module.exports ={
       console.log(err);
       res.cookie('jwt', '', { expires: new Date(0) });
       res.status(401).json({
-        message: "Sesi login berakhir, harap login lagi",
+        message: "Sesi login berakhir, harap login kembali!",
       });
     
     }
@@ -59,8 +59,8 @@ module.exports ={
         next()
       })
       .catch((err) => {
-        res.status(401).json({
-          message:  "Have no Access",
+        res.status(403).json({
+          message:  "You dont have permission",
         });
       });
   },
@@ -101,10 +101,13 @@ module.exports ={
   logout(req, res) {
 
     // Hapus token dari cookie dengan mengeset waktu kadaluarsa ke masa lalu
-    res.cookie('jwt', '', { expires: new Date(0) });
+    res.clearCookie('jwt');
   
     // Kirim respon berhasil logout
-    res.status(200).json({ message: 'Logout berhasil' });
+    res.status(200).json({ 
+      status : 'Ok',
+      message: 'Logout berhasil' 
+    });
   },
 
   // Middleware async untuk memeriksa token kedaluwarsa

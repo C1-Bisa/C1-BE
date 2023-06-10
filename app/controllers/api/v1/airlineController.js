@@ -58,8 +58,7 @@ module.exports = {
         .then((airline) => {
           res.status(200).json({
             status: airline.status,
-            massage: airline.message,
-            data: airline.data
+            massage: airline.message
           });
         })
         .catch((err) => {

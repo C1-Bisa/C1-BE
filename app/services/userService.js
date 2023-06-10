@@ -4,6 +4,7 @@ const {sendMail, generateOTP} = require("../../utils/email");
 require('dotenv').config()
 const jwt = require("jsonwebtoken")
 const {JWT_SIGNATURE_KEY} = process.env;
+const{Notification, User} = require("../models")
 
 const regexGmail = /[\w]*@*[a-z]*\.*[\w]{5,}(\.)*(@gmail\.com)/g;
 
@@ -213,19 +214,18 @@ module.exports = {
     }
   },
 
-  async delete (id) {
-    try{
-      const userPayload = await userRepository.findUser(id);
-      if (!userPayload) {
-        throw new Error(`User not found`);
-      }
-      await userRepository.delete(id);
+  async delete (userId) {
+    try {
+      // Hapus notifikasi terlebih dahulu
+      await userRepository.deleteNotif(userId);
+
+      // Hapus pengguna
+      await userRepository.delete(userId)
+  
       return { message: 'User deleted successfully' };
-
-    }catch{
-      throw new Error('Failed to check and delete user');
-
-    } 
+    } catch (error) {
+      throw new Error('Failed to delete user');
+    }
   },
 
   async authorize (requestHeader) {
