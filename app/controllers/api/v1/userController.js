@@ -49,6 +49,56 @@ module.exports = {
       });
   },
 
+  resetpass(req, res) {
+    userService
+      .reset(req.body)
+      .then((code) => {
+        if(!code.otp){
+          res.status(422).json({
+            status: code.status,
+            message: code.message,
+          });
+          return;
+        }
+
+        res.status(201).json({
+          status: code.status,
+          message: code.message
+        });
+      })
+      .catch((err) => {
+        res.status(422).json({
+          status: "Failed",
+          message: err.message,
+        });
+      });
+  },
+
+  updatepass(req, res) {
+    userService
+      .updatePass(req.params, req.body)
+      .then((code) => {
+        if(!code.data){
+          res.status(422).json({
+            status: code.status,
+            message: code.message,
+          });
+          return;
+        }
+
+        res.status(201).json({
+          status: code.status,
+          message: code.message
+        });
+      })
+      .catch((err) => {
+        res.status(422).json({
+          status: "Failed",
+          message: err.message,
+        });
+      });
+  },
+
   update(req, res) {
     userService
       .update(req.params.id, req.body)
