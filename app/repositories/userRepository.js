@@ -50,25 +50,34 @@ module.exports = {
     });
   },
 
-  createNotif(createnotifArgs){
-    return Notification.create(createnotifArgs);
+  updateUser(id, updateArgs){
+    return User.update(updateArgs,{
+      where : {id : id}
+    });
   },
-
   deleteUser(id){
     return User.destroy({
       where : {id : id}
     });
   },
 
-  updateUser(id, updateArgs){
-    return User.update(updateArgs,{
-      where : {id : id}
-    });
+  createNotif(createnotifArgs){
+    return Notification.create(createnotifArgs);
+  },
+
+
+  deleteNotif(userId){
+    return Notification.destroy({
+      where: {
+        userId: userId 
+      }
+    })
   },
 
   createVerified(reqBody){
     return verified.create(reqBody)
   },
+
 
   findOtp(token){
     return verified.findOne({
