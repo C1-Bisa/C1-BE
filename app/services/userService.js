@@ -193,7 +193,7 @@ module.exports = {
 
     if(!userEmail){
       return{
-        status: "Succes",
+        status: "Success",
         data: newUser,
         message: "Tautan Verifikasi Telah Dikirim!",
         otp: verify.verifiedToken
@@ -302,6 +302,14 @@ module.exports = {
       const newDateExpired = Date.now() + 60000;
       const userInfo = await userRepository.findUser(idUser);
 
+      if(!userInfo){
+        return{
+          data: null,
+          message: "User Not found",
+          status: "Failed"
+        }
+      }
+
       const verify = await userRepository.createVerified({
         userId: idUser,
         verifiedToken: newTokenOTP,
@@ -343,7 +351,7 @@ module.exports = {
       if(!findEmail){
         return{
           data: null,
-          message: "Email Not Found!",
+          message: "Email Not Registered!",
           status: "Failed"
         }
       }

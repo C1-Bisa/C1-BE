@@ -4,11 +4,11 @@ const controllers = require("../app/controllers");
 const apiRouter = express.Router();
 
 // Reset Password
-apiRouter.get("/api/v1/user/resetPassword",controllers.api.v1.userController.resetpass);
+apiRouter.post("/api/v1/user/resetPassword",controllers.api.v1.userController.resetpass);
 apiRouter.put("/api/v1/user/createNewPassword/:id/:token",controllers.api.v1.userController.updatepass);
 
 //USER
-apiRouter.get("/api/v1/user/verification", controllers.api.v1.userController.verifikasi); 
+apiRouter.put("/api/v1/user/verification", controllers.api.v1.userController.verifikasi); 
 apiRouter.get("/api/v1/user/logout", controllers.api.v1.authController.logout);
 apiRouter.get("/api/v1/user",controllers.api.v1.userController.list);
 apiRouter.post("/api/v1/user/register",controllers.api.v1.userController.register);

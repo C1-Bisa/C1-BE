@@ -61,7 +61,7 @@ module.exports = {
           return;
         }
 
-        res.status(201).json({
+        res.status(200).json({
           status: code.status,
           message: code.message
         });
@@ -86,7 +86,7 @@ module.exports = {
           return;
         }
 
-        res.status(201).json({
+        res.status(200).json({
           status: code.status,
           message: code.message
         });
@@ -144,7 +144,7 @@ module.exports = {
           return;
         }
 
-        res.status(201).json({
+        res.status(200).json({
           subject: verify.subject,
           message: verify.message,
         });

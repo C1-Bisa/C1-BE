@@ -84,7 +84,7 @@ deleteflight(req, res) {
           });
           return;
         }
-          res.status(201).json({
+          res.status(200).json({
             status: flight.status,
             message: flight.message
           });
