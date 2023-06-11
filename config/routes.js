@@ -1,7 +1,14 @@
 const express = require("express");
 const controllers = require("../app/controllers");
+const swaggerDocument = require('../docs/openapi.json');
+const swaggerUi = require('swagger-ui-express');
+
 
 const apiRouter = express.Router();
+
+apiRouter.use('/api-docs', swaggerUi.serve);
+apiRouter.get('/api-docs', swaggerUi.setup(swaggerDocument));
+
 
 // Reset Password
 apiRouter.get("/api/v1/user/resetPassword",controllers.api.v1.userController.resetpass);
