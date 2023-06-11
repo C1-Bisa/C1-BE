@@ -6,15 +6,16 @@ const swaggerUi = require('swagger-ui-express');
 
 const apiRouter = express.Router();
 
-apiRouter.use('/api-docs', swaggerUi.serve);
-apiRouter.get('/api-docs', swaggerUi.setup(swaggerDocument));
+apiRouter.use('/api', swaggerUi.serve);
+apiRouter.get('/api', swaggerUi.setup(swaggerDocument));
 
 
 // Reset Password
 apiRouter.post("/api/v1/user/resetPassword",controllers.api.v1.userController.resetpass);
 apiRouter.put("/api/v1/user/createNewPassword/:id/:token",controllers.api.v1.userController.updatepass);
 
-//USER
+//USER 
+
 // apiRouter.get("/api/v1/user/verification", controllers.api.v1.userController.verifikasi); 
 // apiRouter.get("/api/v1/user/logout", controllers.api.v1.authController.logout);
 // apiRouter.post("/api/v1/user/login", controllers.api.v1.authController.login);
@@ -40,7 +41,7 @@ apiRouter.post("/api/v1/user/login", controllers.api.v1.authController.login);
 
 
 //FLIGHT
-apiRouter.get("/api/v1/flight/getflight", controllers.api.v1.authController.authorizeAdmin, controllers.api.v1.flightController.listflight);
+apiRouter.get("/api/v1/flight/getflight", controllers.api.v1.flightController.listflight);
 apiRouter.post("/api/v1/flight/createflight", controllers.api.v1.authController.authorizeAdmin, controllers.api.v1.flightController.createflight);
 apiRouter.put("/api/v1/flight/updateflight/:id", controllers.api.v1.authController.authorizeAdmin, controllers.api.v1.flightController.updateflight);
 apiRouter.delete("/api/v1/flight/deleteflight/:id", controllers.api.v1.authController.authorizeAdmin, controllers.api.v1.flightController.deleteflight);

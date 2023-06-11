@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8000/api/v1"
+      "url": "https://airplaneapikel1-production.up.railway.app/api/v1"
     }
   ],
   "tags": [
@@ -2088,11 +2088,6 @@
         "tags": [
           "flight"
         ],
-        "security": [
-          {
-            "bearerToken": []
-          }
-        ],
         "summary": "Get list an existing flight schedule",
         "description": "Get all of existing flight schedule",
         "responses": {
@@ -2840,14 +2835,14 @@
     "schemas": {
       "Users": {
         "required": [
-          "nama",
+          "name",
           "email",
           "phone",
           "password"
         ],
         "type": "object",
         "properties": {
-          "nama": {
+          "name": {
             "type": "string",
             "example": "Neymar JR"
           },
