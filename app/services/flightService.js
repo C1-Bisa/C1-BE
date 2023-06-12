@@ -1,6 +1,10 @@
 const flightRepository = require("../repositories/flightRepository");
 const airlineRepository = require("../repositories/airlineRepository");
 
+
+const dayjs = require("dayjs");
+const { DATE } = require("sequelize");
+
 module.exports = {
     async list() {
         try {
@@ -100,6 +104,107 @@ module.exports = {
                 message: "Flight data successfuly create!",
                 data: flight,
             };
+        } catch (err) {
+            throw err;
+        }
+    },
+    
+    async search(reqBody) {
+        try {
+            const from  = reqBody.from;
+            const to = reqBody.to;
+            const departure_date = reqBody.departure_date;
+            const departure_time = reqBody.departure_time;
+            const departure = new Date(departure_date);
+            const returnDate = reqBody.returnDate;
+            const departureReturn = new Date(returnDate)
+            
+
+            
+            if (
+                !reqBody.from ||
+                !reqBody.to ||
+                !reqBody.departure_date ||
+                !reqBody.departure_time 
+            ) {
+                return {
+                    status: "Failed",
+                    message: "form search must be filled!",
+                    data: null,
+                };
+            }
+
+            const searchFrom = await flightRepository.findLocation(reqBody.from);
+            const searchTo = await flightRepository.findLocation(reqBody.to);
+
+            if(!searchFrom){
+                return {
+                    status: "Failed",
+                    message: "from location did'nt found please choose the other location!",
+                    data: null,
+                };
+            }
+
+            if(!searchTo){
+                return {
+                    status: "Failed",
+                    message: "To location did'nt found please choose the other location!",
+                    data: null,
+                };
+            }
+
+            if(reqBody.from.toLowerCase() === reqBody.to.toLowerCase()){
+                return {
+                    status: "Failed",
+                    message: "Location must be different!",
+                    data: null,
+                };
+            }
+
+            // const  flightschedule = await flightRepository.findSchedule(from, to, departure, yesterday);
+            const flight = await flightRepository.findAll();
+            const array = [];
+            const filter = flight.map(schedule => array.push({
+                airline_id: schedule.airline_id,
+                airport_id: schedule.airport_id,
+                departure_date: schedule.departure_date,
+                departure_time: schedule.departure_time,
+                arrival_date: schedule.arrival_date,
+                arrival_time: schedule.arrival_time,
+                from: schedule.from,
+                to: schedule.to,
+                price: schedule.price,
+                flight_class: schedule.flight_class,
+                description: schedule.description,
+                airplane: schedule.Airline,
+                airport: schedule.Airport
+            }));
+
+
+            if(!returnDate){
+                const search = array.filter((data) => data.from === from && data.to === to && data.departure_date >= departure && data.departure_time >= departure_time) 
+
+                return {
+                    status: "Success",
+                    message: "Result Search",
+                    data: search,
+                };
+            }
+
+            if (returnDate) {
+                const search = array.filter((data) => data.from === from && data.to === to && data.departure_date >= departure && data.departure_time >= departure_time);
+                const searchReturn = array.filter((data) => data.from === to && data.to === from && data.departure_date >= departureReturn && data.departure_time >= departure_time);
+
+                return {
+                    status: "Success",
+                    message: "Result Search",
+                    data: {
+                        berangkat: search,
+                        pulang: searchReturn,
+                    },
+                };
+            }
+
         } catch (err) {
             throw err;
         }

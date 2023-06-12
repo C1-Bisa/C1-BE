@@ -31,6 +31,25 @@ module.exports = {
             });
       },
 
+    findSchedule(from, to, departure_date, yesterday) {
+      console.log(yesterday);
+        return Flight.findAll({
+            where: {
+              to, 
+              departure_date: departure_date >= yesterday
+            },
+            include: [
+                {
+                    model: Airline
+                },   
+                {
+                    model: Airport,
+                    where: {airport_location: from}
+                }   
+            ]
+            });
+      },
+
       findAirport(id) {
         return Airport.findByPk(id);
       },

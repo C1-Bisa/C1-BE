@@ -48,6 +48,34 @@ createflight(req, res) {
       });
   },
 
+searchflight(req, res) {
+    flightService
+      .search(req.body)
+      .then((flight) => {
+        if(!flight.data){
+            res.status(422).json({
+              status: flight.status,
+              message: flight.message,
+            });
+            return;
+          }
+  
+          res.status(200).json({
+            status: flight.status,
+            message: flight.message,
+            data: {
+              flight: flight.data
+            }
+          });
+      })
+      .catch((err) => {
+        res.status(400).json({
+          status: "Failed",
+          message: err.message,
+        });
+      });
+  },
+
 updateflight(req, res) {
     flightService
       .update(req.params.id, req.body)
