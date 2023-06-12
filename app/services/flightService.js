@@ -1,10 +1,6 @@
 const flightRepository = require("../repositories/flightRepository");
 const airlineRepository = require("../repositories/airlineRepository");
 
-
-const dayjs = require("dayjs");
-const { DATE } = require("sequelize");
-
 module.exports = {
     async list() {
         try {
