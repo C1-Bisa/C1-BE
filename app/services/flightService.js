@@ -124,6 +124,7 @@ module.exports = {
             const departureReturn = new Date(returnDate);
             const lowPrice = reqQuery.lowPrice;
             const departureAsc = reqQuery.departureAsc
+            const earlyDeparture = reqQuery.earlyDeparture
             
             if (
                 !reqBody.from ||
@@ -191,15 +192,27 @@ module.exports = {
             if(!returnDate){
                 const search = array.filter((data) => data.from === from && data.to === to && data.departure_date >= departure && data.departure_time >= departure_time) 
 
-                // if (lowPrice === "true") {
-                //     search.sort((a, b) => a.price - b.price);
-                // }
+                if (lowPrice === "true") {
+                    search.sort((a, b) => a.price - b.price);
+                }
                 if (departureAsc === "departure_asc") {
                     search.sort((a, b) => {
                         const timeA = new Date(`${a.departure_date}T${a.departure_time}`);
                         const timeB = new Date(`${b.departure_date}T${b.departure_time}`);
                         return timeA - timeB;
                     });
+                }
+
+                if(earlyDeparture){
+                    const earlyDepartured = search.sort((a, b) => a.departure_date - b.departure_date || a.departure_time.localeCompare(b.departure_time));
+                    return {
+                        status: "Success",
+                        message: "Result Search",
+                        data: {
+                            berangkat: earlyDepartured,
+                            pulang: [],
+                        },
+                    };
                 }
 
                 
