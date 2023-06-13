@@ -1,18 +1,16 @@
 const express = require("express");
 const controllers = require("../app/controllers/api/v1");
+const controller = require("../app/controllers");
 const services = require("../app/services/userService") 
 const auth = require ("../middleware/auth");
 const swaggerDocument = require('../docs/openapi.json');
 const swaggerUi = require('swagger-ui-express');
 const controller = require("../app/controllers")
 
-
-
 const apiRouter = express.Router();
 
 apiRouter.use('/api', swaggerUi.serve);
 apiRouter.get('/api', swaggerUi.setup(swaggerDocument));
-
 
 // Reset Password
 apiRouter.post("/api/v1/user/resetPassword",controllers.userController.resetpass);
@@ -25,6 +23,7 @@ apiRouter.post("/api/v1/user/logout", controllers.authController.logout);
 apiRouter.delete("/api/v1/user/delete/:id",controllers.authController.authorizeAdmin,controllers.userController.checkUser ,controllers.userController.destroy);
 apiRouter.get("/api/v1/user",controllers.authController.authorizeAdmin,controllers.userController.list);
 apiRouter.post("/api/v1/user/register",controllers.userController.register);
+apiRouter.get("/api/v1/user/getProfile",auth,controllers.authController.getProfile);
 apiRouter.put("/api/v1/user/update",auth,services.update);
 apiRouter.get("/api/v1/user/:id", controllers.userController.checkUser);
 apiRouter.get("/api/v1/user/resendcode/:id", controllers.userController.resend);

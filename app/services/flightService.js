@@ -5,9 +5,6 @@ const airlineRepository = require("../repositories/airlineRepository");
 const dayjs = require("dayjs");
 const { DATE } = require("sequelize");
 
-function sortTicketsByPriceAscending(tickets) {
-    return tickets.sort((a, b) => a.price - b.price);
-}
 
 module.exports = {
     async list() {
@@ -130,6 +127,7 @@ module.exports = {
             
             const lowPrice = reqQuery.lowPrice;
             const departureAsc = reqQuery.departureAsc
+            const earlyDeparture = reqQuery.earlyDeparture
             
             if (
                 !reqBody.from ||
@@ -198,93 +196,15 @@ module.exports = {
             if(!returnDate){
                 const search = array.filter((data) => data.from === from && data.to === to && data.departure_date >= departure && data.departure_time >= departure_time) 
 
-                // NGEFILTER QUERY YANG TIDAK BISA DI FILTER
-                if(
-                    (toLower && earlyDeparture && lastDeparture && earlyArrive && lastArrive) ||
-                    (toLower && earlyDeparture && lastDeparture && earlyArrive) ||
-                    (toLower && earlyDeparture && lastDeparture && lastArrive) ||
-                    (toLower && earlyArrive && lastArrive && earlyDeparture)||
-                    (toLower && earlyArrive && lastArrive && lastDeparture) ||
-                    (toLower && earlyDeparture && lastDeparture) ||
-                    (toLower && earlyDeparture && earlyArrive) ||
-                    (toLower && earlyDeparture && lastArrive) ||
-                    (toLower && lastDeparture && earlyArrive) ||
-                    (toLower && lastDeparture && lastArrive) ||
-                    (toLower && earlyArrive && lastArrive) ||
-                    (earlyArrive && lastArrive && lastDeparture) ||
-                    (earlyArrive && lastArrive && earlyDeparture) ||
-                    (earlyDeparture && lastDeparture && earlyArrive)||
-                    (earlyDeparture && lastDeparture && lastArrive)||
-                    (earlyDeparture && earlyArrive)||
-                    (earlyDeparture && lastArrive)||
-                    (lastDeparture && lastArrive)||
-                    (lastDeparture && earlyArrive)
-                ){
-                    return {
-                        status: "Failed",
-                        message: "Filter Result Not Found!",
-                        data: null,
-                    };
-                }
-
-                if(toLower && earlyDeparture){
-                    const priceEarlydeparture = search.sort((a, b) => a.departure_date - b.departure_date || a.departure_time.localeCompare(b.departure_time) || a.price - b.price);
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: {
-                            berangkat: priceEarlydeparture,
-                            pulang: [],
-                        },
-                    };
-                }
-
-                if(toLower && lastDeparture){
-                    const priceLastdeparture = search.sort((a, b) => a.departure_date - b.departure_date || b.departure_time.localeCompare(a.departure_time) || a.price - b.price);
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: {
-                            berangkat: priceLastdeparture,
-                            pulang: [],
-                        },
-                    };
-                }
-
-                if(toLower && earlyArrive){
-                    const priceEarlyArrive = search.sort((a, b) => a.arrival_date - b.arrival_date || a.arrival_time.localeCompare(b.arrival_time) || a.price - b.price);
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: {
-                            berangkat: priceEarlyArrive,
-                            pulang: [],
-                        },
-                    };
-                }
-
-                if(toLower && lastArrive){
-                    const priceLastArrive = search.sort((a, b) => a.arrival_date - b.arrival_date || b.arrival_time.localeCompare(a.arrival_time) || a.price - b.price);
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: {
-                            berangkat: priceLastArrive,
-                            pulang: [],
-                        },
-                    };
-                }
-
-                if(toLower){
-                    const lowerPrice = search.sort((a, b) => a.price - b.price);
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: {
-                            berangkat: lowerPrice,
-                            pulang: [],
-                        },
-                    };
+                // if (lowPrice === "true") {
+                //     search.sort((a, b) => a.price - b.price);
+                // }
+                if (departureAsc === "departure_asc") {
+                    search.sort((a, b) => {
+                        const timeA = new Date(`${a.departure_date}T${a.departure_time}`);
+                        const timeB = new Date(`${b.departure_date}T${b.departure_time}`);
+                        return timeA - timeB;
+                    });
                 }
 
                 if(earlyDeparture){
@@ -297,53 +217,6 @@ module.exports = {
                             pulang: [],
                         },
                     };
-                }
-
-                if(lastDeparture){
-                    const lastDepartured = search.sort((a, b) => a.departure_date - b.departure_date || b.departure_time.localeCompare(a.departure_time));
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: {
-                            berangkat: lastDepartured,
-                            pulang: [],
-                        },
-                    };
-                }
-
-                if(earlyArrive){
-                    const earlyArrived = search.sort((a, b) => a.arrival_date - b.arrival_date || a.arrival_time.localeCompare(b.arrival_time));
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: {
-                            berangkat: earlyArrived,
-                            pulang: [],
-                        },
-                    };
-                }
-
-                if(lastArrive){
-                    const lastArrived = search.sort((a, b) => a.arrival_date - b.arrival_date || b.arrival_time.localeCompare(a.arrival_time));
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: {
-                            berangkat: lastArrived,
-                            pulang: [],
-                        },
-                    };
-                }
-
-                // if (lowPrice === "true") {
-                //     search.sort((a, b) => a.price - b.price);
-                // }
-                if (departureAsc === "departure_asc") {
-                    search.sort((a, b) => {
-                        const timeA = new Date(`${a.departure_date}T${a.departure_time}`);
-                        const timeB = new Date(`${b.departure_date}T${b.departure_time}`);
-                        return timeA - timeB;
-                    });
                 }
 
                 
