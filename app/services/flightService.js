@@ -127,7 +127,6 @@ module.exports = {
             
             const lowPrice = reqQuery.lowPrice;
             const departureAsc = reqQuery.departureAsc
-            const earlyDeparture = reqQuery.earlyDeparture
             
             if (
                 !reqBody.from ||
