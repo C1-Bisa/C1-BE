@@ -31,13 +31,13 @@ module.exports = {
         type: Sequelize.DATE
       },
       departure_time: {
-        type: Sequelize.TIME
+        type: Sequelize.TIME(6)
       },
       arrival_date: {
         type: Sequelize.DATE
       },
       arrival_time: {
-        type: Sequelize.TIME
+        type: Sequelize.TIME(6)
       },
       from: {
         type: Sequelize.STRING
