@@ -50,7 +50,7 @@ createflight(req, res) {
 
 searchflight(req, res) {
     flightService
-      .search(req.body)
+      .search(req.body, req.query)
       .then((flight) => {
         if(!flight.data){
             res.status(422).json({

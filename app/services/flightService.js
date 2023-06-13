@@ -5,6 +5,10 @@ const airlineRepository = require("../repositories/airlineRepository");
 const dayjs = require("dayjs");
 const { DATE } = require("sequelize");
 
+function sortTicketsByPriceAscending(tickets) {
+    return tickets.sort((a, b) => a.price - b.price);
+}
+
 module.exports = {
     async list() {
         try {
@@ -109,7 +113,7 @@ module.exports = {
         }
     },
     
-    async search(reqBody) {
+    async search(reqBody, reqQuery) {
         try {
             const from  = reqBody.from;
             const to = reqBody.to;
@@ -117,9 +121,9 @@ module.exports = {
             const departure_time = reqBody.departure_time;
             const departure = new Date(departure_date);
             const returnDate = reqBody.returnDate;
-            const departureReturn = new Date(returnDate)
-            
-
+            const departureReturn = new Date(returnDate);
+            const lowPrice = reqQuery.lowPrice;
+            const departureAsc = reqQuery.departureAsc
             
             if (
                 !reqBody.from ||
@@ -176,20 +180,37 @@ module.exports = {
                 price: schedule.price,
                 flight_class: schedule.flight_class,
                 description: schedule.description,
-                airplane: schedule.Airline,
-                airport: schedule.Airport
+                airplane: schedule.Airline.airline_code,
+                airplane_code: schedule.Airline.airline_name,
+                airport: schedule.Airport.airport_code,
+                airport_code: schedule.Airport.airport_name,
+
             }));
 
 
             if(!returnDate){
                 const search = array.filter((data) => data.from === from && data.to === to && data.departure_date >= departure && data.departure_time >= departure_time) 
 
+                // if (lowPrice === "true") {
+                //     search.sort((a, b) => a.price - b.price);
+                // }
+                if (departureAsc === "departure_asc") {
+                    search.sort((a, b) => {
+                        const timeA = new Date(`${a.departure_date}T${a.departure_time}`);
+                        const timeB = new Date(`${b.departure_date}T${b.departure_time}`);
+                        return timeA - timeB;
+                    });
+                }
+
+                
                 return {
                     status: "Success",
                     message: "Result Search",
                     data: search,
                 };
             }
+
+            
 
             if (returnDate) {
                 const search = array.filter((data) => data.from === from && data.to === to && data.departure_date >= departure && data.departure_time >= departure_time);
@@ -204,6 +225,11 @@ module.exports = {
                     },
                 };
             }
+
+           
+
+          
+        
 
         } catch (err) {
             throw err;

@@ -4,7 +4,8 @@ const {sendMail, generateOTP} = require("../../utils/email");
 require('dotenv').config()
 const jwt = require("jsonwebtoken")
 const {JWT_SIGNATURE_KEY} = process.env;
-const{Notification, User} = require("../models")
+const{Notification, User} = require("../models");
+const ApiError = require("../../utils/ApiError")
 
 const regexGmail = /[\w]*@*[a-z]*\.*[\w]{5,}(\.)*(@gmail\.com)/g;
 
@@ -203,28 +204,33 @@ module.exports = {
 
   },
 
-  async update(id, requestBody) {
-    try {
-      const updatedUser = await userRepository.update(id, requestBody);
-      return { 
-        message: 'User updated successfully', 
-        data: updatedUser };
-    } catch (error) {
-      throw new Error("Failed to update user");
-    }
-  },
+  async update(req,res){
+    const user = req.user
+    const id = user.id
+    const {
+      nama,
+      email,
+      phone,
+      password
+    } = req.body;
 
-  async delete (userId) {
-    try {
-      // Hapus notifikasi terlebih dahulu
-      await userRepository.deleteNotif(userId);
+    try{
+      if (email) throw new ApiError(400, 'Email tidak boleh Diganti.');
+      if (password) throw new ApiError(400, 'Password tidak boleh Diganti.');
+      if (!nama) throw new ApiError(400, 'Nama tidak boleh kosong.');
+      if (!phone) throw new ApiError(400, 'Nama tidak boleh kosong.');
 
-      // Hapus pengguna
-      await userRepository.delete(userId)
-  
-      return { message: 'User deleted successfully' };
-    } catch (error) {
-      throw new Error('Failed to delete user');
+      const updateUser = await userRepository.update(id,{nama,email,phone,password});
+      res.status(200).json({
+        status: "OK",
+        message: "Success Updated Profile",
+        data: updateUser
+      });
+      
+    }catch(error){
+      res.status(error.statusCode || 500).json({
+        message: error.message,
+      });
     }
   },
 
