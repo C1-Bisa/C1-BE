@@ -1,0 +1,2975 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Flight Ticket Tiketku FSW AND Kelompok 1",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://airplaneapikel1-production.up.railway.app/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "Users API Collection"
+    },
+    {
+      "name": "Airline",
+      "description": "Airline API Collection"
+    },
+    {
+      "name": "Airport",
+      "description": "Airport API Collection"
+    },
+    {
+      "name": "flight",
+      "description": "Everything about Data Flight"
+    }
+  ],
+  "paths": {
+    "/user/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Login for all role user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "admin@gmail.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "admin123"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Status login success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int64",
+                          "example": 1
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "risa@gmail.com"
+                        },
+                        "token": {
+                          "type": "string",
+                          "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJzdXBlcmFkbWluQGdtYWlsLmNvbSIsIm5hbWUiOiJyaXNhIHN1cGVyIGFkbWluIiwidXNlclJvbGUiOiJzdXBlcmFkbWluIiwiaWF0IjoxNjgzNTQ1NzA3fQ.-FoJAHQWM1it9jW3hY6CJQQslTpcwckxUQY8RNhH9TU"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed error because bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/EmptyEmail"
+                    },
+                    {
+                      "$ref": "#/components/schemas/EmptyPassword"
+                    },
+                    {
+                      "$ref": "#/components/schemas/WrongPassword"
+                    }
+                  ]
+                },
+                "examples": {
+                  "emptyEmail": {
+                    "summary": "example empty email",
+                    "value": {
+                      "status": "FAIL",
+                      "message": "email can't be empty!"
+                    }
+                  },
+                  "emptyEmailPassword": {
+                    "summary": "example empty password",
+                    "value": {
+                      "status": "FAIL",
+                      "message": "password can't be empty!"
+                    }
+                  },
+                  "wrongPassword": {
+                    "summary": "example wrong password",
+                    "value": {
+                      "status": "FAIL",
+                      "message": "wrong password!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Failed error because user not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "user not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/logout": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Get user information",
+        "description": "to get information from the user who is currently logged in",
+        "responses": {
+          "200": {
+            "description": "Status success get user information",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Logout Berhasil"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed error because bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/RequiredAuth"
+                    }
+                  ]
+                },
+                "examples": {
+                  "requiredAuth": {
+                    "summary": "example empty bearer token",
+                    "value": {
+                      "status": "FAIL",
+                      "message": "required authorization!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "498": {
+            "description": "Failed because token error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/InvalidToken"
+                    }
+                  ]
+                },
+                "examples": {
+                  "invalidToken": {
+                    "summary": "example invalid token",
+                    "value": {
+                      "status": "FAIL",
+                      "message": "invalid token"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Get all user information for admin",
+        "description": "to get information from the all user",
+        "responses": {
+          "200": {
+            "description": "Status success get all user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "Users": {
+                          "type": "array",
+                          "items": {
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "example": "77cc3c5d-3ada-4993-a6a2-7f95c6529748"
+                              },
+                              "name": {
+                                "type": "string",
+                                "example": "admin"
+                              },
+                              "email": {
+                                "type": "string",
+                                "example": "admin@gmail.com"
+                              },
+                              "phone": {
+                                "type": "string",
+                                "example": 82132830954
+                              },
+                              "role": {
+                                "type": "string",
+                                "example": "Admin"
+                              },
+                              "isVerified": {
+                                "type": "boolean",
+                                "example": true
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "example": "2023-05-06T07:41:44.381Z"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "example": "2023-05-06T07:41:44.381Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer",
+                          "format": "int64",
+                          "example": 8
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed error because bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/RequiredAuth"
+                    }
+                  ]
+                },
+                "examples": {
+                  "requiredAuth": {
+                    "summary": "example empty bearer token",
+                    "value": {
+                      "status": "FAIL",
+                      "message": "required authorization!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "498": {
+            "description": "Failed because token error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/InvalidToken"
+                    }
+                  ]
+                },
+                "examples": {
+                  "invalidToken": {
+                    "summary": "example invalid token",
+                    "value": {
+                      "status": "FAIL",
+                      "message": "invalid token"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Update a User",
+        "description": "To update user by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the User",
+            "required": true,
+            "schema": {
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "nama": {
+                    "type": "string",
+                    "example": "Anya Geraldin"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "anya@gmail.com"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": 81259842863
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "anya123"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "If data successfully updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User updated successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DontHavePermit"
+                    }
+                  ]
+                },
+                "examples": {
+                  "dontHavePermit": {
+                    "summary": "example unauthorized",
+                    "value": {
+                      "status": "FAIL",
+                      "message": "Sesi login berakhir, harap login kembali!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If failed to retrive the data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "user not found!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Delete user",
+        "description": "To delete user by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the car",
+            "required": true,
+            "schema": {
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "If data successfully deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User deleted successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failed error because forbidden access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DontHavePermit"
+                    }
+                  ]
+                },
+                "examples": {
+                  "dontHavePermit": {
+                    "summary": "example invalid role access",
+                    "value": {
+                      "status": "FAIL",
+                      "message": "You dont have permission"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If failed to retrive the data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "user not found!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/register": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Register for user",
+        "description": "User can use app after register to the app first.",
+        "requestBody": {
+          "description": "Created user object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Users"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "If account user registered",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Tautan Verifikasi Telah Dikirim!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "format": "int64",
+                              "example": 1
+                            },
+                            "nama": {
+                              "type": "string",
+                              "example": "Neymar JR"
+                            },
+                            "email": {
+                              "type": "string",
+                              "example": "neymarjr@gmail.com"
+                            },
+                            "password": {
+                              "type": "string",
+                              "example": "$2a$10$xlvNSeDxDsukEtRSrMitCetrTraembhayd1R0Wbmes0t1Fjgum30e"
+                            },
+                            "phone": {
+                              "type": "string",
+                              "example": 8123532534
+                            },
+                            "role": {
+                              "type": "string",
+                              "example": "User"
+                            },
+                            "isVerified": {
+                              "type": "boolean",
+                              "example": false
+                            },
+                            "updatedAt": {
+                              "type": "string",
+                              "example": "2023-05-03T01:44:42.437Z"
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "example": "2023-05-03T00:25:45.592Z"
+                            }
+                          }
+                        },
+                        "otp": {
+                          "type": "string",
+                          "example": 512323
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If wrong path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Error will be displayed if email has been taken, input not filled, email not match with regex, password length must > 6",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Email has been taken !!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/verification": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "verification otp user",
+        "description": "this endpoint to check otp user is true or not, if true user can be loggin to account",
+        "requestBody": {
+          "description": "Created user object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "OTPinput": {
+                    "type": "string",
+                    "example": 812332
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful verified otp account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "subject": {
+                      "type": "string",
+                      "example": "Verification OTP"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Registrasi Berhasil"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "If Wrong otp input, and if code otp expired will return status code 422 with response OTP Code Expired, please resend OTP!",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Wrong OTP code, please input again!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/resendcode/{userId}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "endpoint for resend otp to email if otp expired",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of users that needs to resend otp code",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful resend otp to user email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "subject": {
+                      "type": "string",
+                      "example": "Resend OTP"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Tautan Verifikasi Telah Dikirim!"
+                    },
+                    "otp": {
+                      "type": "string",
+                      "example": 124231
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If wrong path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "If wrong input id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User Not found"
+                    },
+                    "data": {
+                      "type": "string",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/resetPassword": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Reset Password for user if forget password before login",
+        "description": "User can change password before login, before reset password user will get and email to verify link.",
+        "requestBody": {
+          "description": "send email for verification",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "neymarjr@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "If verification link has been send to email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Reset Password"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Check your Email! Reset Password Link Has been send!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If wrong path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "if email not registered can't reset password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Email Not Registered!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/createNewPassword/{userId}/{otp}": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "endpoint for resend otp to email if otp expired",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of users that needs to resend otp code",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "otp",
+            "in": "path",
+            "description": "otp verification code",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "send email for verification",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "newPassword": {
+                    "type": "string",
+                    "example": "messi12345"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful updated user password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User password Updated"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If wrong path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "if link verification has expired, and if id is wrong will return message wrong token, and if id and token not match will return Token and user id not match",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Link reset password Expired"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/aiport": {
+      "post": {
+        "tags": [
+          "Airport"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Create airport data",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "airport_code": {
+                    "type": "string",
+                    "example": "CGK"
+                  },
+                  "airport_name": {
+                    "type": "string",
+                    "example": "Soekarno Hatta"
+                  },
+                  "airport_location": {
+                    "type": "string",
+                    "example": "Jakarta"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Airport succesfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "format": "int64",
+                              "example": 13
+                            },
+                            "airport_code": {
+                              "type": "string",
+                              "example": "CGK"
+                            },
+                            "airport_name": {
+                              "type": "string",
+                              "example": "Soekarno Hatta"
+                            },
+                            "airport_location": {
+                              "type": "string",
+                              "example": "Jakarta"
+                            },
+                            "updatedAt": {
+                              "type": "string",
+                              "example": "2023-05-04 00:31:02.934+07"
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "example": "2023-05-04 00:31:02.934+07"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failed error because forbidden access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DontHavePermit"
+                    }
+                  ]
+                },
+                "examples": {
+                  "dontHavePermit": {
+                    "summary": "example invalid role access",
+                    "value": {
+                      "message": "You dont have permission"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Airport"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Get all airport information for admin",
+        "description": "to get information from the all airport",
+        "responses": {
+          "200": {
+            "description": "Status success get all airport",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "airport": {
+                          "type": "array",
+                          "items": {
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "format": "int64",
+                                "example": 1
+                              },
+                              "airport_code": {
+                                "type": "string",
+                                "example": "CGK"
+                              },
+                              "airport_name": {
+                                "type": "string",
+                                "example": "Soekarno Hatta"
+                              },
+                              "airport_location": {
+                                "type": "string",
+                                "example": "Jakarta"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "example": "2023-05-06T07:41:44.381Z"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "example": "2023-05-06T07:41:44.381Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failed error forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/RequiredAuth"
+                    }
+                  ]
+                },
+                "examples": {
+                  "requiredAuth": {
+                    "summary": "example empty bearer token",
+                    "value": {
+                      "message": "You dont have permission"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/airport/{id}": {
+      "get": {
+        "tags": [
+          "Airport"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Get airport by id for admin",
+        "description": "To retrive airport by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the car",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "If data successfully retrived",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int64",
+                          "example": 1
+                        },
+                        "airport_code": {
+                          "type": "string",
+                          "example": "CGK"
+                        },
+                        "airport_name": {
+                          "type": "string",
+                          "example": "Soekarno Hatta"
+                        },
+                        "airport_location": {
+                          "type": "string",
+                          "example": "Jakarta"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2023-05-06T07:41:44.381Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2023-05-06T07:41:44.381Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You dont have permission"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Airport not found!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Airport"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Update a airport",
+        "description": "To update a airport by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the airport",
+            "required": true,
+            "schema": {
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "airport_code": {
+                    "type": "string",
+                    "example": "CGK"
+                  },
+                  "airport_name": {
+                    "type": "string",
+                    "example": "Soekarno Hatta Airpot"
+                  },
+                  "airport_location": {
+                    "type": "string",
+                    "example": "Jakarta"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "If data successfully updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Airport updated successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failed error because forbidden access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DontHavePermit"
+                    }
+                  ]
+                },
+                "examples": {
+                  "dontHavePermit": {
+                    "summary": "example invalid role access",
+                    "value": {
+                      "message": "You dont have permission"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If failed to retrive the data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Airport not found!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Airport"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Delete the airport data",
+        "description": "To delete the airport by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the airport",
+            "required": true,
+            "schema": {
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "If data successfully deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Airport successfully deleted!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failed error because forbidden access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DontHavePermit"
+                    }
+                  ]
+                },
+                "examples": {
+                  "dontHavePermit": {
+                    "summary": "example invalid role access",
+                    "value": {
+                      "message": "You dont have permission"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If failed to retrive the data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "airport not found!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/airline": {
+      "post": {
+        "tags": [
+          "Airline"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Create airline data",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "airline_code": {
+                    "type": "string",
+                    "example": "SJA"
+                  },
+                  "airline_name": {
+                    "type": "string",
+                    "example": "Super Jet Airline"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Airport succesfully created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "format": "int64",
+                              "example": 13
+                            },
+                            "airline_code": {
+                              "type": "string",
+                              "example": "SJA"
+                            },
+                            "airline_name": {
+                              "type": "string",
+                              "example": "Super Jet Air"
+                            },
+                            "updatedAt": {
+                              "type": "string",
+                              "example": "2023-05-04 00:31:02.934+07"
+                            },
+                            "createdAt": {
+                              "type": "string",
+                              "example": "2023-05-04 00:31:02.934+07"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failed error because forbidden access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DontHavePermit"
+                    }
+                  ]
+                },
+                "examples": {
+                  "dontHavePermit": {
+                    "summary": "example invalid role access",
+                    "value": {
+                      "message": "You dont have permission"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Airline"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Get all airline information for admin",
+        "description": "to get information from the all airline",
+        "responses": {
+          "200": {
+            "description": "Status success get all airline",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "airline": {
+                          "type": "array",
+                          "items": {
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "format": "int64",
+                                "example": 1
+                              },
+                              "airline_code": {
+                                "type": "string",
+                                "example": "SJA"
+                              },
+                              "airline_name": {
+                                "type": "string",
+                                "example": "Super Jet Air"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "example": "2023-05-06T07:41:44.381Z"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "example": "2023-05-06T07:41:44.381Z"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failed error forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/RequiredAuth"
+                    }
+                  ]
+                },
+                "examples": {
+                  "requiredAuth": {
+                    "summary": "example empty bearer token",
+                    "value": {
+                      "message": "You dont have permission"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/airline/{id}": {
+      "get": {
+        "tags": [
+          "Airline"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Get airline by id for admin",
+        "description": "To retrive airline by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the airline",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "If data successfully retrived",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Airline found!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "format": "int64",
+                          "example": 1
+                        },
+                        "airline_code": {
+                          "type": "string",
+                          "example": "SJA"
+                        },
+                        "airline_name": {
+                          "type": "string",
+                          "example": "Super Jet Air"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2023-05-06T07:41:44.381Z"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2023-05-06T07:41:44.381Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Error forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "You dont have permission"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Airline not found!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Airline"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Update a airport",
+        "description": "To update a airport by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the airport",
+            "required": true,
+            "schema": {
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "airline_code": {
+                    "type": "string",
+                    "example": "SJA"
+                  },
+                  "airline_name": {
+                    "type": "string",
+                    "example": "Super Jet Air"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "If data successfully updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Airline data successfuly updated!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failed error because forbidden access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DontHavePermit"
+                    }
+                  ]
+                },
+                "examples": {
+                  "dontHavePermit": {
+                    "summary": "example invalid role access",
+                    "value": {
+                      "message": "You dont have permission"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If failed to retrive the data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Airline not found!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Airline"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Delete the airline data",
+        "description": "To delete the airline by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the airline",
+            "required": true,
+            "schema": {
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "format": "int64",
+                  "example": 1
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "If data successfully deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Airplane successfully deleted!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failed error because forbidden access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DontHavePermit"
+                    }
+                  ]
+                },
+                "examples": {
+                  "dontHavePermit": {
+                    "summary": "example invalid role access",
+                    "value": {
+                      "message": "You dont have permission"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If failed to retrive the data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "airline not found!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flight/getflight": {
+      "get": {
+        "tags": [
+          "flight"
+        ],
+        "summary": "Get list an existing flight schedule",
+        "description": "Get all of existing flight schedule",
+        "responses": {
+          "200": {
+            "description": "Successful get list Flight",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "flight": {
+                          "type": "array",
+                          "items": {
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "format": "int64",
+                                "example": 1
+                              },
+                              "airline_id": {
+                                "type": "integer",
+                                "format": "int64",
+                                "example": 3
+                              },
+                              "airport_id": {
+                                "type": "integer",
+                                "format": "int64",
+                                "example": 5
+                              },
+                              "departure_date": {
+                                "type": "string",
+                                "example": "2023-06-12T00:00:00.000Z"
+                              },
+                              "departure_time": {
+                                "type": "string",
+                                "example": "09:00:00"
+                              },
+                              "arrival_date": {
+                                "type": "string",
+                                "example": "2023-06-12T00:00:00.000Z"
+                              },
+                              "arrival_time": {
+                                "type": "string",
+                                "example": "11:00:00"
+                              },
+                              "from": {
+                                "type": "string",
+                                "example": "Semarang"
+                              },
+                              "to": {
+                                "type": "string",
+                                "example": "Yogyakarta"
+                              },
+                              "price": {
+                                "type": "integer",
+                                "format": "int64",
+                                "example": 2000000
+                              },
+                              "flight_class": {
+                                "type": "string",
+                                "example": "Bussiness"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "Perjalanan Menuju Madiun akan ditempuh selama 2 jam perjalanan dengan class Economy"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "example": "2023-06-09T14:06:20.248Z"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "example": "2023-06-09T23:04:27.998Z"
+                              },
+                              "Airline": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "example": 3
+                                  },
+                                  "airline_code": {
+                                    "type": "string",
+                                    "example": "ID"
+                                  },
+                                  "airline_name": {
+                                    "type": "string",
+                                    "example": "Batik Air"
+                                  },
+                                  "createdAt": {
+                                    "type": "string",
+                                    "example": "2023-06-09T14:06:20.248Z"
+                                  },
+                                  "updatedAt": {
+                                    "type": "string",
+                                    "example": "2023-06-09T23:04:27.998Z"
+                                  }
+                                }
+                              },
+                              "Airport": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "example": 5
+                                  },
+                                  "airport_code": {
+                                    "type": "string",
+                                    "example": "SRG"
+                                  },
+                                  "airport_name": {
+                                    "type": "string",
+                                    "example": "Ahmad Yani"
+                                  },
+                                  "airport_location": {
+                                    "type": "string",
+                                    "example": "Semarang"
+                                  },
+                                  "createdAt": {
+                                    "type": "string",
+                                    "example": "2023-06-09T14:06:20.248Z"
+                                  },
+                                  "updatedAt": {
+                                    "type": "string",
+                                    "example": "2023-06-09T23:04:27.998Z"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer",
+                          "format": "int64",
+                          "example": 1
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If wrong path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flight/createflight": {
+      "post": {
+        "tags": [
+          "flight"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Add a new data flight",
+        "description": "Add a new dataflight to database",
+        "requestBody": {
+          "description": "send email for verification",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "airline_id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 3
+                  },
+                  "airport_id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 4
+                  },
+                  "departure_date": {
+                    "type": "string",
+                    "example": "2023-09-12T00:00:00.000Z"
+                  },
+                  "departure_time": {
+                    "type": "string",
+                    "example": "08:00:00"
+                  },
+                  "arrival_date": {
+                    "type": "string",
+                    "example": "2023-09-12T00:00:00.000Z"
+                  },
+                  "arrival_time": {
+                    "type": "string",
+                    "example": "11:00:00"
+                  },
+                  "from": {
+                    "type": "string",
+                    "example": "Yogyakarta"
+                  },
+                  "to": {
+                    "type": "string",
+                    "example": "Medan"
+                  },
+                  "price": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 2000000
+                  },
+                  "flight_class": {
+                    "type": "string",
+                    "example": "Bussiness"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Perjalanan Menuju Madiun akan ditempuh selama 2 jam perjalanan dengan class Economy"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "If data successfuly created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Flight data successfuly create!"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "flight": {
+                          "type": "array",
+                          "items": {
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "format": "int64",
+                                "example": 1
+                              },
+                              "airline_id": {
+                                "type": "integer",
+                                "format": "int64",
+                                "example": 3
+                              },
+                              "airport_id": {
+                                "type": "integer",
+                                "format": "int64",
+                                "example": 5
+                              },
+                              "departure_date": {
+                                "type": "string",
+                                "example": "2023-09-12T00:00:00.000Z"
+                              },
+                              "departure_time": {
+                                "type": "string",
+                                "example": "08:00:00"
+                              },
+                              "arrival_date": {
+                                "type": "string",
+                                "example": "2023-09-12T00:00:00.000Z"
+                              },
+                              "arrival_time": {
+                                "type": "string",
+                                "example": "11:00:00"
+                              },
+                              "from": {
+                                "type": "string",
+                                "example": "Semarang"
+                              },
+                              "to": {
+                                "type": "string",
+                                "example": "Yogyakarta"
+                              },
+                              "price": {
+                                "type": "integer",
+                                "format": "int64",
+                                "example": 2000000
+                              },
+                              "flight_class": {
+                                "type": "string",
+                                "example": "Bussiness"
+                              },
+                              "description": {
+                                "type": "string",
+                                "example": "Perjalanan Menuju Madiun akan ditempuh selama 2 jam perjalanan dengan class Economy"
+                              },
+                              "createdAt": {
+                                "type": "string",
+                                "example": "2023-06-09T14:06:20.248Z"
+                              },
+                              "updatedAt": {
+                                "type": "string",
+                                "example": "2023-06-09T23:04:27.998Z"
+                              },
+                              "Airline": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "example": 3
+                                  },
+                                  "airline_code": {
+                                    "type": "string",
+                                    "example": "ID"
+                                  },
+                                  "airline_name": {
+                                    "type": "string",
+                                    "example": "Batik Air"
+                                  },
+                                  "createdAt": {
+                                    "type": "string",
+                                    "example": "2023-06-09T14:06:20.248Z"
+                                  },
+                                  "updatedAt": {
+                                    "type": "string",
+                                    "example": "2023-06-09T23:04:27.998Z"
+                                  }
+                                }
+                              },
+                              "Airport": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "example": 5
+                                  },
+                                  "airport_code": {
+                                    "type": "string",
+                                    "example": "SRG"
+                                  },
+                                  "airport_name": {
+                                    "type": "string",
+                                    "example": "Ahmad Yani"
+                                  },
+                                  "airport_location": {
+                                    "type": "string",
+                                    "example": "Semarang"
+                                  },
+                                  "createdAt": {
+                                    "type": "string",
+                                    "example": "2023-06-09T14:06:20.248Z"
+                                  },
+                                  "updatedAt": {
+                                    "type": "string",
+                                    "example": "2023-06-09T23:04:27.998Z"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If wrong path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "if from or to location didn't found in database, if from not filled, if from and to location same, if airport id not match with from location will return 422 error code.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "from location did'nt found please choose the other location!                  "
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flight/updateflight/{flightid}": {
+      "put": {
+        "tags": [
+          "flight"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Updates a flight schedule in the database with form data",
+        "description": "",
+        "parameters": [
+          {
+            "name": "flightid",
+            "in": "path",
+            "description": "ID of flight schedule that needs to be updated",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "send email for verification",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "airline_id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 3
+                  },
+                  "airport_id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 4
+                  },
+                  "departure_date": {
+                    "type": "string",
+                    "example": "2023-09-12T00:00:00.000Z"
+                  },
+                  "departure_time": {
+                    "type": "string",
+                    "example": "08:00:00"
+                  },
+                  "arrival_date": {
+                    "type": "string",
+                    "example": "2023-09-12T00:00:00.000Z"
+                  },
+                  "arrival_time": {
+                    "type": "string",
+                    "example": "11:00:00"
+                  },
+                  "from": {
+                    "type": "string",
+                    "example": "Yogyakarta"
+                  },
+                  "to": {
+                    "type": "string",
+                    "example": "Medan"
+                  },
+                  "price": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 2000000
+                  },
+                  "flight_class": {
+                    "type": "string",
+                    "example": "Bussiness"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Perjalanan Menuju Madiun akan ditempuh selama 2 jam perjalanan dengan class Economy"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "If Successfuly Updated Data Flight",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Flight data successfuly updated!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If wrong path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "when update from location must update airport id too if not update both of them will return error. To or from location must be in database, adn dont update from and to with same location.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Airport ID did'nt match with from location, You must change airport_id too!                  "
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/flight/deleteflight/{flightid}": {
+      "delete": {
+        "tags": [
+          "flight"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Delete data Flight schedule in database",
+        "description": "Delete a Flight schedule",
+        "parameters": [
+          {
+            "name": "flightid",
+            "in": "path",
+            "description": "Flight schedule id to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "If Successfuly Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Flight data successfuly deleted!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If wrong path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "when data to be delete not found in database",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Flight data Not Found!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Users": {
+        "required": [
+          "name",
+          "email",
+          "phone",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Neymar JR"
+          },
+          "email": {
+            "type": "string",
+            "example": "neymarjr@gmail.com"
+          },
+          "phone": {
+            "type": "string",
+            "example": 8123532534
+          },
+          "password": {
+            "type": "string",
+            "example": "neymar123"
+          }
+        },
+        "xml": {
+          "name": "users"
+        }
+      },
+      "RequiredAuth": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "DontHavePermit": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "InvalidToken": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "EmptyName": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "EmptyEmail": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "EmailAlreadyTaken": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "MinimumPassword": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "EmptyPassword": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "WrongPassword": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerToken": {
+        "description": "Note: Token required, you may to login first then paste token code here",
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
