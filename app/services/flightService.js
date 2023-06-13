@@ -113,7 +113,7 @@ module.exports = {
         }
     },
     
-    async search(reqBody, reqQuery, reqQuery) {
+    async search(reqBody, reqQuery) {
         try {
             const from  = reqBody.from;
             const to = reqBody.to;

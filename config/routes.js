@@ -4,6 +4,7 @@ const services = require("../app/services/userService")
 const auth = require ("../middleware/auth");
 const swaggerDocument = require('../docs/openapi.json');
 const swaggerUi = require('swagger-ui-express');
+const controller = require("../app/controllers")
 
 
 
@@ -59,7 +60,7 @@ apiRouter.get("/api/v1/errors", () => {
   );
 });
 
-apiRouter.use(controllers.api.main.onLost);
-apiRouter.use(controllers.api.main.onError);
+apiRouter.use(controller.api.main.onLost);
+apiRouter.use(controller.api.main.onError);
 
 module.exports = apiRouter;
