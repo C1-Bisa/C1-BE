@@ -221,11 +221,19 @@ module.exports = {
       if (!phone) throw new ApiError(400, 'Nama tidak boleh kosong.');
 
       const updateUser = await userRepository.update(id,{nama,email,phone,password});
-      res.status(200).json({
-        status: "OK",
-        message: "Success Updated Profile",
-        data: updateUser
-      });
+      if(updateUser){
+        const getUser = await userRepository.findUser(id);
+        res.status(200).json({
+          status: "OK",
+          message: "Success Updated Profile",
+          data: {
+            nama : getUser.nama,
+            email: getUser.email,
+            phone: getUser.phone
+          }
+        });
+      }
+
       
     }catch(error){
       res.status(error.statusCode || 500).json({

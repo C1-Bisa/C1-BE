@@ -5,9 +5,6 @@ const airlineRepository = require("../repositories/airlineRepository");
 const dayjs = require("dayjs");
 const { DATE } = require("sequelize");
 
-function sortTicketsByPriceAscending(tickets) {
-    return tickets.sort((a, b) => a.price - b.price);
-}
 
 module.exports = {
     async list() {

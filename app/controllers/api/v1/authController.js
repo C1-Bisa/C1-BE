@@ -134,6 +134,27 @@ module.exports ={
     });
   },
 
+  getProfile(req,res) {
+    try {
+      const user = req.user; //from authorization userMiddleware
+      res.status(200).json({
+        status: "OK",
+        message: "Success",
+        data: {
+          nama: user.nama,
+          email: user.email,
+          phone: user.phone,
+          // password: user.password
+        },
+      });
+    } catch (err) {
+      res.status(err.statusCode || 404).json({
+        status: "FAIL",
+        message: err.message,
+      });
+    }
+  },
+
   // Middleware async untuk memeriksa token kedaluwarsa
   async checkTokenExpiration(req, res, next) {
     const authHeader = req.headers.authorization;
@@ -154,5 +175,6 @@ module.exports ={
       return res.status(500).json({ message: 'Internal Server Error' });
     }
   }
+
 
 }
