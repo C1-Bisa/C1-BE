@@ -101,12 +101,11 @@ module.exports = {
 
   update(req, res) {
     userService
-      .update(req.params.id, req.body)
-      .then((user) => {
+      .updateProfile(req.body)
+      .then((updateUser) => {
         res.status(200).json({
           status: "OK",
           message: user.message
-
         });
       })
       .catch((err) => {
