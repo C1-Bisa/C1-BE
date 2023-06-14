@@ -18,7 +18,16 @@ module.exports = {
           key: 'id'
         }
       },
-      airport_id: {
+      airport_id_from: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: "Airports"
+          },
+          key: 'id'
+        }
+      },
+      airport_id_to: {
         type: Sequelize.INTEGER,
         references: {
           model: {
@@ -44,6 +53,9 @@ module.exports = {
       },
       to: {
         type: Sequelize.STRING
+      },
+      duration: {
+        type: Sequelize.INTEGER
       },
       price: {
         type: Sequelize.INTEGER

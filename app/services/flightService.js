@@ -25,13 +25,15 @@ module.exports = {
         try {
             if (
                 !reqBody.airline_id ||
-                !reqBody.airport_id ||
+                !reqBody.airport_id_from ||
+                !reqBody.airport_id_to ||
                 !reqBody.departure_date ||
                 !reqBody.departure_time ||
                 !reqBody.arrival_date ||
                 !reqBody.arrival_time ||
                 !reqBody.from ||
                 !reqBody.to ||
+                !reqBody.duration ||
                 !reqBody.price ||
                 !reqBody.flight_class ||
                 !reqBody.description
@@ -43,13 +45,20 @@ module.exports = {
                 };
             }
 
-            const airportId = reqBody.airport_id;
-            const getdataAirport = await flightRepository.findAirport(airportId);
+            const airportIdFrom = reqBody.airport_id_from;
+            const airportIdTo = reqBody.airport_id_to;
+
+            const getdataAirportFrom = await flightRepository.findAirport(airportIdFrom);
+            const getdataAirportTo = await flightRepository.findAirport(airportIdTo);
 
             const from = reqBody.from;
             const to = reqBody.to;
             const searchFrom = await flightRepository.findLocation(from);
             const searchTo = await flightRepository.findLocation(to);
+
+            // const arivalTime = reqBody.arrival_time;
+            // const departureTime = reqBody.departure_time;
+            // const subtractTime = Math.abs(arivalTime - departureTime);
 
             if(!searchFrom){
                 return {
@@ -75,7 +84,7 @@ module.exports = {
                 };
             }
 
-            if(getdataAirport.airport_location !== from){
+            if(getdataAirportFrom.airport_location !== from){
                 return {
                     status: "Failed",
                     message: "Airport ID did'nt match with from location",
@@ -83,16 +92,26 @@ module.exports = {
                 };
             }
 
+            if(getdataAirportTo.airport_location !== to){
+                return {
+                    status: "Failed",
+                    message: "Airport ID did'nt match with to location",
+                    data: null,
+                };
+            }
+
 
             const ticket = await flightRepository.create({
                 airline_id: reqBody.airline_id,
-                airport_id: reqBody.airport_id,
+                airport_id_from: reqBody.airport_id_from,
+                airport_id_to: reqBody.airport_id_to,
                 departure_date: reqBody.departure_date,
                 departure_time: reqBody.departure_time,
                 arrival_date: reqBody.arrival_date,
                 arrival_time: reqBody.arrival_time,
                 from: reqBody.from,
                 to: reqBody.to,
+                duration: reqBody.duration,
                 price: reqBody.price,
                 flight_class: reqBody.flight_class,
                 description: reqBody.description,
@@ -125,9 +144,7 @@ module.exports = {
             const earlyArrive = reqQuery.earlyArrive;
             const lastArrive = reqQuery.lastArrive;
             
-            const lowPrice = reqQuery.lowPrice;
             const departureAsc = reqQuery.departureAsc
-            const earlyDeparture = reqQuery.earlyDeparture
             
             if (
                 !reqBody.from ||
@@ -175,37 +192,124 @@ module.exports = {
             const filter = flight.map(schedule => array.push({
                 id: schedule.id,
                 airline_id: schedule.airline_id,
-                airport_id: schedule.airport_id,
+                airline: schedule.Airline.airline_name,
+                airlane_code: schedule.Airline.airline_code,
+                airport_id_from: schedule.airport_id_from,
+                from: schedule.from,
+                airport_from_code: schedule.Airport_from.airport_code,
+                airport_from: schedule.Airport_from.airport_name,
+                airport_id_to: schedule.airport_id_to,
+                to: schedule.to,
+                airport_to_code: schedule.Airport_to.airport_code,
+                airport_to: schedule.Airport_to.airport_name,
                 departure_date: schedule.departure_date,
                 departure_time: schedule.departure_time,
                 arrival_date: schedule.arrival_date,
                 arrival_time: schedule.arrival_time,
-                from: schedule.from,
-                to: schedule.to,
+                duration: schedule.duration,
                 price: schedule.price,
                 flight_class: schedule.flight_class,
                 description: schedule.description,
-                airplane: schedule.Airline.airline_code,
-                airplane_code: schedule.Airline.airline_name,
-                airport: schedule.Airport.airport_code,
-                airport_code: schedule.Airport.airport_name,
-
             }));
 
 
             if(!returnDate){
                 const search = array.filter((data) => data.from === from && data.to === to && data.departure_date >= departure && data.departure_time >= departure_time) 
 
-                // if (lowPrice === "true") {
-                //     search.sort((a, b) => a.price - b.price);
-                // }
-                if (departureAsc === "departure_asc") {
-                    search.sort((a, b) => {
-                        const timeA = new Date(`${a.departure_date}T${a.departure_time}`);
-                        const timeB = new Date(`${b.departure_date}T${b.departure_time}`);
-                        return timeA - timeB;
-                    });
+                if(
+                    (toLower && earlyDeparture && lastDeparture && earlyArrive && lastArrive) ||
+                    (toLower && earlyDeparture && lastDeparture && earlyArrive) ||
+                    (toLower && earlyDeparture && lastDeparture && lastArrive) ||
+                    (toLower && earlyArrive && lastArrive && earlyDeparture)||
+                    (toLower && earlyArrive && lastArrive && lastDeparture) ||
+                    (toLower && earlyDeparture && lastDeparture) ||
+                    (toLower && earlyDeparture && earlyArrive) ||
+                    (toLower && earlyDeparture && lastArrive) ||
+                    (toLower && lastDeparture && earlyArrive) ||
+                    (toLower && lastDeparture && lastArrive) ||
+                    (toLower && earlyArrive && lastArrive) ||
+                    (earlyArrive && lastArrive && lastDeparture) ||
+                    (earlyArrive && lastArrive && earlyDeparture) ||
+                    (earlyDeparture && lastDeparture && earlyArrive)||
+                    (earlyDeparture && lastDeparture && lastArrive)||
+                    (earlyDeparture && earlyArrive)||
+                    (earlyDeparture && lastArrive)||
+                    (lastDeparture && lastArrive)||
+                    (lastDeparture && earlyArrive)
+                ){
+                    return {
+                        status: "Failed",
+                        message: "Filter Result Not Found!",
+                        data: null,
+                    };
                 }
+
+                if(toLower && earlyDeparture){
+                    const priceEarlydeparture = search.sort((a, b) => a.departure_date - b.departure_date || a.departure_time.localeCompare(b.departure_time) || a.price - b.price);
+                    return {
+                        status: "Success",
+                        message: "Result Search",
+                        data: {
+                            berangkat: priceEarlydeparture,
+                            pulang: [],
+                        },
+                    };
+                }
+
+                if(toLower && lastDeparture){
+                    const priceLastdeparture = search.sort((a, b) => a.departure_date - b.departure_date || b.departure_time.localeCompare(a.departure_time) || a.price - b.price);
+                    return {
+                        status: "Success",
+                        message: "Result Search",
+                        data: {
+                            berangkat: priceLastdeparture,
+                            pulang: [],
+                        },
+                    };
+                }
+
+                if(toLower && earlyArrive){
+                    const priceEarlyArrive = search.sort((a, b) => a.arrival_date - b.arrival_date || a.arrival_time.localeCompare(b.arrival_time) || a.price - b.price);
+                    return {
+                        status: "Success",
+                        message: "Result Search",
+                        data: {
+                            berangkat: priceEarlyArrive,
+                            pulang: [],
+                        },
+                    };
+                }
+
+                if(toLower && lastArrive){
+                    const priceLastArrive = search.sort((a, b) => a.arrival_date - b.arrival_date || b.arrival_time.localeCompare(a.arrival_time) || a.price - b.price);
+                    return {
+                        status: "Success",
+                        message: "Result Search",
+                        data: {
+                            berangkat: priceLastArrive,
+                            pulang: [],
+                        },
+                    };
+                }
+
+                if(toLower){
+                    const lowerPrice = search.sort((a, b) => a.price - b.price);
+                    return {
+                        status: "Success",
+                        message: "Result Search",
+                        data: {
+                            berangkat: lowerPrice,
+                            pulang: [],
+                        },
+                    };
+                }
+                // if (departureAsc === "departure_asc") {
+                //     search.sort((a, b) => {
+                //         const timeA = new Date(`${a.departure_date}T${a.departure_time}`);
+                //         const timeB = new Date(`${b.departure_date}T${b.departure_time}`);
+                //         return timeA - timeB;
+                //     });
+                // }
 
                 if(earlyDeparture){
                     const earlyDepartured = search.sort((a, b) => a.departure_date - b.departure_date || a.departure_time.localeCompare(b.departure_time));
@@ -214,6 +318,42 @@ module.exports = {
                         message: "Result Search",
                         data: {
                             berangkat: earlyDepartured,
+                            pulang: [],
+                        },
+                    };
+                }
+
+                if(lastDeparture){
+                    const lastDepartured = search.sort((a, b) => a.departure_date - b.departure_date || b.departure_time.localeCompare(a.departure_time));
+                    return {
+                        status: "Success",
+                        message: "Result Search",
+                        data: {
+                            berangkat: lastDepartured,
+                            pulang: [],
+                        },
+                    };
+                }
+
+                if(earlyArrive){
+                    const earlyArrived = search.sort((a, b) => a.arrival_date - b.arrival_date || a.arrival_time.localeCompare(b.arrival_time));
+                    return {
+                        status: "Success",
+                        message: "Result Search",
+                        data: {
+                            berangkat: earlyArrived,
+                            pulang: [],
+                        },
+                    };
+                }
+
+                if(lastArrive){
+                    const lastArrived = search.sort((a, b) => a.arrival_date - b.arrival_date || b.arrival_time.localeCompare(a.arrival_time));
+                    return {
+                        status: "Success",
+                        message: "Result Search",
+                        data: {
+                            berangkat: lastArrived,
                             pulang: [],
                         },
                     };
@@ -408,14 +548,17 @@ module.exports = {
 
             const from = reqBody.from;
             const to = reqBody.to;
-            const airportId = reqBody.airport_id;
+            const airportIdFrom = reqBody.airport_id_from;
+            const airportIdTo = reqBody.airport_id_to;
             const data = await flightRepository.findFlight(id);
-            const getdataAirport = await flightRepository.findAirport(data.airport_id);
+            const getdataAirportFrom = await flightRepository.findAirport(data.airport_id_from);
+            const getdataAirportTo = await flightRepository.findAirport(data.airport_id_to);
 
-            if(to && from && airportId ){
+            if(to && from && airportIdFrom && airportIdTo){
                 const searchTo = await flightRepository.findLocation(to);
                 const searchFrom = await flightRepository.findLocation(from);
-                const aiportDataReq = await flightRepository.findAirport(airportId);
+                const aiportDataReqFrom = await flightRepository.findAirport(airportIdFrom);
+                const aiportDataReqTo = await flightRepository.findAirport(airportIdTo);
 
                 if(!searchFrom){
                     return {
@@ -441,16 +584,24 @@ module.exports = {
                     };
                 }
 
-                if(searchFrom && searchFrom.airport_location !== aiportDataReq.airport_location){
+                if(searchFrom && searchFrom.airport_location !== aiportDataReqFrom.airport_location){
                     return {
                         status: "Failed",
-                        message: "Airport ID did'nt match with from location, You must change airport_id too!",
+                        message: "Airport ID did'nt match with from location, You must change airport_id_from too!",
+                        data: null,
+                    };
+                }
+
+                if(searchTo && searchTo.airport_location !== aiportDataReqTo.airport_location){
+                    return {
+                        status: "Failed",
+                        message: "Airport ID did'nt match with to location, You must change airport_id_to too!",
                         data: null,
                     };
                 }
             }
 
-            if(to&&from&&!airportId){
+            if(to&&from&&!airportIdFrom&&!airportIdTo){
                 const searchTo = await flightRepository.findLocation(to);
                 const searchFrom = await flightRepository.findLocation(from);
 
@@ -478,16 +629,24 @@ module.exports = {
                     };
                 }
 
-                if(searchFrom && searchFrom.airport_location !== getdataAirport.airport_location){
+                if(searchFrom && searchFrom.airport_location !== getdataAirportFrom.airport_location){
                     return {
                         status: "Failed",
-                        message: "Airports ID did'nt match with from location, You must change airport_id too!",
+                        message: "Airports ID did'nt match with from location, You must change airport_id_from too!",
+                        data: null,
+                    };
+                }
+
+                if(searchTo && searchTo.airport_location !== getdataAirportTo.airport_location){
+                    return {
+                        status: "Failed",
+                        message: "Airport ID did'nt match with to location, You must change airport_id_to too!",
                         data: null,
                     };
                 }
             }
 
-            if(from && !airportId){
+            if(from && !airportIdFrom){
                 const searchFrom = await flightRepository.findLocation(from);
                 if(!searchFrom){
                     return {
@@ -497,21 +656,29 @@ module.exports = {
                     };
                 }
 
-                if(searchFrom && searchFrom.airport_location !== getdataAirport.airport_location){
+                if(searchFrom && searchFrom.airport_location !== getdataAirportFrom.airport_location){
                     return {
                         status: "Failed",
-                        message: "Airportss ID did'nt match with from location, You must change airport_id too!",
+                        message: "Airportss ID did'nt match with from location, You must change airport_id_from too!",
                         data: null,
                     };
                 }
             }
 
-            if(to){
+            if(to && !airportIdTo){
                 const searchTo = await flightRepository.findLocation(to);
                 if(!searchTo){
                     return {
                         status: "Failed",
                         message: "To location did'nt found please choose the other location!",
+                        data: null,
+                    };
+                }
+
+                if(searchTo && searchTo.airport_location !== getdataAirportTo.airport_location){
+                    return {
+                        status: "Failed",
+                        message: "Airportss ID did'nt match with to location, You must change airport_id_to too!",
                         data: null,
                     };
                 }
@@ -521,13 +688,15 @@ module.exports = {
             const ticket = await flightRepository
                 .update(id, {
                     airline_id: reqBody.airline_id,
-                    airport_id: reqBody.airport_id,
+                    airport_id_from: reqBody.airport_id_from,
+                    airport_id_to: reqBody.airport_id_to,
                     departure_date: reqBody.departure_date,
                     departure_time: reqBody.departure_time,
                     arrival_date: reqBody.arrival_date,
                     arrival_time: reqBody.arrival_time,
                     from: reqBody.from,
                     to: reqBody.to,
+                    duration: reqBody.duration,
                     price: reqBody.price,
                     flight_class: reqBody.flight_class,
                     description: reqBody.description,
@@ -549,7 +718,6 @@ module.exports = {
     async delete(id) {
         try {
             const findDataDelete = await flightRepository.findFlight(id);
-            const ticket = await flightRepository.delete(id);
             if(!findDataDelete){
                 return {
                     status: "Failed",
@@ -557,6 +725,7 @@ module.exports = {
                     data: null,
                 }
             }
+            const ticket = await flightRepository.delete(id);
 
             return {
                 status: "Success",

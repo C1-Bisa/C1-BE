@@ -48,7 +48,7 @@ createflight(req, res) {
       });
   },
 
-searchflight(req, res) {
+searchFlight(req, res) {
     flightService
       .search(req.body, req.query)
       .then((flight) => {

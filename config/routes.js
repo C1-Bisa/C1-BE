@@ -5,7 +5,6 @@ const services = require("../app/services/userService")
 const auth = require ("../middleware/auth");
 const swaggerDocument = require('../docs/openapi.json');
 const swaggerUi = require('swagger-ui-express');
-const controller = require("../app/controllers")
 
 const apiRouter = express.Router();
 
@@ -31,11 +30,11 @@ apiRouter.post("/api/v1/user/login",controllers.authController.login);
 
 
 //FLIGHT
+apiRouter.post("/api/v1/flight/searchflight",  controllers.flightController.searchFlight);
 apiRouter.get("/api/v1/flight/getflight", controllers.flightController.listflight);
-apiRouter.post("/api/v1/flight/createflight",  controllers.flightController.createflight);
+apiRouter.post("/api/v1/flight/createflight", controllers.authController.authorizeAdmin, controllers.flightController.createflight);
 apiRouter.put("/api/v1/flight/updateflight/:id", controllers.authController.authorizeAdmin, controllers.flightController.updateflight);
 apiRouter.delete("/api/v1/flight/deleteflight/:id", controllers.authController.authorizeAdmin, controllers.flightController.deleteflight);
-apiRouter.post("/api/v1/flight/searchflight",  controllers.flightController.searchflight);
 
 
 // Airline

@@ -11,9 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.hasMany(models.Flight, {
-        foreignKey:'airport_id'
+        foreignKey:'airport_id_from',
+        as: 'Airport_from'
+      })
+      this.hasMany(models.Flight, {
+        foreignKey:'airport_id_to',
+        as: 'Airport_to'
       })
     }
+
   }
   Airport.init({
     airport_code: DataTypes.STRING,
