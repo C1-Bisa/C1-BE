@@ -33,7 +33,6 @@ module.exports = {
                 !reqBody.arrival_time ||
                 !reqBody.from ||
                 !reqBody.to ||
-                !reqBody.duration ||
                 !reqBody.price ||
                 !reqBody.flight_class ||
                 !reqBody.description
@@ -56,10 +55,15 @@ module.exports = {
             const searchFrom = await flightRepository.findLocation(from);
             const searchTo = await flightRepository.findLocation(to);
 
-            // const arivalTime = reqBody.arrival_time;
-            // const departureTime = reqBody.departure_time;
-            // const subtractTime = Math.abs(arivalTime - departureTime);
+            const arivalTime = new Date(`${reqBody.arrival_date} ${reqBody.arrival_time}`);
+            const departureTime = new Date(`${reqBody.departure_date} ${reqBody.departure_time}`);
+            const subtractTime = arivalTime - departureTime;
+            const hours = Math.floor(subtractTime / (1000 * 60 * 60));
+            const minutes = Math.floor((subtractTime % (1000 * 60 * 60)) / (1000 * 60));
+            
+            const duration = Number(`${hours.toString().padStart(2, '0')}9${minutes.toString().padStart(2, '0')}`);
 
+            console.log(duration);
             if(!searchFrom){
                 return {
                     status: "Failed",
@@ -111,7 +115,7 @@ module.exports = {
                 arrival_time: reqBody.arrival_time,
                 from: reqBody.from,
                 to: reqBody.to,
-                duration: reqBody.duration,
+                duration: duration,
                 price: reqBody.price,
                 flight_class: reqBody.flight_class,
                 description: reqBody.description,
@@ -683,7 +687,6 @@ module.exports = {
                     };
                 }
             }
-
 
             const ticket = await flightRepository
                 .update(id, {
