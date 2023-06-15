@@ -19,7 +19,7 @@ apiRouter.put("/api/v1/user/createNewPassword/:id/:token",controllers.userContro
 
 apiRouter.put("/api/v1/user/verification", controllers.userController.verifikasi); 
 apiRouter.post("/api/v1/user/logout", controllers.authController.logout);
-apiRouter.delete("/api/v1/user/delete/:id",controllers.authController.authorizeAdmin,controllers.userController.checkUser ,controllers.userController.destroy);
+apiRouter.delete("/api/v1/user/delete/:id",controllers.userController.checkUser ,controllers.userController.destroy);
 apiRouter.get("/api/v1/user",controllers.authController.authorizeAdmin,controllers.userController.list);
 apiRouter.post("/api/v1/user/register",controllers.userController.register);
 apiRouter.get("/api/v1/user/getProfile",auth,controllers.authController.getProfile);
@@ -30,7 +30,7 @@ apiRouter.post("/api/v1/user/login",controllers.authController.login);
 
 
 //FLIGHT
-apiRouter.post("/api/v1/flight/searchflight",  controllers.flightController.searchFlight);
+apiRouter.post("/api/v1/flight/searchflight",controllers.flightController.searchFlight);
 apiRouter.get("/api/v1/flight/getflight", controllers.flightController.listflight);
 apiRouter.post("/api/v1/flight/createflight", controllers.authController.authorizeAdmin, controllers.flightController.createflight);
 apiRouter.put("/api/v1/flight/updateflight/:id", controllers.authController.authorizeAdmin, controllers.flightController.updateflight);
@@ -38,15 +38,15 @@ apiRouter.delete("/api/v1/flight/deleteflight/:id", controllers.authController.a
 
 
 // Airline
-apiRouter.get("/api/v1/airline", controllers.authController.authorizeAdmin,controllers.airlineController.list);
-apiRouter.get("/api/v1/airline/:id", controllers.authController.authorizeAdmin,controllers.airlineController.checkAirline,controllers.airlineController.getById);
+apiRouter.get("/api/v1/airline",controllers.airlineController.list);
+apiRouter.get("/api/v1/airline/:id",controllers.airlineController.checkAirline,controllers.airlineController.getById);
 apiRouter.post("/api/v1/airline", controllers.authController.authorizeAdmin,controllers.airlineController.create);
 apiRouter.put("/api/v1/airline/:id",controllers.authController.authorizeAdmin,controllers.airlineController.checkAirline,controllers.airlineController.update);
 apiRouter.delete("/api/v1/airline/:id", controllers.authController.authorizeAdmin,controllers.airlineController.checkAirline,controllers.airlineController.destroy);
 
 // Airport
-apiRouter.get("/api/v1/airport",controllers.authController.authorizeAdmin ,controllers.airportController.list);
-apiRouter.get("/api/v1/airport/:id",controllers.authController.authorizeAdmin ,controllers.airportController.checkAirport,controllers.airportController.getById);
+apiRouter.get("/api/v1/airport",controllers.airportController.list);
+apiRouter.get("/api/v1/airport/:id",controllers.airportController.checkAirport,controllers.airportController.getById);
 apiRouter.post("/api/v1/airport",controllers.authController.authorizeAdmin ,controllers.airportController.create);
 apiRouter.put("/api/v1/airport/:id",controllers.authController.authorizeAdmin ,controllers.airportController.checkAirport,controllers.airportController.update);
 apiRouter.delete("/api/v1/airport/:id",controllers.authController.authorizeAdmin ,controllers.airportController.checkAirport,controllers.airportController.destroy);
