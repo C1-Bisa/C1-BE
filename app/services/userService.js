@@ -218,7 +218,7 @@ module.exports = {
       if (email) throw new ApiError(400, 'Email tidak boleh Diganti.');
       if (password) throw new ApiError(400, 'Password tidak boleh Diganti.');
       if (!nama) throw new ApiError(400, 'Nama tidak boleh kosong.');
-      if (!phone) throw new ApiError(400, 'Nama tidak boleh kosong.');
+      if (!phone) throw new ApiError(400, 'Telepon tidak boleh kosong.');
 
       const updateUser = await userRepository.update(id,{nama,email,phone,password});
       if(updateUser){

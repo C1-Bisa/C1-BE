@@ -11,8 +11,13 @@ module.exports = {
                     model: Airline
                 },   
                 {
-                    model: Airport
-                }   
+                  model: Airport,
+                  as: "Airport_from"
+              },   
+              {
+                  model: Airport,
+                  as: "Airport_to"
+              }     
             ]
             });
       },
@@ -25,7 +30,12 @@ module.exports = {
                     model: Airline
                 },   
                 {
-                    model: Airport
+                    model: Airport,
+                    as: "Airport_from"
+                },   
+                {
+                    model: Airport,
+                    as: "Airport_to"
                 }   
             ]
             });

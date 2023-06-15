@@ -18,7 +18,16 @@ module.exports = {
           key: 'id'
         }
       },
-      airport_id: {
+      airport_id_from: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: {
+            tableName: "Airports"
+          },
+          key: 'id'
+        }
+      },
+      airport_id_to: {
         type: Sequelize.INTEGER,
         references: {
           model: {
@@ -31,19 +40,22 @@ module.exports = {
         type: Sequelize.DATE
       },
       departure_time: {
-        type: Sequelize.TIME(6)
+        type: Sequelize.TIME(4)
       },
       arrival_date: {
         type: Sequelize.DATE
       },
       arrival_time: {
-        type: Sequelize.TIME(6)
+        type: Sequelize.TIME(4)
       },
       from: {
         type: Sequelize.STRING
       },
       to: {
         type: Sequelize.STRING
+      },
+      duration: {
+        type: Sequelize.INTEGER
       },
       price: {
         type: Sequelize.INTEGER
