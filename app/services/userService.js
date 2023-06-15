@@ -242,6 +242,21 @@ module.exports = {
     }
   },
 
+  async delete (id) {
+    try{
+      const userPayload = await userRepository.findUser(id);
+      if (!userPayload) {
+        throw new Error(`User not found`);
+      }
+      await userRepository.delete(id);
+      return { message: 'User deleted successfully' };
+
+    }catch{
+      throw new Error('Failed to check and delete user');
+
+    } 
+  },
+
   async authorize (requestHeader) {
     try{
    // mendapatkan token 

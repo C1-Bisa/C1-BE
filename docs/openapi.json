@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "https://airplaneapikel1-production.up.railway.app/api/v1"
+      "url": "http://localhost:8000/api/v1"
     }
   ],
   "tags": [
@@ -365,127 +365,6 @@
       }
     },
     "/user/{id}": {
-      "put": {
-        "tags": [
-          "User"
-        ],
-        "security": [
-          {
-            "bearerToken": []
-          }
-        ],
-        "summary": "Update a User",
-        "description": "To update user by id",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of the User",
-            "required": true,
-            "schema": {
-              "properties": {
-                "id": {
-                  "type": "integer",
-                  "format": "int64",
-                  "example": 1
-                }
-              }
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "properties": {
-                  "nama": {
-                    "type": "string",
-                    "example": "Anya Geraldin"
-                  },
-                  "email": {
-                    "type": "string",
-                    "example": "anya@gmail.com"
-                  },
-                  "phone": {
-                    "type": "string",
-                    "example": 81259842863
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "anya123"
-                  }
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "If data successfully updated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "OK"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "User updated successfully"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/DontHavePermit"
-                    }
-                  ]
-                },
-                "examples": {
-                  "dontHavePermit": {
-                    "summary": "example unauthorized",
-                    "value": {
-                      "status": "FAIL",
-                      "message": "Sesi login berakhir, harap login kembali!"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "If failed to retrive the data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "FAIL"
-                    },
-                    "message": {
-                      "type": "string",
-                      "example": "user not found!"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
       "delete": {
         "tags": [
           "User"
@@ -1067,7 +946,237 @@
         }
       }
     },
-    "/airport": {
+    "/user/getProfile": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Get user information by token",
+        "description": "to get information from the spesific user",
+        "responses": {
+          "200": {
+            "description": "Status success get all user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "example": "admin"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "admin@gmail.com"
+                        },
+                        "phone": {
+                          "type": "string",
+                          "example": 82132830954
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Failed error because bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/RequiredAuth"
+                    }
+                  ]
+                },
+                "examples": {
+                  "requiredAuth": {
+                    "summary": "example empty bearer token",
+                    "value": {
+                      "status": "FAIL",
+                      "message": "required authorization!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Failed because token error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/InvalidToken"
+                    }
+                  ]
+                },
+                "examples": {
+                  "invalidToken": {
+                    "summary": "example invalid token",
+                    "value": {
+                      "status": "FAIL",
+                      "message": "invalid token"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user/update": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Update a User based on token",
+        "description": "To update user by token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "nama": {
+                    "type": "string",
+                    "example": "risa"
+                  },
+                  "phone": {
+                    "type": "string",
+                    "example": 8125876543
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "If data successfully updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "OK"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Success updated profile"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "nama": {
+                          "type": "string",
+                          "example": "risa"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "risairmaa@gmail.com"
+                        },
+                        "phone": {
+                          "type": "string",
+                          "example": 8125876543
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Email tidak boleh Diganti."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DontHavePermit"
+                    }
+                  ]
+                },
+                "examples": {
+                  "dontHavePermit": {
+                    "summary": "example unauthorized",
+                    "value": {
+                      "status": "FAIL",
+                      "message": "invalid token!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If failed to retrive the data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "user not found!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/aiport": {
       "post": {
         "tags": [
           "Airport"
@@ -1590,11 +1699,6 @@
         "tags": [
           "Airline"
         ],
-        "security": [
-          {
-            "bearerToken": []
-          }
-        ],
         "summary": "Create airline data",
         "requestBody": {
           "content": {
@@ -1690,11 +1794,6 @@
       "get": {
         "tags": [
           "Airline"
-        ],
-        "security": [
-          {
-            "bearerToken": []
-          }
         ],
         "summary": "Get all airline information for admin",
         "description": "to get information from the all airline",
@@ -2088,6 +2187,11 @@
         "tags": [
           "flight"
         ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
         "summary": "Get list an existing flight schedule",
         "description": "Get all of existing flight schedule",
         "responses": {
@@ -2289,11 +2393,6 @@
         "tags": [
           "flight"
         ],
-        "security": [
-          {
-            "bearerToken": []
-          }
-        ],
         "summary": "Add a new data flight",
         "description": "Add a new dataflight to database",
         "requestBody": {
@@ -2306,49 +2405,65 @@
                   "airline_id": {
                     "type": "integer",
                     "format": "int64",
-                    "example": 3
+                    "example": 5
                   },
-                  "airport_id": {
+                  "airport_id_from": {
                     "type": "integer",
                     "format": "int64",
-                    "example": 4
+                    "example": 1
+                  },
+                  "airport_id_to": {
+                    "type": "integer",
+                    "format": "int64",
+                    "example": 6
                   },
                   "departure_date": {
                     "type": "string",
-                    "example": "2023-09-12T00:00:00.000Z"
+                    "example": "2023-06-23T00:00:00.000Z"
                   },
                   "departure_time": {
                     "type": "string",
-                    "example": "08:00:00"
+                    "example": "10:00"
                   },
                   "arrival_date": {
                     "type": "string",
-                    "example": "2023-09-12T00:00:00.000Z"
+                    "example": "2023-06-23T00:00:00.000Z"
                   },
                   "arrival_time": {
                     "type": "string",
-                    "example": "11:00:00"
+                    "example": "13:00"
                   },
                   "from": {
                     "type": "string",
-                    "example": "Yogyakarta"
+                    "example": "Jakarta"
                   },
                   "to": {
                     "type": "string",
-                    "example": "Medan"
+                    "example": "Bali"
+                  },
+                  "duration": {
+                    "type": "integer",
+                    "example": 3
                   },
                   "price": {
-                    "type": "integer",
-                    "format": "int64",
+                    "type": "string",
                     "example": 2000000
                   },
                   "flight_class": {
                     "type": "string",
-                    "example": "Bussiness"
+                    "example": "Economy"
                   },
                   "description": {
                     "type": "string",
-                    "example": "Perjalanan Menuju Madiun akan ditempuh selama 2 jam perjalanan dengan class Economy"
+                    "example": "Baggage 20 kg Cabin baggage 7 kg In Flight Entertainment"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "example": "2023-05-06T07:41:44.381Z"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "example": "2023-05-06T07:41:44.381Z"
                   }
                 }
               }
@@ -2378,121 +2493,68 @@
                           "type": "array",
                           "items": {
                             "properties": {
-                              "id": {
-                                "type": "integer",
-                                "format": "int64",
-                                "example": 1
-                              },
                               "airline_id": {
-                                "type": "integer",
-                                "format": "int64",
-                                "example": 3
-                              },
-                              "airport_id": {
                                 "type": "integer",
                                 "format": "int64",
                                 "example": 5
                               },
+                              "airport_id_from": {
+                                "type": "integer",
+                                "format": "int64",
+                                "example": 1
+                              },
+                              "airport_id_to": {
+                                "type": "integer",
+                                "format": "int64",
+                                "example": 6
+                              },
                               "departure_date": {
                                 "type": "string",
-                                "example": "2023-09-12T00:00:00.000Z"
+                                "example": "2023-06-23T00:00:00.000Z"
                               },
                               "departure_time": {
                                 "type": "string",
-                                "example": "08:00:00"
+                                "example": "10:00"
                               },
                               "arrival_date": {
                                 "type": "string",
-                                "example": "2023-09-12T00:00:00.000Z"
+                                "example": "2023-06-23T00:00:00.000Z"
                               },
                               "arrival_time": {
                                 "type": "string",
-                                "example": "11:00:00"
+                                "example": "13:00"
                               },
                               "from": {
                                 "type": "string",
-                                "example": "Semarang"
+                                "example": "Jakarta"
                               },
                               "to": {
                                 "type": "string",
-                                "example": "Yogyakarta"
+                                "example": "Bali"
+                              },
+                              "duration": {
+                                "type": "integer",
+                                "example": 3
                               },
                               "price": {
-                                "type": "integer",
-                                "format": "int64",
+                                "type": "string",
                                 "example": 2000000
                               },
                               "flight_class": {
                                 "type": "string",
-                                "example": "Bussiness"
+                                "example": "Economy"
                               },
                               "description": {
                                 "type": "string",
-                                "example": "Perjalanan Menuju Madiun akan ditempuh selama 2 jam perjalanan dengan class Economy"
+                                "example": "Baggage 20 kg Cabin baggage 7 kg In Flight Entertainment"
                               },
                               "createdAt": {
                                 "type": "string",
-                                "example": "2023-06-09T14:06:20.248Z"
+                                "example": "2023-05-06T07:41:44.381Z"
                               },
                               "updatedAt": {
                                 "type": "string",
-                                "example": "2023-06-09T23:04:27.998Z"
-                              },
-                              "Airline": {
-                                "type": "object",
-                                "properties": {
-                                  "id": {
-                                    "type": "integer",
-                                    "format": "int64",
-                                    "example": 3
-                                  },
-                                  "airline_code": {
-                                    "type": "string",
-                                    "example": "ID"
-                                  },
-                                  "airline_name": {
-                                    "type": "string",
-                                    "example": "Batik Air"
-                                  },
-                                  "createdAt": {
-                                    "type": "string",
-                                    "example": "2023-06-09T14:06:20.248Z"
-                                  },
-                                  "updatedAt": {
-                                    "type": "string",
-                                    "example": "2023-06-09T23:04:27.998Z"
-                                  }
-                                }
-                              },
-                              "Airport": {
-                                "type": "object",
-                                "properties": {
-                                  "id": {
-                                    "type": "integer",
-                                    "format": "int64",
-                                    "example": 5
-                                  },
-                                  "airport_code": {
-                                    "type": "string",
-                                    "example": "SRG"
-                                  },
-                                  "airport_name": {
-                                    "type": "string",
-                                    "example": "Ahmad Yani"
-                                  },
-                                  "airport_location": {
-                                    "type": "string",
-                                    "example": "Semarang"
-                                  },
-                                  "createdAt": {
-                                    "type": "string",
-                                    "example": "2023-06-09T14:06:20.248Z"
-                                  },
-                                  "updatedAt": {
-                                    "type": "string",
-                                    "example": "2023-06-09T23:04:27.998Z"
-                                  }
-                                }
+                                "example": "2023-05-06T07:41:44.381Z"
                               }
                             }
                           }
@@ -2829,20 +2891,327 @@
           }
         }
       }
+    },
+    "/flight/searchflight": {
+      "post": {
+        "tags": [
+          "flight"
+        ],
+        "summary": "Get data flight based on request",
+        "description": "get data flight based on requst body from user",
+        "requestBody": {
+          "description": "send request to get flight data",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "departure_date": {
+                    "type": "string",
+                    "example": "2023-06-26"
+                  },
+                  "departure_time": {
+                    "type": "string",
+                    "example": "08:00"
+                  },
+                  "from": {
+                    "type": "string",
+                    "example": "Bali"
+                  },
+                  "to": {
+                    "type": "string",
+                    "example": "Jakarta"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "If data available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Result Search"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "flight": {
+                          "type": "object",
+                          "properties": {
+                            "berangkat": {
+                              "type": "array",
+                              "items": {
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "example": 1
+                                  },
+                                  "airline_id": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "example": 5
+                                  },
+                                  "airline": {
+                                    "type": "string",
+                                    "example": "Air Asia"
+                                  },
+                                  "airline_code": {
+                                    "type": "string",
+                                    "example": "AK"
+                                  },
+                                  "airport_id_from": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "example": 6
+                                  },
+                                  "from": {
+                                    "type": "string",
+                                    "example": "Bali"
+                                  },
+                                  "airport_from_code": {
+                                    "type": "string",
+                                    "example": "DPS"
+                                  },
+                                  "airport_from": {
+                                    "type": "string",
+                                    "example": "Ngurah Rai"
+                                  },
+                                  "airport_id_to": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "example": 1
+                                  },
+                                  "to": {
+                                    "type": "string",
+                                    "example": "Jakarta"
+                                  },
+                                  "airport_to_code": {
+                                    "type": "string",
+                                    "example": "CGK"
+                                  },
+                                  "airport_to": {
+                                    "type": "string",
+                                    "example": "Soekarno Hatta"
+                                  },
+                                  "departure_date": {
+                                    "type": "string",
+                                    "example": "2023-06-27T00:00:00.000Z"
+                                  },
+                                  "departure_time": {
+                                    "type": "string",
+                                    "example": "10:00:00"
+                                  },
+                                  "arrival_date": {
+                                    "type": "string",
+                                    "example": "2023-06-27T00:00:00.000Z"
+                                  },
+                                  "arrival_time": {
+                                    "type": "string",
+                                    "example": "13:00:00"
+                                  },
+                                  "duration": {
+                                    "type": "integer",
+                                    "example": 3
+                                  },
+                                  "price": {
+                                    "type": "integer",
+                                    "example": 200000
+                                  },
+                                  "flight_class": {
+                                    "type": "string",
+                                    "example": "Economy"
+                                  },
+                                  "description": {
+                                    "type": "string",
+                                    "example": "Baggage 10 kg Cabin baggage 7 kg In Flight Entertainment"
+                                  }
+                                }
+                              }
+                            },
+                            "pulang": {
+                              "type": "array",
+                              "items": {
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "example": 1
+                                  },
+                                  "airline_id": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "example": 5
+                                  },
+                                  "airline": {
+                                    "type": "string",
+                                    "example": "Air Asia"
+                                  },
+                                  "airline_code": {
+                                    "type": "string",
+                                    "example": "AK"
+                                  },
+                                  "airport_id_from": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "example": 1
+                                  },
+                                  "from": {
+                                    "type": "string",
+                                    "example": "Jakarta"
+                                  },
+                                  "airport_from_code": {
+                                    "type": "string",
+                                    "example": "CGK"
+                                  },
+                                  "airport_from": {
+                                    "type": "string",
+                                    "example": "Soekarno Hatta"
+                                  },
+                                  "airport_id_to": {
+                                    "type": "integer",
+                                    "format": "int64",
+                                    "example": 6
+                                  },
+                                  "to": {
+                                    "type": "string",
+                                    "example": "Bali"
+                                  },
+                                  "airport_to_code": {
+                                    "type": "string",
+                                    "example": "dps"
+                                  },
+                                  "airport_to": {
+                                    "type": "string",
+                                    "example": "Ngurah Rai"
+                                  },
+                                  "departure_date": {
+                                    "type": "string",
+                                    "example": "2023-06-28T00:00:00.000Z"
+                                  },
+                                  "departure_time": {
+                                    "type": "string",
+                                    "example": "10:00:00"
+                                  },
+                                  "arrival_date": {
+                                    "type": "string",
+                                    "example": "2023-06-28T00:00:00.000Z"
+                                  },
+                                  "arrival_time": {
+                                    "type": "string",
+                                    "example": "13:00:00"
+                                  },
+                                  "duration": {
+                                    "type": "integer",
+                                    "example": 3
+                                  },
+                                  "price": {
+                                    "type": "integer",
+                                    "example": 200000
+                                  },
+                                  "flight_class": {
+                                    "type": "string",
+                                    "example": "Economy"
+                                  },
+                                  "description": {
+                                    "type": "string",
+                                    "example": "Baggage 10 kg Cabin baggage 7 kg In Flight Entertainment"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If wrong path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "if from or to location didn't found in database, if from not filled, if from and to location same, if airport id not match with from location will return 422 error code.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "from location did'nt found please choose the other location!  "
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
       "Users": {
         "required": [
-          "name",
+          "nama",
           "email",
           "phone",
           "password"
         ],
         "type": "object",
         "properties": {
-          "name": {
+          "nama": {
             "type": "string",
             "example": "Neymar JR"
           },
