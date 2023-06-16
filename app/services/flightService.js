@@ -139,6 +139,7 @@ module.exports = {
             const to = reqBody.to;
             const departure_date = reqBody.departure_date;
             const departure_time = reqBody.departure_time;
+            const flight_class = reqBody.flight_class;
             const departure = new Date(departure_date);
             const returnDate = reqBody.returnDate;
             const departureReturn = new Date(returnDate)
@@ -154,7 +155,8 @@ module.exports = {
                 !reqBody.from ||
                 !reqBody.to ||
                 !reqBody.departure_date ||
-                !reqBody.departure_time 
+                !reqBody.departure_time ||
+                !reqBody.flight_class
             ) {
                 return {
                     status: "Failed",
@@ -218,7 +220,7 @@ module.exports = {
 
 
             if(!returnDate){
-                const search = array.filter((data) => data.from === from && data.to === to && data.departure_date >= departure && data.departure_time >= departure_time) 
+                const search = array.filter((data) => data.from === from && data.to === to && data.departure_date >= departure && data.departure_time >= departure_time && data.flight_class === flight_class) 
 
                 if(
                     (toLower && earlyDeparture && lastDeparture && earlyArrive && lastArrive) ||
@@ -336,6 +338,13 @@ module.exports = {
                     };
                 }
 
+                if(search.length < 1){
+                    return {
+                        status: "Failed",
+                        message: "Search Flight Schedule Not Found!",
+                        data: null,
+                    };
+                }
                 
                 return {
                     status: "Success",
@@ -347,7 +356,7 @@ module.exports = {
             
 
             if (returnDate) {
-                const searchReturn = array.filter((data) => data.from === to && data.to === from && data.departure_date >= departureReturn && data.departure_time >= departure_time);
+                const searchReturn = array.filter((data) => data.from === to && data.to === from && data.departure_date >= departureReturn && data.departure_time >= departure_time && data.flight_class === flight_class);
 
                 // NGEFILTER QUERY YANG TIDAK BISA DI FILTER
                 if(
@@ -459,6 +468,13 @@ module.exports = {
                     };
                 }
 
+                if(searchReturn.length < 1){
+                    return {
+                        status: "Failed",
+                        message: "Search Flight Schedule Not Found!",
+                        data: null,
+                    };
+                }
 
                 return {
                     status: "Success",
@@ -466,9 +482,6 @@ module.exports = {
                     data: searchReturn,
                 };
             }
-
-           
-
           
         
 

@@ -419,7 +419,7 @@ module.exports = {
           <p style="margin-bottom:1.5rem; text-align:center;">
             Enter this button verification code !!!
           </p><br></br>
-          <a href="${currentUrl}/resetpage/${addIdToken}" style="text-decoration:none; font-size:1rem; text-align:center; font-weight: 900; background:#000b76; border-radius: 0.5rem; color:yellow;">Confirm Reset</a>`
+          <a href="${currentUrl}/resetpage/?token=${addIdToken}" style="text-decoration:none; font-size:1rem; text-align:center; font-weight: 900; background:#000b76; border-radius: 0.5rem; color:yellow;">Confirm Reset</a>`
         }
         
         sendMail(payloadNodemailer);
