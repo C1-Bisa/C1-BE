@@ -76,7 +76,7 @@ module.exports = {
 
   updatepass(req, res) {
     userService
-      .updatePass(req.params, req.body)
+      .updatePass(req.query, req.body)
       .then((code) => {
         if(!code.data){
           res.status(422).json({

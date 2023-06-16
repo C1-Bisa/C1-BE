@@ -12,8 +12,8 @@ apiRouter.use('/api', swaggerUi.serve);
 apiRouter.get('/api', swaggerUi.setup(swaggerDocument));
 
 // Reset Password
+apiRouter.put("/api/v1/user/createNewPassword",controllers.userController.updatepass);
 apiRouter.post("/api/v1/user/resetPassword",controllers.userController.resetpass);
-apiRouter.put("/api/v1/user/createNewPassword/:id/:token",controllers.userController.updatepass);
 
 //USER 
 

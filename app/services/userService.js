@@ -19,6 +19,15 @@ const encryptPassword = async (encryptedPassword) => {
   }
 } 
 
+const encryptToken = async (token) => {
+  try{
+    const ecrypttoken = await bcrypt.hash(token,10);
+    return ecrypttoken;
+  }catch(err){
+    return err;
+  }
+} 
+
 const comparePassword = async (password, encryptedPassword) =>{
   try{
     const result = await bcrypt.compare(password,encryptedPassword);
@@ -154,10 +163,10 @@ module.exports = {
       }
     }
 
-    if(reqBody.password.length <= 6){
+    if(reqBody.password.length <= 8){
       return{
         data: null,
-        message: "password must fill with 6 character",
+        message: "password must fill with 8 character",
         status: "Failed"
       }
     }
@@ -389,11 +398,19 @@ module.exports = {
         const currentUrl = "http://localhost:3000";
         const tokenOTP = generateOTP();
         const dateExpired = Date.now() + 300000;
+        const tokenEncrypt = await encryptToken(tokenOTP);
+
+        const addIdToken = `${tokenEncrypt}:${findEmail.id}`;
+
+
         const verify = await userRepository.createVerified({
           userId: findEmail.id,
           verifiedToken: tokenOTP,
           expiredDate: dateExpired,
         });
+
+
+
         const payloadNodemailer = {
           Email: findEmail.email,
           subject: "Reset Password Verification",
@@ -402,7 +419,7 @@ module.exports = {
           <p style="margin-bottom:1.5rem; text-align:center;">
             Enter this button verification code !!!
           </p><br></br>
-          <a href="${currentUrl}/resetpage/${findEmail.id}/${verify.verifiedToken}" style="text-decoration:none; font-size:1rem; text-align:center; font-weight: 900; background:#000b76; border-radius: 0.5rem; color:yellow;">Confirm Reset</a>`
+          <a href="${currentUrl}/resetpage/${addIdToken}" style="text-decoration:none; font-size:1rem; text-align:center; font-weight: 900; background:#000b76; border-radius: 0.5rem; color:yellow;">Confirm Reset</a>`
         }
         
         sendMail(payloadNodemailer);
@@ -419,11 +436,18 @@ module.exports = {
     }
   },
 
-  async updatePass(reqParam, reqBody) {
+  async updatePass(reqQuery, reqBody) {
     try {
-      id = reqParam.id;
-      token = reqParam.token;
-      findToken = await userRepository.findOtp(token);
+      const token = reqQuery.token;
+      const newPasswords = reqBody.newPassword
+
+      const splitToken = token.split(":");
+      const id = splitToken[1];
+      const tokenSplit = splitToken[0]
+
+      // findToken = await userRepository.findOtp(token);
+      const findData = await userRepository.findToken(id);
+      const findToken = await comparePassword(findData.verifiedToken, tokenSplit)
 
       if(!findToken){
         return{
@@ -433,20 +457,27 @@ module.exports = {
         }
       }
 
-      if(findToken.userId != id){
-        return{
-          data: null,
-          message: "Token and user id not match",
-          status: "Failed"
-        }
-      }
+      // if(findToken.userId != id){
+      //   return{
+      //     data: null,
+      //     message: "Token and user id not match",
+      //     status: "Failed"
+      //   }
+      // }
 
-      if(findToken.userId == id){
-        const newPassword = await encryptPassword(reqBody.newPassword)
+      if(findToken){
+        if(newPasswords.length <= 8){
+          return{
+            data: null,
+            message: "password must fill with 8 character",
+            status: "Failed"
+          }
+        }
+        const newPassword = await encryptPassword(newPasswords)
         const newDate = Date.now();
         const getUser = await userRepository.findUser(id);
         // the token will expired in 5 minute
-        const limitExpired = findToken.expiredDate;
+        const limitExpired = findData.expiredDate;
         if(limitExpired <= newDate){
           deleteToken = await userRepository.deleteOTP(id);
           return{

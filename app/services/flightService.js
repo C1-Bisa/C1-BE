@@ -253,10 +253,7 @@ module.exports = {
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: priceEarlydeparture,
-                            pulang: [],
-                        },
+                        data: priceEarlydeparture,
                     };
                 }
 
@@ -265,10 +262,7 @@ module.exports = {
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: priceLastdeparture,
-                            pulang: [],
-                        },
+                        data: priceLastdeparture,
                     };
                 }
 
@@ -277,10 +271,7 @@ module.exports = {
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: priceEarlyArrive,
-                            pulang: [],
-                        },
+                        data: priceEarlyArrive,
                     };
                 }
 
@@ -289,10 +280,7 @@ module.exports = {
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: priceLastArrive,
-                            pulang: [],
-                        },
+                        data: priceLastArrive,
                     };
                 }
 
@@ -301,10 +289,7 @@ module.exports = {
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: lowerPrice,
-                            pulang: [],
-                        },
+                        data: lowerPrice,
                     };
                 }
                 // if (departureAsc === "departure_asc") {
@@ -320,10 +305,7 @@ module.exports = {
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: earlyDepartured,
-                            pulang: [],
-                        },
+                        data: earlyDepartured,
                     };
                 }
 
@@ -332,10 +314,7 @@ module.exports = {
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: lastDepartured,
-                            pulang: [],
-                        },
+                        data: lastDepartured,
                     };
                 }
 
@@ -344,10 +323,7 @@ module.exports = {
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: earlyArrived,
-                            pulang: [],
-                        },
+                        data: earlyArrived,
                     };
                 }
 
@@ -356,10 +332,7 @@ module.exports = {
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: lastArrived,
-                            pulang: [],
-                        },
+                        data: lastArrived,
                     };
                 }
 
@@ -367,17 +340,13 @@ module.exports = {
                 return {
                     status: "Success",
                     message: "Result Search",
-                    data: {
-                        berangkat: search,
-                        pulang: [],
-                    },
+                    data: search,
                 };
             }
 
             
 
             if (returnDate) {
-                const search = array.filter((data) => data.from === from && data.to === to && data.departure_date >= departure && data.departure_time >= departure_time);
                 const searchReturn = array.filter((data) => data.from === to && data.to === from && data.departure_date >= departureReturn && data.departure_time >= departure_time);
 
                 // NGEFILTER QUERY YANG TIDAK BISA DI FILTER
@@ -410,119 +379,83 @@ module.exports = {
                 }
 
                 if(toLower && earlyDeparture){
-                    const priceEarlydeparture = search.sort((a, b) => a.departure_date - b.departure_date || a.departure_time.localeCompare(b.departure_time) || a.price - b.price);
                     const priceEarlydepartureReturn = searchReturn.sort((a, b) => a.departure_date - b.departure_date || a.departure_time.localeCompare(b.departure_time) || a.price - b.price);
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: priceEarlydeparture,
-                            pulang: priceEarlydepartureReturn,
-                        },
+                        data: priceEarlydepartureReturn,
                     };
                 }
 
                 if(toLower && lastDeparture){
-                    const priceLastdeparture = search.sort((a, b) => a.departure_date - b.departure_date || b.departure_time.localeCompare(a.departure_time) || a.price - b.price);
                     const priceLastdepartureReturn = searchReturn.sort((a, b) => a.departure_date - b.departure_date || b.departure_time.localeCompare(a.departure_time) || a.price - b.price);
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: priceLastdeparture,
-                            pulang: priceLastdepartureReturn,
-                        },
+                        data: priceLastdepartureReturn,
                     };
                 }
 
                 if(toLower && earlyArrive){
-                    const priceEarlyArrive = search.sort((a, b) => a.arrival_date - b.arrival_date || a.arrival_time.localeCompare(b.arrival_time) || a.price - b.price);
                     const priceEarlyArriveReturn = searchReturn.sort((a, b) => a.arrival_date - b.arrival_date || a.arrival_time.localeCompare(b.arrival_time) || a.price - b.price);
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: priceEarlyArrive,
-                            pulang: priceEarlyArriveReturn,
-                        },
+                        data: priceEarlyArriveReturn,
                     };
                 }
 
                 if(toLower && lastArrive){
-                    const priceLastArrive = search.sort((a, b) => a.arrival_date - b.arrival_date || b.arrival_time.localeCompare(a.arrival_time) || a.price - b.price);
                     const priceLastArriveReturn = searchReturn.sort((a, b) => a.arrival_date - b.arrival_date || b.arrival_time.localeCompare(a.arrival_time) || a.price - b.price);
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: priceLastArrive,
-                            pulang: priceLastArriveReturn,
-                        },
+                        data: priceLastArriveReturn,
                     };
                 }
 
                 if(toLower){
-                    const lowerPrice = search.sort((a, b) => a.price - b.price);
                     const lowerPriceReturn = searchReturn.sort((a, b) => a.price - b.price);
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: lowerPrice,
-                            pulang: lowerPriceReturn,
-                        },
+                        data: lowerPriceReturn,
                     };
                 }
 
                 if(earlyDeparture){
-                    const earlyDepartured = search.sort((a, b) => a.departure_date - b.departure_date || a.departure_time.localeCompare(b.departure_time));
                     const earlyDeparturedReturn = searchReturn.sort((a, b) => a.departure_date - b.departure_date || a.departure_time.localeCompare(b.departure_time));
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: earlyDepartured,
-                            pulang: earlyDeparturedReturn,
-                        },
+                        data: earlyDeparturedReturn,
                     };
                 }
 
                 if(lastDeparture){
-                    const lastDepartured = search.sort((a, b) => a.departure_date - b.departure_date || b.departure_time.localeCompare(a.departure_time));
                     const lastDeparturedReturn = searchReturn.sort((a, b) => a.departure_date - b.departure_date || b.departure_time.localeCompare(a.departure_time));
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: lastDepartured,
-                            pulang: lastDeparturedReturn,
-                        },
+                        data: lastDeparturedReturn,
                     };
                 }
 
                 if(earlyArrive){
-                    const earlyArrived = search.sort((a, b) => a.arrival_date - b.arrival_date || a.arrival_time.localeCompare(b.arrival_time));
                     const earlyArrivedReturn = searchReturn.sort((a, b) => a.arrival_date - b.arrival_date || a.arrival_time.localeCompare(b.arrival_time));
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: earlyArrived,
-                            pulang: earlyArrivedReturn,
-                        },
+                        data: earlyArrivedReturn,
                     };
                 }
 
                 if(lastArrive){
-                    const lastArrived = search.sort((a, b) => a.arrival_date - b.arrival_date || b.arrival_time.localeCompare(a.arrival_time));
                     const lastArrivedReturn = searchReturn.sort((a, b) => a.arrival_date - b.arrival_date || b.arrival_time.localeCompare(a.arrival_time));
                     return {
                         status: "Success",
                         message: "Result Search",
-                        data: {
-                            berangkat: lastArrived,
-                            pulang: lastArrivedReturn,
-                        },
+                        data: lastArrivedReturn,
                     };
                 }
 
@@ -530,10 +463,7 @@ module.exports = {
                 return {
                     status: "Success",
                     message: "Result Search",
-                    data: {
-                        berangkat: search,
-                        pulang: searchReturn,
-                    },
+                    data: searchReturn,
                 };
             }
 

@@ -85,6 +85,12 @@ module.exports = {
     })
   },
 
+  findToken(id){
+    return verified.findOne({
+      where: {userId: id}
+    })
+  },
+
   deleteOTP(id){
     return verified.destroy({
       where : {userId : id}
