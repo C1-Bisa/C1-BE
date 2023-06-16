@@ -430,14 +430,15 @@ module.exports = {
       }
 
       if(findEmail){
-        const currentUrl = "http://localhost:3000";
+        const currentUrl = "https://c1-fe.vercel.app";
         const tokenOTP = generateOTP();
         const dateExpired = Date.now() + 300000;
         const tokenEncrypt = await encryptToken(tokenOTP);
 
         const addIdToken = `${tokenEncrypt}:${findEmail.id}`;
+        
 
-
+        const deleteToken = await userRepository.deleteOTP(findEmail.id);
         const verify = await userRepository.createVerified({
           userId: findEmail.id,
           verifiedToken: tokenOTP,
@@ -458,7 +459,7 @@ module.exports = {
                   Terimakasih telah menggunakan layanan kami. Masukkan kode OTP berikut untuk verifikasi akun anda. 
                 </p>
                 <div style="text-align: center;">
-                    <a href="${currentUrl}/resetpage/${addIdToken}" style="
+                    <a href="${currentUrl}/resetpage/?token=${addIdToken}" style="
                     font-size:18px;
                     text-align:center; 
                     font-weight: 900; 
