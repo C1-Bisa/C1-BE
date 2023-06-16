@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
   
 exports.sendMail = (email) => {
       const options = {
-        from: "'FlywUs' <no-reply@gmail.com>",
+        from: "'Tiketku' <no-reply@gmail.com>",
         to: email.Email,
         subject: email.subject,
         html: email.html
