@@ -5,7 +5,7 @@ require('dotenv').config()
 const jwt = require("jsonwebtoken")
 const {JWT_SIGNATURE_KEY} = process.env;
 const{Notification, User} = require("../models");
-const ApiError = require("../../utils/ApiError")
+const ApiError = require("../../utils/ApiError");
 
 const regexGmail = /[\w]*@*[a-z]*\.*[\w]{5,}(\.)*(@gmail\.com)/g;
 
@@ -190,14 +190,32 @@ module.exports = {
 
     const payloadNodemailer = {
       Email: email,
-      subject: "OTP Code for Verification",
+      subject: "Email Verification",
       html: `
-      <h1 style="text-align:center;">Your Verification OTP Code</h1><br></br>
-      <p style="margin-bottom:1.5rem; text-align:center;">
-        Enter this verification code in field:
-      </p><br></br>
-      <p style="font-size:2rem; text-align:center; font-weight: 900; background:#000b76; border-radius: 0.5rem; padding:0.8rem; color:yellow;">${verify.verifiedToken}</p>
-      <p style="text-align:center; margin-top:1.5rem">Verification code is valid only for 1 minutes</p>`
+      <img style="margin-left: 15%; margin-right: 20%; " src="https://i.imgur.com/zpVHDof.png"></img>
+      <div style="text-align:center;  display: block; max-width: 900px;margin-left: 20%; margin-right: 20%;">
+        <div style="text-align: left; margin: 0 auto; max-width: 600px;">
+            <h1 style="font-size: 24px; margin-top: 20px; ">Hello, ${nama}</h1>
+            <p style="font-size: 16px; margin-top: 20px; margin-bottom: 5px;">
+              Terimakasih telah menggunakan layanan kami. Masukkan kode OTP berikut untuk verifikasi akun anda. 
+            </p>
+            <div style="text-align: center;">
+                <a style="
+                font-size:18px;
+                text-align:center; 
+                font-weight: 900; 
+                background:#A06ECE; 
+                border-radius: 10px; 
+                padding:0.5rem; 
+                color:white;
+                border:none;
+                ">${verify.verifiedToken}</a>
+            </div>
+            <p style="font-weight:700; margin-top:20px;">OTP akan kadaluwarsa dalam waktu 1 menit</p>
+            <p>Abaikan email ini jika kamu tidak melakukan proses verifikasi</p>
+            <p style="margin-top: 1.5px;">Thanks,<br> Tiketku team</p>
+        </div>   
+      </div>`
     }
     
     sendMail(payloadNodemailer);
@@ -251,19 +269,18 @@ module.exports = {
     }
   },
 
-  async delete (id) {
-    try{
-      const userPayload = await userRepository.findUser(id);
-      if (!userPayload) {
-        throw new Error(`User not found`);
-      }
-      await userRepository.delete(id);
+  async delete (userId) {
+    try {
+      // Hapus notifikasi terlebih dahulu
+      await userRepository.deleteNotif(userId);
+
+      // Hapus pengguna
+      await userRepository.delete(userId)
+  
       return { message: 'User deleted successfully' };
-
-    }catch{
-      throw new Error('Failed to check and delete user');
-
-    } 
+    } catch (error) {
+      throw new Error('Failed to delete user');
+    }
   },
 
   async authorize (requestHeader) {
@@ -358,12 +375,30 @@ module.exports = {
         Email: userInfo.email,
         subject: "OTP Resend Code for Verification",
         html: `
-        <h1 style="text-align:center;">Your Verification OTP Code</h1><br></br>
-        <p style="margin-bottom:1.5rem; text-align:center;">
-          Enter this verification code in field:
-        </p><br></br>
-        <p style="font-size:2rem; text-align:center; font-weight: 900; background:#000b76; border-radius: 0.5rem; padding:0.8rem; color:yellow;">${verify.verifiedToken}</p>
-        <p style="text-align:center; margin-top:1.5rem">Verification code is valid only for 1 minutes</p>`
+        <img style="margin-left: 15%; margin-right: 20%; " src="https://i.imgur.com/zpVHDof.png"></img>
+        <div style="text-align:center;  display: block; max-width: 900px;margin-left: 20%; margin-right: 20%;">
+          <div style="text-align: left; margin: 0 auto; max-width: 600px;">
+              <h1 style="font-size: 24px; margin-top: 20px; ">Hello</h1>
+              <p style="font-size: 16px; margin-top: 20px;">
+                Terimakasih telah menggunakan layanan kami. Masukkan kode OTP berikut untuk verifikasi akun anda. 
+              </p>
+              <div style="text-align: center;">
+                  <a style="
+                  font-size:18px;
+                  text-align:center; 
+                  font-weight: 900; 
+                  background:#A06ECE; 
+                  border-radius: 10px; 
+                  padding:0.5rem; 
+                  color:white;
+                  border:none;
+                  ">${verify.verifiedToken}</a>
+              </div>
+              <p style="font-weight:700;">OTP akan kadaluwarsa dalam waktu 1 menit</p>
+              <p>Abaikan email ini jika kamu tidak melakukan proses verifikasi</p>
+              <p style="margin-top: 1.5px;">Thanks,<br> Tiketku team</p>
+          </div>   
+        </div>`
       }
       
       sendMail(payloadNodemailer);
@@ -413,13 +448,32 @@ module.exports = {
 
         const payloadNodemailer = {
           Email: findEmail.email,
-          subject: "Reset Password Verification",
+          subject: "Reset your password",
           html: `
-          <h1 style="text-align:center;">Reset Password Confirmation Notification</h1><br></br>
-          <p style="margin-bottom:1.5rem; text-align:center;">
-            Enter this button verification code !!!
-          </p><br></br>
-          <a href="${currentUrl}/resetpage/${addIdToken}" style="text-decoration:none; font-size:1rem; text-align:center; font-weight: 900; background:#000b76; border-radius: 0.5rem; color:yellow;">Confirm Reset</a>`
+          <img style="margin-left: 15%; margin-right: 20%; " src="https://i.imgur.com/zpVHDof.png"></img>
+          <div style="text-align:center;  display: block; max-width: 900px;margin-left: 20%; margin-right: 20%;">
+            <div style="text-align: left; margin: 0 auto; max-width: 600px;">
+                <h1 style="font-size: 24px; margin-top: 20px; ">Hello, ${emailReset}</h1>
+                <p style="font-size: 16px; margin-top: 20px; margin-bottom: 20px;">
+                  Terimakasih telah menggunakan layanan kami. Masukkan kode OTP berikut untuk verifikasi akun anda. 
+                </p>
+                <div style="text-align: center;">
+                    <a href="${currentUrl}/resetpage/${addIdToken}" style="
+                    font-size:18px;
+                    text-align:center; 
+                    font-weight: 900; 
+                    background:#A06ECE; 
+                    border-radius: 10px; 
+                    padding:0.5rem; 
+                    color:white;
+                    border:none;
+                    text-decoration: none;
+                    ">Reset Your Password</a>
+                </div>
+                <p style="margin-top: 20px;">Abaikan email ini jika kamu tidak melakukan proses verifikasi</p>
+                <p style="margin-top: 1.5px;">Thanks,<br> Tiketku team</p>
+            </div>   
+          </div>`
         }
         
         sendMail(payloadNodemailer);
