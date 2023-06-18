@@ -337,14 +337,6 @@ module.exports = {
                         data: lastArrived,
                     };
                 }
-
-                if(search.length < 1){
-                    return {
-                        status: "Failed",
-                        message: "Search Flight Schedule Not Found!",
-                        data: null,
-                    };
-                }
                 
                 return {
                     status: "Success",
@@ -465,14 +457,6 @@ module.exports = {
                         status: "Success",
                         message: "Result Search",
                         data: lastArrivedReturn,
-                    };
-                }
-
-                if(searchReturn.length < 1){
-                    return {
-                        status: "Failed",
-                        message: "Search Flight Schedule Not Found!",
-                        data: null,
                     };
                 }
 
