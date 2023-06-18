@@ -1,11 +1,68 @@
 const transactionRepository = require("../repositories/transactionRepository");
+const {generateCode} = require("../../utils/transaction");
+const flightRepository = require("../repositories/flightRepository");
 
 module.exports = {
 
     async create(req) { 
-        const {flight_id, amount, passenger} = req.body;
+        const user = req.user;
+        const {flight_id, amount, passenger,} = req.body;
+        const transaction_code = generateCode()
+        let flight_type;
+        const flight= [];
+        const date= new Date();
+        const bookCodeTransaction = []
 
-        console.log(flight_id,amount,passenger)
+
+        if (flight_id.length === 2) {
+            for (let i = 0; i < flight_id.length; i++) {
+                flight.push(flight_id[i]);
+            }
+            flight_type = "Two Way";
+        }else{
+            flight.push(flight_id[0]);
+            flight_type = "One Way";
+        }
+
+        const newTransaction = await transactionRepository.create({
+            flight_id: flight,
+            user_id: user.id,
+            amount,
+            transaction_code,
+            flight_type,
+            transaction_date: date,
+            transaction_status: 'issued'
+        })
+
+        for (let i = 0; i < passenger.length; i++) {
+            const bookPassenger = await transactionRepository.create({
+                transaction_id: newTransaction.id,
+                transaction_code: newTransaction.transaction_code,
+                type: passenger[i].type,
+                title: passenger[i].title,
+                name: passenger[i].name,
+                family_name: passenger[i].family_name,
+                birthday: passenger[i].birthday,
+                nationality: passenger[i].nationality,
+                nik_paspor: passenger[i].nik,
+                seat: passenger[i].seat
+            })
+            bookCodeTransaction.push(bookPassenger)
+        }
+
+
+        return {
+            status: "Ok",
+            message: "Data succesfuly created",
+            data: {
+                transaction: newTransaction, 
+                dataPassenger: bookCodeTransaction
+            }
+        }
+
+
+        console.log(transaction_code, user)
+
     
     },
 }

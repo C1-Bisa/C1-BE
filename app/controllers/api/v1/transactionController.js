@@ -4,10 +4,11 @@ module.exports = {
     create(req, res) {
         transactionService
           .create(req)
-          .then((airport) => {
+          .then((transaction) => {
             res.status(201).json({
-              status: "OK",
-              data: airport,
+              status: transaction.status,
+              message: transaction.message,
+              data: transaction.data,
             });
           })
           .catch((err) => {
