@@ -6,7 +6,7 @@ module.exports = {
 
     async create(req) { 
         const user = req.user;
-        const {flight_id, amount, passenger,} = req.body;
+        const {flight_id, amount, passenger} = req.body;
         const transaction_code = generateCode()
         let flight_type;
         const flight= [];
@@ -35,9 +35,9 @@ module.exports = {
         })
 
         for (let i = 0; i < passenger.length; i++) {
-            const bookPassenger = await transactionRepository.create({
+            const bookPassenger = await transactionRepository.createPassenger({
                 transaction_id: newTransaction.id,
-                transaction_code: newTransaction.transaction_code,
+                transactionCode: newTransaction.transaction_code,
                 type: passenger[i].type,
                 title: passenger[i].title,
                 name: passenger[i].name,
@@ -50,18 +50,33 @@ module.exports = {
             bookCodeTransaction.push(bookPassenger)
         }
 
+        const getDataFlight = await flightRepository.findFlight(flight[0])
+        const getDataFlightDua = await flightRepository.findFlight(flight[1])
 
-        return {
-            status: "Ok",
-            message: "Data succesfuly created",
-            data: {
-                transaction: newTransaction, 
-                dataPassenger: bookCodeTransaction
+        if (flight.length === 2) {
+            return {
+                status: "Ok",
+                message: "Data succesfuly created",
+                data: {
+                    transaction: newTransaction, 
+                    berangkat: getDataFlight,
+                    pulang: getDataFlightDua,
+                    dataPassenger: bookCodeTransaction
+                }
+            }
+        }else{
+            return {
+                status: "Ok",
+                message: "Data succesfuly created",
+                data: {
+                    transaction: newTransaction, 
+                    berangkat: getDataFlight,
+                    pulang: [],
+                    dataPassenger: bookCodeTransaction
+                }
             }
         }
 
-
-        console.log(transaction_code, user)
 
     
     },

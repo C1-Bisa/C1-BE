@@ -55,6 +55,7 @@ apiRouter.delete("/api/v1/airport/:id",controllers.authController.authorizeAdmin
 
 // Transaction
 apiRouter.post("/api/v1/transaction",auth,controllers.transactionController.create);
+apiRouter.post("/api/v1/getHistoryTransaction",auth,controllers.transactionController.getHistory);
 
 
 apiRouter.get("/api/v1/errors", () => {
