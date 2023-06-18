@@ -294,14 +294,6 @@ module.exports = {
                         data: lowerPrice,
                     };
                 }
-                // if (departureAsc === "departure_asc") {
-                //     search.sort((a, b) => {
-                //         const timeA = new Date(`${a.departure_date}T${a.departure_time}`);
-                //         const timeB = new Date(`${b.departure_date}T${b.departure_time}`);
-                //         return timeA - timeB;
-                //     });
-                // }
-
                 if(earlyDeparture){
                     const earlyDepartured = search.sort((a, b) => a.departure_date - b.departure_date || a.departure_time.localeCompare(b.departure_time));
                     return {
@@ -666,4 +658,104 @@ module.exports = {
             throw err;
         }
     },
+
+    async getDetail(req) {
+        try{
+            const {flight_id, dewasa, anak} = req.body
+            const tax = 0.1;
+    
+            if(flight_id.length === 2){
+                const getDataFlight = await flightRepository.findFlight(flight_id[0])
+                const getDataFlightDua = await flightRepository.findFlight(flight_id[1])
+                
+                if(!getDataFlight){
+                    return{
+                        status: "FAIL",
+                        message: "Upss data tidak ada  lhoo",
+                        data: null
+                    }
+                }
+
+                if(!getDataFlightDua){
+                    return{
+                        status: "FAIL",
+                        message: "Upss data tidak ada  lhoo",
+                        data: null
+                    }
+                }
+                const priceFlight = getDataFlight.price;
+                const priceFlightDua = getDataFlightDua.price;
+        
+                const adults = priceFlight * dewasa;
+                const child = priceFlight * anak;
+                const baby = priceFlight * 0;
+        
+                const adultsTwo = priceFlightDua * dewasa;
+                const childTwo = priceFlightDua * anak;
+                const babyTwo = priceFlightDua * 0;
+        
+                const totalAdults = adults + adultsTwo;
+                const totalChild = child + childTwo;
+                const totalBaby = baby + babyTwo;
+        
+                const totalTax = (totalAdults + totalChild + totalBaby ) * tax;
+        
+                const totalPrice = totalTax + totalAdults + totalChild + totalBaby
+    
+                return {
+                    status: "Success",
+                    data:{
+                        berangkat: getDataFlight,
+                        pulang: getDataFlightDua,
+                        totalAdults: totalAdults,
+                        totalChild: totalChild,
+                        totalBaby: totalBaby,
+                        tax: totalTax,
+                        totalPrice: totalPrice
+                    }
+                };
+            }else{
+                const getDataFlight = await flightRepository.findFlight(flight_id[0])
+
+                if(!getDataFlight){
+                    return{
+                        status: "FAIL",
+                        message: "Upss data tidak ada  lhoo",
+                        data: null
+                    }
+                }
+                const priceFlight = getDataFlight.price;
+
+                const adults = priceFlight * dewasa;
+                const child = priceFlight * anak;
+                const baby = priceFlight * 0;
+
+                const totalTax = (adults + child + baby ) * tax;
+        
+                const totalPrice = adults + child + baby + totalTax
+
+                return {
+                    status: "Success",
+                    data:{
+                        berangkat: getDataFlight,
+                        pulang: [],
+                        totalAdults: adults,
+                        totalChild: child,
+                        totalBaby: baby,
+                        tax: totalTax,
+                        totalPrice: totalPrice
+                    }
+                };
+            }
+
+        }catch(error){
+            throw error
+            
+        }
+
+
+
+
+    }
+
 };

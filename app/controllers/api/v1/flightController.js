@@ -124,5 +124,31 @@ deleteflight(req, res) {
         });
       });
   },
+getDetail(req, res) {
+    flightService
+      .getDetail(req)
+      .then((flight) => {
+        if(!flight.data){
+          res.status(422).json({
+            status: flight.status,
+            message: flight.message,
+          });
+          return;
+        }
+          res.status(200).json({
+            status: flight.status,
+            message: flight.message,
+            data: flight.data
+          });
+      })
+      .catch((err) => {
+        res.status(400).json({
+          status: "Failed",
+          message: err.message,
+        });
+      });
+  },
+
+
   
 };
