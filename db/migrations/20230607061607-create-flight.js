@@ -14,7 +14,7 @@ module.exports = {
         references: {
           model: {
             tableName: "Airlines"
-          },
+          },k
           key: 'id'
         }
       },
