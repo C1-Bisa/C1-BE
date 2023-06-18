@@ -53,6 +53,9 @@ apiRouter.post("/api/v1/airport",controllers.authController.authorizeAdmin ,cont
 apiRouter.put("/api/v1/airport/:id",controllers.authController.authorizeAdmin ,controllers.airportController.checkAirport,controllers.airportController.update);
 apiRouter.delete("/api/v1/airport/:id",controllers.authController.authorizeAdmin ,controllers.airportController.checkAirport,controllers.airportController.destroy);
 
+// Transaction
+apiRouter.post("/api/v1/transaction",auth,controllers.transactionController.create);
+
 
 apiRouter.get("/api/v1/errors", () => {
   throw new Error(
