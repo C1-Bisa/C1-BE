@@ -2,9 +2,11 @@ const express = require("express");
 const controllers = require("../app/controllers/api/v1");
 const controller = require("../app/controllers");
 const services = require("../app/services/userService") 
+const historyService = require("../app/services/historyService") 
 const auth = require ("../middleware/auth");
 const swaggerDocument = require('../docs/openapi.json');
 const swaggerUi = require('swagger-ui-express');
+
 
 const apiRouter = express.Router();
 
@@ -55,7 +57,7 @@ apiRouter.delete("/api/v1/airport/:id",controllers.authController.authorizeAdmin
 
 // Transaction
 apiRouter.post("/api/v1/transaction",auth,controllers.transactionController.create);
-apiRouter.post("/api/v1/getHistoryTransaction",auth,controllers.transactionController.getHistory);
+apiRouter.post("/api/v1/history",auth,historyService.get);
 
 
 apiRouter.get("/api/v1/errors", () => {

@@ -1,6 +1,7 @@
 const transactionRepository = require("../repositories/transactionRepository");
 const {generateCode} = require("../../utils/transaction");
 const flightRepository = require("../repositories/flightRepository");
+const historyRepository = require("../repositories/historyRepository");
 
 module.exports = {
 
@@ -50,6 +51,12 @@ module.exports = {
             bookCodeTransaction.push(bookPassenger)
         }
 
+        const addHistory = await historyRepository.create({
+            user_id: user.id,
+            transaction_id: newTransaction.id,
+        })
+
+
         const getDataFlight = await flightRepository.findFlight(flight[0])
         const getDataFlightDua = await flightRepository.findFlight(flight[1])
 
@@ -61,7 +68,8 @@ module.exports = {
                     transaction: newTransaction, 
                     berangkat: getDataFlight,
                     pulang: getDataFlightDua,
-                    dataPassenger: bookCodeTransaction
+                    dataPassenger: bookCodeTransaction,
+                    dataHistory: addHistory
                 }
             }
         }else{
@@ -72,7 +80,9 @@ module.exports = {
                     transaction: newTransaction, 
                     berangkat: getDataFlight,
                     pulang: [],
-                    dataPassenger: bookCodeTransaction
+                    dataPassenger: bookCodeTransaction,
+                    dataHistory: addHistory
+
                 }
             }
         }
