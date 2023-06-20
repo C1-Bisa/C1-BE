@@ -1,5 +1,6 @@
 const { transaction } = require("../models");
 const { passenger } = require("../models");
+const { Flight } = require("../models");
 
 module.exports = {
 
@@ -19,7 +20,21 @@ module.exports = {
         })
       },
 
-    
+      findAll(id) {
+        return transaction.findAll({
+          where: {user_id: id},
+          include: [
+            {
+                model: passenger
+            }
+        ]
+        });
+      },
 
+      findPassenger(token) {
+        return passenger.findAll({
+          where: {transactionCode: token}
+        });
+      },
 
 }

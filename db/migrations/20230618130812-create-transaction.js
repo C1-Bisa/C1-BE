@@ -16,7 +16,7 @@ module.exports = {
         type: Sequelize.ARRAY(Sequelize.INTEGER),
       },
       user_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       amount: {
         type: Sequelize.INTEGER
