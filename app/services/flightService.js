@@ -1,5 +1,8 @@
 const flightRepository = require("../repositories/flightRepository");
 const airlineRepository = require("../repositories/airlineRepository");
+const { Flight, Airline,Airport } = require("../models");
+
+
 
 
 const dayjs = require("dayjs");
@@ -7,15 +10,118 @@ const { DATE } = require("sequelize");
 
 
 module.exports = {
-    async list() {
+    async list(reqBody, reqQuery) {
         try {
-            const flight = await flightRepository.findAll();
-            const flightCount = await flightRepository.getTotalFlight();
+            const {from,to,departure_date,departure_time,flight_class,returnDate} = reqBody
+            const {lowPrice,earlyDeparture,lastDeparture,earlyArrive,lastArrive } = reqQuery;
 
-            return {
-                data: flight,
-                count: flightCount,
-            };
+            const departureTomorrow = new Date(departure_date)
+            departureTomorrow.setDate(departureTomorrow.getDate() + 1);
+            const departureYesterday = new Date(departure_date)
+            departureYesterday.setDate(departureYesterday.getDate() - 1);
+
+            if(
+                !from ||
+                !to ||
+                !departure_date ||
+                !departure_time ||
+                !flight_class
+            ) {
+                return {
+                    status: "Failed",
+                    message: "form search must be filled!",
+                    data: null,
+                };
+            }
+
+            if(reqBody.from.toLowerCase() === reqBody.to.toLowerCase()){
+                return {
+                    status: "Failed",
+                    message: "Location must be different!",
+                    data: null,
+                };
+            }
+
+            // Mencari data penerbangan dan mengisinya ke dalam array
+            const flight = await flightRepository.findAll();
+            const array = [...flight];
+
+            if(!returnDate){
+                const flightSchedule = array.filter((data) => {
+                const date = new Date(data.departure_date);
+                    return (
+                        data.from === from &&
+                        data.to === to &&
+                        date > departureYesterday &&
+                        date < departureTomorrow &&
+                        data.flight_class === flight_class
+                    )
+                });
+
+                if (flightSchedule.length === 0) {
+                    return {
+                      status: "Failed",
+                      message: "Data tidak ditemukan",
+                      data: null,
+                    };
+                }
+
+                // Filter early departure
+                if(earlyDeparture){
+                    const earlyDepartured = flightSchedule.sort((a, b) =>  a.departure_time.localeCompare(b.departure_time));
+                    return {
+                        status: "Success",
+                        message: "Result Search",
+                        data: earlyDepartured,
+                    };
+                }
+
+                // Filter last departure
+                if(lastDeparture){
+                    const lastDepartured = flightSchedule.sort((a, b) =>  b.departure_time.localeCompare(a.departure_time));
+                    return {
+                        status: "Success",
+                        message: "Result Search",
+                        data: lastDepartured,
+                    };
+                }
+
+                // Filter harga terendah
+                if(lowPrice){
+                    const lowerPrice = flightSchedule.sort((a, b) => a.price - b.price);
+                    return {
+                        status: "Success",
+                        message: "Result Search",
+                        data: lowerPrice,
+                    };
+                }
+
+                // Filter early arrival
+                if(earlyArrive){
+                    const earlyArrived = flightSchedule.sort((a, b) =>  a.arrival_time.localeCompare(b.arrival_time));
+                    return {
+                        status: "Success",
+                        message: "Result Search",
+                        data: earlyArrived,
+                    };
+                }
+
+                // Filter las arrival
+                if(lastArrive){
+                    const lastArrived = flightSchedule.sort((a, b) =>  b.arrival_time.localeCompare(a.arrival_time));
+                    return {
+                        status: "Success",
+                        message: "Result Search",
+                        data: lastArrived,
+                    };
+                }
+                
+                return {
+                    status: "Success",
+                    message: "Result Search",
+                    data: flightSchedule,
+                };
+            }   
         } catch (err) {
             throw err;
         }

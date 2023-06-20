@@ -21,6 +21,7 @@ module.exports = {
       },
 
       findAll(id) {
+        
         return transaction.findAll({
           where: {user_id: id},
           include: [

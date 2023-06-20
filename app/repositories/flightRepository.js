@@ -8,7 +8,7 @@ module.exports = {
         return Flight.findAll({
             include: [
                 {
-                    model: Airline
+                    model: Airline 
                 },   
                 {
                   model: Airport,
