@@ -3,8 +3,6 @@ const airlineRepository = require("../repositories/airlineRepository");
 const { Flight, Airline,Airport } = require("../models");
 
 
-
-
 const dayjs = require("dayjs");
 const { DATE } = require("sequelize");
 
@@ -343,71 +341,7 @@ module.exports = {
                     // data.departure_date >= departure  && 
                     // data.departure_time >= departure_time && 
                     // data.flight_class === flight_class
-                }) 
-                
-                if(
-                    (toLower && earlyDeparture && lastDeparture && earlyArrive && lastArrive) ||
-                    (toLower && earlyDeparture && lastDeparture && earlyArrive) ||
-                    (toLower && earlyDeparture && lastDeparture && lastArrive) ||
-                    (toLower && earlyArrive && lastArrive && earlyDeparture)||
-                    (toLower && earlyArrive && lastArrive && lastDeparture) ||
-                    (toLower && earlyDeparture && lastDeparture) ||
-                    (toLower && earlyDeparture && earlyArrive) ||
-                    (toLower && earlyDeparture && lastArrive) ||
-                    (toLower && lastDeparture && earlyArrive) ||
-                    (toLower && lastDeparture && lastArrive) ||
-                    (toLower && earlyArrive && lastArrive) ||
-                    (earlyArrive && lastArrive && lastDeparture) ||
-                    (earlyArrive && lastArrive && earlyDeparture) ||
-                    (earlyDeparture && lastDeparture && earlyArrive)||
-                    (earlyDeparture && lastDeparture && lastArrive)||
-                    (earlyDeparture && earlyArrive)||
-                    (earlyDeparture && lastArrive)||
-                    (lastDeparture && lastArrive)||
-                    (lastDeparture && earlyArrive)
-                ){
-                    return {
-                        status: "Failed",
-                        message: "Filter Result Not Found!",
-                        data: null,
-                    };
-                }
-
-                if(toLower && earlyDeparture){
-                    const priceEarlydeparture = search.sort((a, b) => a.departure_date - b.departure_date || a.departure_time.localeCompare(b.departure_time) || a.price - b.price);
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: priceEarlydeparture,
-                    };
-                }
-
-                if(toLower && lastDeparture){
-                    const priceLastdeparture = search.sort((a, b) => a.departure_date - b.departure_date || b.departure_time.localeCompare(a.departure_time) || a.price - b.price);
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: priceLastdeparture,
-                    };
-                }
-
-                if(toLower && earlyArrive){
-                    const priceEarlyArrive = search.sort((a, b) => a.arrival_date - b.arrival_date || a.arrival_time.localeCompare(b.arrival_time) || a.price - b.price);
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: priceEarlyArrive,
-                    };
-                }
-
-                if(toLower && lastArrive){
-                    const priceLastArrive = search.sort((a, b) => a.arrival_date - b.arrival_date || b.arrival_time.localeCompare(a.arrival_time) || a.price - b.price);
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: priceLastArrive,
-                    };
-                }
+                })
 
                 if(toLower){
                     const lowerPrice = search.sort((a, b) => a.price - b.price);
@@ -459,130 +393,6 @@ module.exports = {
                     data: search,
                 };
             }
-
-            
-
-            // if (returnDate) {
-            //     const searchReturn = array.filter((data) => data.from === to && data.to === from && data.departure_date >= departureReturn && data.departure_time >= departure_time && data.flight_class === flight_class);
-
-            //     // NGEFILTER QUERY YANG TIDAK BISA DI FILTER
-            //     if(
-            //         (toLower && earlyDeparture && lastDeparture && earlyArrive && lastArrive) ||
-            //         (toLower && earlyDeparture && lastDeparture && earlyArrive) ||
-            //         (toLower && earlyDeparture && lastDeparture && lastArrive) ||
-            //         (toLower && earlyArrive && lastArrive && earlyDeparture)||
-            //         (toLower && earlyArrive && lastArrive && lastDeparture) ||
-            //         (toLower && earlyDeparture && lastDeparture) ||
-            //         (toLower && earlyDeparture && earlyArrive) ||
-            //         (toLower && earlyDeparture && lastArrive) ||
-            //         (toLower && lastDeparture && earlyArrive) ||
-            //         (toLower && lastDeparture && lastArrive) ||
-            //         (toLower && earlyArrive && lastArrive) ||
-            //         (earlyArrive && lastArrive && lastDeparture) ||
-            //         (earlyArrive && lastArrive && earlyDeparture) ||
-            //         (earlyDeparture && lastDeparture && earlyArrive)||
-            //         (earlyDeparture && lastDeparture && lastArrive)||
-            //         (earlyDeparture && earlyArrive)||
-            //         (earlyDeparture && lastArrive)||
-            //         (lastDeparture && lastArrive)||
-            //         (lastDeparture && earlyArrive)
-            //     ){
-            //         return {
-            //             status: "Failed",
-            //             message: "Filter Result Not Found!",
-            //             data: null,
-            //         };
-            //     }
-
-            //     if(toLower && earlyDeparture){
-            //         const priceEarlydepartureReturn = searchReturn.sort((a, b) => a.departure_date - b.departure_date || a.departure_time.localeCompare(b.departure_time) || a.price - b.price);
-            //         return {
-            //             status: "Success",
-            //             message: "Result Search",
-            //             data: priceEarlydepartureReturn,
-            //         };
-            //     }
-
-            //     if(toLower && lastDeparture){
-            //         const priceLastdepartureReturn = searchReturn.sort((a, b) => a.departure_date - b.departure_date || b.departure_time.localeCompare(a.departure_time) || a.price - b.price);
-            //         return {
-            //             status: "Success",
-            //             message: "Result Search",
-            //             data: priceLastdepartureReturn,
-            //         };
-            //     }
-
-            //     if(toLower && earlyArrive){
-            //         const priceEarlyArriveReturn = searchReturn.sort((a, b) => a.arrival_date - b.arrival_date || a.arrival_time.localeCompare(b.arrival_time) || a.price - b.price);
-            //         return {
-            //             status: "Success",
-            //             message: "Result Search",
-            //             data: priceEarlyArriveReturn,
-            //         };
-            //     }
-
-            //     if(toLower && lastArrive){
-            //         const priceLastArriveReturn = searchReturn.sort((a, b) => a.arrival_date - b.arrival_date || b.arrival_time.localeCompare(a.arrival_time) || a.price - b.price);
-            //         return {
-            //             status: "Success",
-            //             message: "Result Search",
-            //             data: priceLastArriveReturn,
-            //         };
-            //     }
-
-            //     if(toLower){
-            //         const lowerPriceReturn = searchReturn.sort((a, b) => a.price - b.price);
-            //         return {
-            //             status: "Success",
-            //             message: "Result Search",
-            //             data: lowerPriceReturn,
-            //         };
-            //     }
-
-            //     if(earlyDeparture){
-            //         const earlyDeparturedReturn = searchReturn.sort((a, b) => a.departure_date - b.departure_date || a.departure_time.localeCompare(b.departure_time));
-            //         return {
-            //             status: "Success",
-            //             message: "Result Search",
-            //             data: earlyDeparturedReturn,
-            //         };
-            //     }
-
-            //     if(lastDeparture){
-            //         const lastDeparturedReturn = searchReturn.sort((a, b) => a.departure_date - b.departure_date || b.departure_time.localeCompare(a.departure_time));
-            //         return {
-            //             status: "Success",
-            //             message: "Result Search",
-            //             data: lastDeparturedReturn,
-            //         };
-            //     }
-
-            //     if(earlyArrive){
-            //         const earlyArrivedReturn = searchReturn.sort((a, b) => a.arrival_date - b.arrival_date || a.arrival_time.localeCompare(b.arrival_time));
-            //         return {
-            //             status: "Success",
-            //             message: "Result Search",
-            //             data: earlyArrivedReturn,
-            //         };
-            //     }
-
-            //     if(lastArrive){
-            //         const lastArrivedReturn = searchReturn.sort((a, b) => a.arrival_date - b.arrival_date || b.arrival_time.localeCompare(a.arrival_time));
-            //         return {
-            //             status: "Success",
-            //             message: "Result Search",
-            //             data: lastArrivedReturn,
-            //         };
-            //     }
-
-            //     return {
-            //         status: "Success",
-            //         message: "Result Search",
-            //         data: searchReturn,
-            //     };
-            // }
-          
-        
 
         } catch (err) {
             throw err;
