@@ -50,6 +50,8 @@ module.exports = {
             bookCodeTransaction.push(bookPassenger)
         }
 
+        
+
         await notificationRepository.create({
             headNotif: "Pemesanan tiket",
             message: "Segera lakukan pembayaran  untuk menyelesaikan proses transaksi",
@@ -142,8 +144,7 @@ module.exports = {
 
             }else{
                 const getDataFlight = await flightRepository.findTicketFilter(arrayDataTransaction[i].flight_id[0])
-                arrayFlightDeparture.push(getDataFlight);
-               
+                arrayFlightDeparture.push(getDataFlight); 
             }
         }
 
@@ -170,18 +171,5 @@ module.exports = {
         }catch{
 
         }
-
-
-  
-
-
-
-
-
-
-
-
-
-
     }
 }

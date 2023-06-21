@@ -24,9 +24,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'airport_id_to',
         as: 'Airport_to'
       })
-      this.hasMany(models.transaction, {
-        foreignKey:'flight_id'
-      })
     }
   }
   Flight.init({

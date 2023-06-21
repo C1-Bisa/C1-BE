@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       this.belongsToMany(models.Flight, {
-         through: "Transaction_Flights"
-      });
-      this.hasMany(models.Flight, {
-        foreignKey:'transaction_id'
-      })
+        through: "Transaction_Flights"
+     });
+     this.hasMany(models.Flight, {
+       foreignKey:'transaction_id'
+     })
     }
   }
   Transaction.init({
@@ -23,8 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     user_id: DataTypes.INTEGER,
     amount: DataTypes.INTEGER,
     transaction_status: DataTypes.STRING,
-    transaction_date: DataTypes.DATE,
-    flight_type: DataTypes.STRING
+    transaction_date: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'Transaction',
