@@ -12,10 +12,11 @@ module.exports = {
         return passenger.create(createArgs);
       },
   
-    update(id, updateArgs){
+    update(id,code, updateArgs){
         return transaction.update(updateArgs,{
             where: {
-                id,
+                user_id: id,
+                transaction_code: code
             },
         })
       },

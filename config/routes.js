@@ -39,8 +39,6 @@ apiRouter.put("/api/v1/flight/updateflight/:id", controllers.authController.auth
 apiRouter.delete("/api/v1/flight/deleteflight/:id", controllers.authController.authorizeAdmin, controllers.flightController.deleteflight);
 apiRouter.post("/api/v1/flight/getDetail", auth, controllers.flightController.getDetail);
 
-
-
 // Airline
 apiRouter.get("/api/v1/airline",controllers.airlineController.list);
 apiRouter.get("/api/v1/airline/:id",controllers.airlineController.checkAirline,controllers.airlineController.getById);
@@ -58,6 +56,7 @@ apiRouter.delete("/api/v1/airport/:id",controllers.authController.authorizeAdmin
 // Transaction
 apiRouter.post("/api/v1/transaction",auth,controllers.transactionController.create);
 apiRouter.get("/api/v1/getHistoryTransaction",auth,controllers.transactionController.getHistory);
+apiRouter.put("/api/v1/transaction/update",auth,controllers.transactionController.update);
 
 
 apiRouter.get("/api/v1/errors", () => {

@@ -1,7 +1,7 @@
 const transactionRepository = require("../repositories/transactionRepository");
 const {generateCode} = require("../../utils/transaction");
 const flightRepository = require("../repositories/flightRepository");
-const historyRepository = require("../repositories/historyRepository");
+const notificationRepository = require("../repositories/notificationRepository");
 
 module.exports = {
 
@@ -32,7 +32,7 @@ module.exports = {
             transaction_code,
             flight_type,
             transaction_date: date,
-            transaction_status: 'issued'
+            transaction_status: 'Unpaid'
         })
 
         for (let i = 0; i < passenger.length; i++) {
@@ -51,10 +51,12 @@ module.exports = {
             bookCodeTransaction.push(bookPassenger)
         }
 
-        const addHistory = await historyRepository.create({
-            user_id: user.id,
-            transaction_id: newTransaction.id,
-        })
+        await notificationRepository.create({
+            headNotif: "Pemesanan tiket",
+            message: "Segera lakukan pembayaran  untuk menyelesaikan proses transaksi",
+            userId: user.id,
+            isRead: false
+        });
 
         const getDataFlight = await flightRepository.findFlight(flight[0])
         const getDataFlightDua = await flightRepository.findFlight(flight[1])
@@ -68,7 +70,6 @@ module.exports = {
                     berangkat: getDataFlight,
                     pulang: getDataFlightDua,
                     dataPassenger: bookCodeTransaction,
-                    dataHistory: addHistory
                 }
             }
         }else{
@@ -80,11 +81,37 @@ module.exports = {
                     berangkat: getDataFlight,
                     pulang: [],
                     dataPassenger: bookCodeTransaction,
-                    dataHistory: addHistory
 
                 }
             }
         }
+    },
+
+    async update(req){
+        try{
+            const user = req.user
+            const {transaction_code,norek} =  req.body
+
+            const updateTransaction =  await transactionRepository.update(user.id,transaction_code,{transaction_status:"Issued"});
+
+            await notificationRepository.create({
+                headNotif: "Payment Successfuly",
+                message: "Ticket has been paid, save flight",
+                userId: user.id,
+                isRead: false
+
+            })
+
+            return{
+                status: "OK",
+                message: "Succesfuly paid",
+                data: updateTransaction
+            }
+
+        }catch(error){
+
+        }
+
     },
 
     async history(req) { 
