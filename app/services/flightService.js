@@ -208,7 +208,6 @@ module.exports = {
                 };
             }
 
-
             const ticket = await flightRepository.create({
                 airline_id: reqBody.airline_id,
                 airport_id_from: reqBody.airport_id_from,

@@ -14,7 +14,6 @@ module.exports = {
         const date= new Date();
         const bookCodeTransaction = []
 
-
         if (flight_id.length === 2) {
             for (let i = 0; i < flight_id.length; i++) {
                 flight.push(flight_id[i]);
@@ -160,4 +159,29 @@ module.exports = {
             data: dataDetailTransaction
         }
     },
+
+    async createTransaction(req){
+        try{
+            const user = req.user;
+            const {flight_id, amount, passenger} = req.body;
+
+            await transactionRepository.createTransactionFlight()
+            
+        }catch{
+
+        }
+
+
+  
+
+
+
+
+
+
+
+
+
+
+    }
 }

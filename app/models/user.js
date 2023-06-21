@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey:'userId',
         as: 'user_notif'
       })
+      this.hasMany(models.Transaction, {
+        foreignKey:'user_id',
+      })
     }
   }
   User.init({

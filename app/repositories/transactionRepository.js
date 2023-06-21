@@ -1,19 +1,19 @@
-const { transaction } = require("../models");
-const { passenger } = require("../models");
-const { Flight } = require("../models");
+const { Transaction } = require("../models");
+const { Passenger } = require("../models");
+// const { Transaction_Flight } = require("../models");
 
 module.exports = {
 
     create(createArgs){
-        return transaction.create(createArgs);
+        return Transaction.create(createArgs);
       },
 
     createPassenger(createArgs){
-        return passenger.create(createArgs);
+        return Passenger.create(createArgs);
       },
   
     update(id,code, updateArgs){
-        return transaction.update(updateArgs,{
+        return Transaction.update(updateArgs,{
             where: {
                 user_id: id,
                 transaction_code: code
@@ -23,20 +23,26 @@ module.exports = {
 
       findAll(id) {
         
-        return transaction.findAll({
+        return Transaction.findAll({
           where: {user_id: id},
           include: [
             {
-                model: passenger
+                model: Passenger
             }
         ]
         });
       },
 
       findPassenger(token) {
-        return passenger.findAll({
+        return Passenger.findAll({
           where: {transactionCode: token}
         });
       },
+
+      // createTransactionFlight(createArgs){
+      //   return Transaction_Flight.create(createArgs);
+
+
+      // }
 
 }
