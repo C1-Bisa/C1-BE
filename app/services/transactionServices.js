@@ -133,6 +133,8 @@ module.exports = {
             passenger: detail.passengers
         }));
 
+        
+
         for (let i = 0; i < arrayDataTransaction.length; i++) {
             if (arrayDataTransaction[i].flight_id.length === 2) {
                 const getDataFlight = await flightRepository.findTicketFilter(arrayDataTransaction[i].flight_id[0])
@@ -154,10 +156,91 @@ module.exports = {
             flight_return: arrayFlightReturn[index]
           }));
 
+        const arrayDataPassenger = [];
+        arrayDataPassenger.push(...dataDetailTransaction);
+        
+        const typePassenger = [];
+        const pricePassengerDeparture = [];
+        const pricePassengerArrival = [];
+        const totalPricePassenger = [];
+        const taxPassenger = [];
+
+        for (let i = 0; i < arrayDataPassenger.length; i++) {
+            const objectPassenger = [];
+            for (let j = 0; j < arrayDataPassenger[i].passenger.length; j++) {
+                objectPassenger.push(arrayDataPassenger[i].passenger[j].type)
+            }
+            typePassenger.push(objectPassenger)
+        }
+
+
+        for (let i = 0; i < arrayDataPassenger.length; i++) {
+            let objectPricedeparture;
+            let objectPricearrival ;
+            if (arrayDataPassenger[i].flight_id.length === 2) {
+                for (let j = 0; j < arrayDataPassenger[i].flight_departure.length; j++) {
+                    objectPricedeparture = arrayDataPassenger[i].flight_departure[j].price
+                }
+                for (let k = 0; k < arrayDataPassenger[i].flight_return.length; k++) {
+                    objectPricearrival = arrayDataPassenger[i].flight_return[k].price
+                }
+            }else{
+                for (let j = 0; j < arrayDataPassenger[i].flight_departure.length; j++) {
+                    objectPricedeparture = arrayDataPassenger[i].flight_departure[j].price
+                }
+            }
+            let tax = 0.1 * arrayDataPassenger[i].amount
+
+            taxPassenger.push(tax)
+            totalPricePassenger.push(arrayDataPassenger[i].amount)
+            pricePassengerDeparture.push(objectPricedeparture);
+            pricePassengerArrival.push(objectPricearrival);
+        }
+
+
+        let dataTransactionWithPrice = arrayDataTransaction.map((obj, index) => ({
+            ...obj,
+            flight_departure: arrayFlightDeparture[index],
+            flight_return: arrayFlightReturn[index],
+            type_passenger: typePassenger[index]
+          }));
+
+
+          const detailData = [];
+          detailData.push(...dataTransactionWithPrice);
+
+        const adult = [];
+        const child = [];
+
+        for (let i = 0; i < detailData.length; i++) {
+            let adultCount = 0;
+            let childCount = 0;
+            for (let j = 0; j < detailData[i].type_passenger.length; j++) {
+                if (detailData[i].type_passenger[j] == "Adult") {
+                    adultCount = adultCount + 1;
+                }
+                if (detailData[i].type_passenger[j] == "Child") {
+                    childCount = childCount + 1;
+                }
+            }
+            adult.push(adultCount)
+            child.push(childCount)
+        }
+
+
+        let  childAdult = arrayDataTransaction.map((obj, index) => ({
+            ...obj,
+            flight_departure: arrayFlightDeparture[index],
+            flight_return: arrayFlightReturn[index],
+            type_passenger: {adult: adult[index], child: child[index]},
+            price: {departure: pricePassengerDeparture[index], arrival: pricePassengerArrival[index], tax: taxPassenger[index], total:totalPricePassenger[index]}
+        }));
+
+
           return {
             status: "Ok",
             message: "Data succesfuly get",
-            data: dataDetailTransaction
+            data: childAdult
         }
     },
 }
