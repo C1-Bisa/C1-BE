@@ -2,9 +2,6 @@ const transactionRepository = require("../repositories/transactionRepository");
 const {generateCode} = require("../../utils/transaction");
 const flightRepository = require("../repositories/flightRepository");
 const notificationRepository = require("../repositories/notificationRepository");
-const { Transaction } = require("../models");
-const { Passenger } = require("../models");
-const { Transaction_Flight } = require("../models");
 
 module.exports = {
 
@@ -166,9 +163,70 @@ module.exports = {
 
     async createTransaction(req){
         try{
-           
+            const user = req.user;
+            const {flight_id, passenger,amount} = req.body;
+            const transaction_code = generateCode()
+            const date= new Date();
+            const flight = []
+            const bookCodeTransaction = []
+
+            const newTransaction = await transactionRepository.create({
+               
+                user_id: user.id,
+                amount,
+                transaction_code,
+                transaction_date: date,
+                transaction_status: 'Unpaid'
+            })
+
+            for (let i = 0; i < passenger.length; i++) {
+                const bookPassenger = await transactionRepository.createPassenger({
+                    transaction_id: newTransaction.id,
+                    transactionCode: newTransaction.transaction_code,
+                    type: passenger[i].type,
+                    title: passenger[i].title,
+                    name: passenger[i].name,
+                    family_name: passenger[i].family_name,
+                    birthday: passenger[i].birthday,
+                    nationality: passenger[i].nationality,
+                    nik_paspor: passenger[i].nik,
+                    seat: passenger[i].seat
+                })
+                bookCodeTransaction.push(bookPassenger)
+            }
+
+            if (flight_id.length >= 2) {
+                const departureFlightId = flight_id[0];
+                const arrivalFlightId = flight_id[1];
+          
+                await transactionRepository.addTransactionFlight(newTransaction.id, departureFlightId);
+                await transactionRepository.addTransactionFlight(newTransaction.id, arrivalFlightId);
+              }
+          
+                // const departureFlight = await flightRepository.findFlight(departureFlightId);
+                // const arrivalFlight = await flightRepository.findFlight(arrivalFlightId);
+          
+                // await transactionRepository.addTransactionFlight({
+                //     flight_id:departureFlight,
+                //     transaction_id:newTransaction.id 
+
+                // });
+                // await transactionRepository.addTransactionFlight({
+                //     flight_id:arrivalFlight,
+                //     transaction_id:newTransaction.id 
+
+                // });
+
+          
+                console.log(departureFlightId);
+                console.log(arrivalFlightId);
+              
+
+            
+            // console.log(bookFlight);         
         }catch(error){
             throw error
+
         }
     }
 }
