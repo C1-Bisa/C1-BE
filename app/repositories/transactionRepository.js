@@ -1,6 +1,7 @@
 const { Transaction } = require("../models");
 const { Passenger } = require("../models");
 const { Flight, Transaction_Flight } = require("../models");
+const transaction_flight = require("../models/transaction_flight");
 
 module.exports = {
 
@@ -33,18 +34,27 @@ module.exports = {
         });
       },
 
+      // transactionFlight() {
+        
+      //   return Transaction.findOne({
+      //     where: { id: 2 },
+      //     include: Flight
+      //   })
+      // },
+
       findPassenger(token) {
         return Passenger.findAll({
           where: {transactionCode: token}
         });
       },
 
+
       async addTransactionFlight(transactionId, flightId) {
-        const transaction = await Transaction.findByPk(transactionId);
-        const flight = await Flight.findByPk(flightId);
+      const transaction = await Transaction.findByPk(transactionId);
+      const flight = await Flight.findByPk(flightId);
         
-        await transaction.addFlight(flight);
-        
+      await transaction.addFlight(flight);
+
       },
 
      

@@ -198,10 +198,19 @@ module.exports = {
             if (flight_id.length >= 2) {
                 const departureFlightId = flight_id[0];
                 const arrivalFlightId = flight_id[1];
-          
-                await transactionRepository.addTransactionFlight(newTransaction.id, departureFlightId);
-                await transactionRepository.addTransactionFlight(newTransaction.id, arrivalFlightId);
-              }
+                const transactionTypeDeparture = "Departure";
+                const transactionTypeArrival = "Arrival";
+
+                // await transactionRepository.createTransactionFlight({transaction_id: newTransaction.id, flight_id: departureFlightId, transaction_type:transactionTypeDeparture})
+                // await transactionRepository.createTransactionFlight({transaction_id: newTransaction.id, flight_id: arrivalFlightId, transaction_type:transactionTypeArrival})
+                // await transactionRepository.addTransactionFlight(newTransaction.id, departureFlightId);
+                // await transactionRepository.addTransactionFlight(newTransaction.id, arrivalFlightId);
+            }else{
+                const departureFlightId = flight_id[0];
+                const transactionTypeDeparture = "Departure";
+                // await transactionRepository.createTransactionFlight({transaction_id: newTransaction.id, flight_id: departureFlightId, transaction_type:transactionTypeDeparture})
+                // await transactionRepository.addTransactionFlight(newTransaction.id, departureFlightId);
+            }
           
                 // const departureFlight = await flightRepository.findFlight(departureFlightId);
                 // const arrivalFlight = await flightRepository.findFlight(arrivalFlightId);
@@ -217,12 +226,8 @@ module.exports = {
 
                 // });
 
-          
-                console.log(departureFlightId);
-                console.log(arrivalFlightId);
-              
-
-            
+            // const dataa = await transactionRepository.transactionFlight()
+            // console.log(dataa);
             // console.log(bookFlight);         
         }catch(error){
             throw error
