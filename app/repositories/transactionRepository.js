@@ -1,6 +1,6 @@
 const { Transaction } = require("../models");
 const { Passenger } = require("../models");
-// const { Transaction_Flight } = require("../models");
+const { Flight, Transaction_Flight } = require("../models");
 
 module.exports = {
 
@@ -39,10 +39,16 @@ module.exports = {
         });
       },
 
-      // createTransactionFlight(createArgs){
-      //   return Transaction_Flight.create(createArgs);
+      async addTransactionFlight(transactionId, flightId) {
+        const transaction = await Transaction.findByPk(transactionId);
+        const flight = await Flight.findByPk(flightId);
+        
+        await transaction.addFlight(flight);
+        
+      },
 
-
-      // }
-
+     
+      
 }
+
+

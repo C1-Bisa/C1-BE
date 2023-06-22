@@ -9,8 +9,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      transation_id: {
-        type: Sequelize.INTEGER,
+      transaction_id: {
+        type: Sequelize.INTEGER, 
         references: {
           model: {
             tableName: "Transactions"
