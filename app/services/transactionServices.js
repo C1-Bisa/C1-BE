@@ -195,35 +195,33 @@ module.exports = {
                 bookCodeTransaction.push(bookPassenger)
             }
 
-            if (flight_id.length >= 2) {
-                const departureFlightId = flight_id[0];
-                const arrivalFlightId = flight_id[1];
-          
-                await transactionRepository.addTransactionFlight(newTransaction.id, departureFlightId);
-                await transactionRepository.addTransactionFlight(newTransaction.id, arrivalFlightId);
+            const departureFlights = [];
+            const arrivalFlights =[]
+
+            const departureFlightId = flight_id[0];
+            const arrivalFlightId = flight_id[1];
+      
+            const departure = await transactionRepository.addTransactionFlight(newTransaction.id, departureFlightId);
+            const arrival = flight_id.length === 2 ? await transactionRepository.addTransactionFlight(newTransaction.id, arrivalFlightId) : null;
+
+            departureFlights.push(departure);
+            if (arrival) {
+              arrivalFlights.push(arrival);
+            }
+        
+            const data = {
+              status: "Ok",
+              message: "Data successfully created",
+              data: {
+                transaction: newTransaction,
+                departure: departureFlights.length > 0 ? departureFlights : null,
+                arrival: arrivalFlights.length > 0 ? arrivalFlights : null,
+                dataPassenger: bookCodeTransaction
               }
-          
-                // const departureFlight = await flightRepository.findFlight(departureFlightId);
-                // const arrivalFlight = await flightRepository.findFlight(arrivalFlightId);
-          
-                // await transactionRepository.addTransactionFlight({
-                //     flight_id:departureFlight,
-                //     transaction_id:newTransaction.id 
-
-                // });
-                // await transactionRepository.addTransactionFlight({
-                //     flight_id:arrivalFlight,
-                //     transaction_id:newTransaction.id 
-
-                // });
-
-          
-                console.log(departureFlightId);
-                console.log(arrivalFlightId);
-              
-
-            
-            // console.log(bookFlight);         
+            };
+        
+            return data;
+                  
         }catch(error){
             throw error
 
