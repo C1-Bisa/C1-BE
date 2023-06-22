@@ -2,6 +2,9 @@ const transactionRepository = require("../repositories/transactionRepository");
 const {generateCode} = require("../../utils/transaction");
 const flightRepository = require("../repositories/flightRepository");
 const notificationRepository = require("../repositories/notificationRepository");
+const { Transaction } = require("../models");
+const { Passenger } = require("../models");
+const { Transaction_Flight } = require("../models");
 
 module.exports = {
 
@@ -163,13 +166,9 @@ module.exports = {
 
     async createTransaction(req){
         try{
-            const user = req.user;
-            const {flight_id, amount, passenger} = req.body;
-
-            await transactionRepository.createTransactionFlight()
-            
-        }catch{
-
+           
+        }catch(error){
+            throw error
         }
     }
 }

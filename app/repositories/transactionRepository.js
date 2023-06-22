@@ -1,6 +1,6 @@
 const { Transaction } = require("../models");
 const { Passenger } = require("../models");
-// const { Transaction_Flight } = require("../models");
+const { Transaction_Flight } = require("../models");
 
 module.exports = {
 
@@ -39,10 +39,8 @@ module.exports = {
         });
       },
 
-      // createTransactionFlight(createArgs){
-      //   return Transaction_Flight.create(createArgs);
-
-
-      // }
+      createTransactionFlight(createArgs){
+        return Transaction_Flight.create(createArgs);
+      }
 
 }

@@ -3,7 +3,7 @@ const transactionService = require("../../../services/transactionServices")
 module.exports = {
     create(req, res) {
         transactionService
-          .create(req)
+          .createTransaction(req)
           .then((transaction) => {
             if(!transaction.data){
               res.status(422).json({
