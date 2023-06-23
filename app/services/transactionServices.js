@@ -168,16 +168,17 @@ module.exports = {
             const transaction_code = generateCode()
             const date= new Date();
             const flight = []
+            const departureFlightId = flight_id[0];
+            const arrivalFlightId = flight_id[1];
             const bookCodeTransaction = []
 
             const newTransaction = await transactionRepository.create({
-               
                 user_id: user.id,
                 amount,
                 transaction_code,
                 transaction_date: date,
                 transaction_status: 'Unpaid'
-            })
+            });
 
             for (let i = 0; i < passenger.length; i++) {
                 const bookPassenger = await transactionRepository.createPassenger({
@@ -195,32 +196,37 @@ module.exports = {
                 bookCodeTransaction.push(bookPassenger)
             }
 
-            const departureFlights = [];
-            const arrivalFlights =[]
+            // const departureFlights = [];
+            // const arrivalFlights =[]
 
-            const departureFlightId = flight_id[0];
-            const arrivalFlightId = flight_id[1];
+            // const departureFlightId = flight_id[0];
+            // const arrivalFlightId = flight_id[1];
+
       
-            const departure = await transactionRepository.addTransactionFlight(newTransaction.id, departureFlightId);
-            const arrival = flight_id.length === 2 ? await transactionRepository.addTransactionFlight(newTransaction.id, arrivalFlightId) : null;
+            // const departure = await transactionRepository.addTransactionFlight(newTransaction.id, departureFlightId);
+            // const arrival = flight_id.length === 2 ? await transactionRepository.addTransactionFlight(newTransaction.id, arrivalFlightId) : null;
 
-            departureFlights.push(departure);
-            if (arrival) {
-              arrivalFlights.push(arrival);
-            }
+            // departureFlights.push(departure);
+            // if (arrival) {
+            //   arrivalFlights.push(arrival);
+            // }
+
         
-            const data = {
-              status: "Ok",
-              message: "Data successfully created",
-              data: {
-                transaction: newTransaction,
-                departure: departureFlights.length > 0 ? departureFlights : null,
-                arrival: arrivalFlights.length > 0 ? arrivalFlights : null,
-                dataPassenger: bookCodeTransaction
-              }
-            };
+            // const datai = await transactionRepository.transactionFlight()
+
+
+            // const data = {
+            //   status: "Ok",
+            //   message: "Data successfully created",
+            //   data: {
+            //     transaction: newTransaction,
+            //     departure: departureFlights.length > 0 ? departureFlights : null,
+            //     arrival: arrivalFlights.length > 0 ? arrivalFlights : null,
+            //     dataPassenger: bookCodeTransaction
+            //   }
+            // };
         
-            return data;
+            // return data;
                   
         }catch(error){
             throw error

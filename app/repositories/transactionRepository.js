@@ -34,13 +34,13 @@ module.exports = {
         });
       },
 
-      // transactionFlight() {
+      transactionFlight() {
         
-      //   return Transaction.findOne({
-      //     where: { id: 2 },
-      //     include: Flight
-      //   })
-      // },
+        return Transaction.findOne({
+          where: { transaction_code: "VT5VX0V84Z" },
+          include: Flight
+        })
+      },
 
       findPassenger(token) {
         return Passenger.findAll({
@@ -53,7 +53,8 @@ module.exports = {
       const transaction = await Transaction.findByPk(transactionId);
       const flight = await Flight.findByPk(flightId);
         
-      await transaction.addFlight(flight);
+      await transaction.addFlight(flight, { through: { transaction_type: "departure" } });
+
 
       },
 
