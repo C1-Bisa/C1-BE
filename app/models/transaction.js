@@ -13,8 +13,13 @@ module.exports = (sequelize, DataTypes) => {
       // we are adding the following
       this.belongsToMany(models.Flight, { 
         foreignKey: 'transaction_id', 
-        through: 'Transaction_Flights', 
+        through: 'Transaction_Flight', 
       });
+      this.hasMany(
+        models.Transaction_Flight,{
+          foreignKey: 'transaction_id', 
+          as: 'Grant'
+        });
       this.hasMany(models.Passenger, {
         foreignKey:'transaction_id'
       })
