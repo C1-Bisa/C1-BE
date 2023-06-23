@@ -12,8 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       this.belongsToMany(models.Transaction, { 
         foreignKey: 'flight_id', 
-        through: 'Transaction_Flights', 
+        through: 'Transaction_Flight', 
       });
+      this.hasMany(
+        models.Transaction_Flight,{
+          foreignKey: 'flight_id', 
+          as: "Grant"
+        }
+        );
       this.belongsTo(models.Airline, {
         foreignKey:'airline_id'
       })

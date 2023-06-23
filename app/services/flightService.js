@@ -670,7 +670,7 @@ module.exports = {
                     status: "Success",
                     data: {
                         berangkat: getDataFlight,
-                        pulang: [],
+                        pulang: {},
                         totalAdults: adults,
                         totalChild: child,
                         totalBaby: baby,
