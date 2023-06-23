@@ -668,7 +668,7 @@ module.exports = {
 
                 return {
                     status: "Success",
-                    data:{
+                    data: {
                         berangkat: getDataFlight,
                         pulang: [],
                         totalAdults: adults,

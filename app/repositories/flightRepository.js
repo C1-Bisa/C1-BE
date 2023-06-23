@@ -65,7 +65,28 @@ module.exports = {
       },
       
       findFlight(id) {
-        return Flight.findByPk(id);
+        return Flight.findOne({
+          where: {id},
+          attributes: ['departure_date', 'departure_time', 'arrival_time', 'arrival_date', 'from', 'to', 'duration', 'price', 'flight_class', 'description'],
+          include: [ 
+                  {
+                    model: Airport,
+                    as: "Airport_from",
+                    attributes: ['airport_name', 'airport_code', 'airport_location'],
+                  },
+                  {
+                    model: Airport,
+                    as: "Airport_to",
+                    attributes: ['airport_name', 'airport_code', 'airport_location'],
+                  },
+                  {
+                    model: Airline,
+                    as: "Airline",
+                    attributes: ['airline_name', 'airline_code'],
+                  },
+          ]
+          
+        });
       },
       
       getTotalFlight() {

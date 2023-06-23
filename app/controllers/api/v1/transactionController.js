@@ -54,7 +54,7 @@ module.exports = {
 
     getHistory(req, res) {
       transactionService
-        .history(req)
+        .transactionHistory(req)
         .then((transaction) => {
           if(!transaction.data){
             res.status(422).json({

@@ -37,7 +37,7 @@ apiRouter.post("/api/v1/flight/getflight", controllers.flightController.listflig
 apiRouter.post("/api/v1/flight/createflight", controllers.authController.authorizeAdmin, controllers.flightController.createflight);
 apiRouter.put("/api/v1/flight/updateflight/:id", controllers.authController.authorizeAdmin, controllers.flightController.updateflight);
 apiRouter.delete("/api/v1/flight/deleteflight/:id", controllers.authController.authorizeAdmin, controllers.flightController.deleteflight);
-apiRouter.post("/api/v1/flight/getDetail", auth, controllers.flightController.getDetail);
+apiRouter.post("/api/v1/flight/getDetail", controllers.flightController.getDetail);
 
 // Airline
 apiRouter.get("/api/v1/airline",controllers.airlineController.list);

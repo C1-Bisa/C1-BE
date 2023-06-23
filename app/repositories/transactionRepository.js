@@ -1,7 +1,6 @@
 const { Transaction } = require("../models");
 const { Passenger } = require("../models");
-const { Flight, Transaction_Flight } = require("../models");
-const transaction_flight = require("../models/transaction_flight");
+const { Flight, Transaction_Flight, Airport, Airline } = require("../models");
 
 module.exports = {
 
@@ -23,43 +22,97 @@ module.exports = {
       },
 
       findAll(id) {
-        
         return Transaction.findAll({
           where: {user_id: id},
+          attributes: ['transaction_code', 'user_id', 'transaction_status', 'transaction_date'],
           include: [
             {
-                model: Passenger
+                model: Passenger,
+                attributes: ['name', 'title', 'type', 'transactionCode', 'nik_paspor'],
+            },
+            {
+              model: Flight,
+              attributes: ['departure_date', 'departure_time', 'arrival_time', 'arrival_date', 'from', 'to', 'duration', 'price', 'flight_class', 'description'],
+              include: [
+                {
+                  model: Airport,
+                  as: "Airport_from",
+                  attributes: ['airport_name', 'airport_code', 'airport_location'],
+                },
+                {
+                  model: Airport,
+                  as: "Airport_to",
+                  attributes: ['airport_name', 'airport_code', 'airport_location'],
+                },
+                {
+                  model: Airline,
+                  as: "Airline",
+                  attributes: ['airline_name', 'airline_code'],
+                },
+              ]
+
+            },
+           
+          ]
+        });
+      },
+
+      finArrival(){
+
+      },
+
+     async createTransactionType(transactionId,flightId,transactionType){
+        const transaction = await Transaction.findByPk(transactionId);
+        const flight = await Flight.findByPk(flightId);
+
+        return Transaction_Flight.create({transaction_id:transactionId,flight_id:flightId,transaction_type:transactionType});
+      },
+
+      getTransactionFlight(id) {   
+        return Transaction_Flight.findAll({
+          where: {transaction_id: id},
+          attributes: ['transaction_type'],
+          include: [
+            {
+                model: Flight,
+                attributes: ['departure_date', 'departure_time', 'arrival_time', 'arrival_date', 'from', 'to', 'duration', 'price', 'flight_class', 'description'],
+                include: [
+                  {
+                    model: Airport,
+                    as: "Airport_from",
+                    attributes: ['airport_name', 'airport_code', 'airport_location'],
+                  },
+                  {
+                    model: Airport,
+                    as: "Airport_to",
+                    attributes: ['airport_name', 'airport_code', 'airport_location'],
+                  },
+                  {
+                    model: Airline,
+                    as: "Airline",
+                    attributes: ['airline_name', 'airline_code'],
+                  },
+                ]
             }
-        ]
+          ]
         });
       },
 
-      transactionFlight() {
-        
+      findPassenger(transactionId){
         return Transaction.findOne({
-          where: { transaction_code: "VT5VX0V84Z" },
-          include: Flight
+          id: transactionId,
+          attributes: ['transaction_code', 'user_id', 'transaction_status', 'transaction_date'],
+          include: [
+            {
+              model: Passenger,
+              attributes: ['name', 'title', 'type', 'transactionCode', 'nik_paspor'],
+            }
+          ]
         })
-      },
+      }
 
-      findPassenger(token) {
-        return Passenger.findAll({
-          where: {transactionCode: token}
-        });
-      },
-
-
-      async addTransactionFlight(transactionId, flightId) {
-      const transaction = await Transaction.findByPk(transactionId);
-      const flight = await Flight.findByPk(flightId);
-        
-      await transaction.addFlight(flight, { through: { transaction_type: "departure" } });
-
-
-      },
-
-     
+}  
       
-}
+
 
 
