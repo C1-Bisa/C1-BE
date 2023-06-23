@@ -2,7 +2,6 @@ const express = require("express");
 const controllers = require("../app/controllers/api/v1");
 const controller = require("../app/controllers");
 const services = require("../app/services/userService") 
-const historyService = require("../app/services/historyService") 
 const auth = require ("../middleware/auth");
 const swaggerDocument = require('../docs/openapi.json');
 const swaggerUi = require('swagger-ui-express');

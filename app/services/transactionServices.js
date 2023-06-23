@@ -164,12 +164,76 @@ module.exports = {
     async transactionHistory(req) {
         try{
             const user = req.user.id;
+            //find transaction id
             const getAllHistory = await transactionRepository.findAll(user);
+            const arrayDataPassenger = [];
+            arrayDataPassenger.push(...getAllHistory);
+            const typePassenger = [];
+            const pricePassengerDeparture = [];
+            const pricePassengerArrival = [];
+            const totalPricePassenger = [];
+            const taxPassenger = [];
+    
+            for (let i = 0; i < arrayDataPassenger.length; i++) {
+                const objectPassenger = [];
+                for (let j = 0; j < arrayDataPassenger[i].Passengers.length; j++) {
+                    objectPassenger.push(arrayDataPassenger[i].Passengers[j].type)
+                }
+                typePassenger.push(objectPassenger)
+            }
+            
+            for (let i = 0; i < arrayDataPassenger.length; i++) {
+                let objectPricedeparture;
+                let objectPricearrival ;
+                if (arrayDataPassenger[i].Flights.length === 2) {
+                    // for (let j = 0; j < arrayDataPassenger[i].flight_departure.length; j++) {
+                        objectPricedeparture = arrayDataPassenger[i].Flights[0].price
+                    // }
+                    // for (let k = 0; k < arrayDataPassenger[i].flight_return.length; k++) {
+                        objectPricearrival = arrayDataPassenger[i].Flights[1].price
+                    // }
+                }else{
+                    // for (let j = 0; j < arrayDataPassenger[i].flight_departure.length; j++) {
+                        objectPricedeparture = arrayDataPassenger[i].Flights[0].price
+                    // }
+                }
+                let tax = 0.1 * arrayDataPassenger[i].amount;
 
+                taxPassenger.push(tax)
+                totalPricePassenger.push(arrayDataPassenger[i].amount)
+                pricePassengerDeparture.push(objectPricedeparture);
+                pricePassengerArrival.push(objectPricearrival);
+            }
+
+            const adult = [];
+            const child = [];
+
+            for (let i = 0; i < typePassenger.length; i++) {
+                let adultCount = 0;
+                let childCount = 0;
+                for (let j = 0; j < typePassenger[i].length; j++) {
+                    if (typePassenger[i][j] == "Adult") {
+                        adultCount = adultCount + 1;
+                    }
+                    if (typePassenger[i][j] == "Child") {
+                        childCount = childCount + 1;
+                    }
+                }
+                adult.push(adultCount)
+                child.push(childCount)
+            }
+
+
+            let coreData = arrayDataPassenger.map((obj, index) => ({
+                transaction: obj,
+                type_passenger: {adult: adult[index], child: child[index]},
+                price: {departure: pricePassengerDeparture[index], arrival: pricePassengerArrival[index], tax: taxPassenger[index], total:totalPricePassenger[index]}
+            }));
+            
             return{
                 status: "Ok",
                 message: "History Transaction",
-                data: getAllHistory
+                data: coreData
             }
 
         }catch(error){
@@ -237,7 +301,7 @@ module.exports = {
               }
             };
         
-            // return data;
+            return data;
                   
         }catch(error){
             throw error
