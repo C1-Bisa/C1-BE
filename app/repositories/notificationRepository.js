@@ -1,6 +1,12 @@
 const {Notification} = require("../models");
 
 module.exports = {
+    findAll(id) {
+        return Notification.findAll({
+            where:{userId: id}
+        });
+      },
+
     create(createArgs){
         return Notification.create(createArgs);
     },

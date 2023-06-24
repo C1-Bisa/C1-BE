@@ -109,6 +109,10 @@ module.exports = {
           attributes: ['transaction_type'],
           include: [
             {
+              model:Transaction,
+              attributes: ['amount']
+            },
+            {
                 model: Flight,
                 attributes: ['departure_date', 'departure_time', 'arrival_time', 'arrival_date', 'from', 'to', 'duration', 'price', 'flight_class', 'description'],
                 include: [
@@ -136,7 +140,7 @@ module.exports = {
       findPassenger(transactionId){
         return Transaction.findOne({
           id: transactionId,
-          attributes: ['transaction_code', 'user_id', 'transaction_status', 'transaction_date'],
+          attributes: ['id', 'transaction_code', 'user_id', 'transaction_status', 'transaction_date'],
           include: [
             {
               model: Passenger,

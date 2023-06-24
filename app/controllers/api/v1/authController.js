@@ -155,6 +155,58 @@ module.exports ={
     }
   },
 
+  getNotif(req, res) {
+    userService
+      .notification(req)
+      .then((user) => {
+        if(!user.data){
+            res.status(422).json({
+              status: user.status,
+              message: user.message,
+            });
+            return;
+          }
+  
+          res.status(200).json({
+            status: user.status,
+            message: user.message,
+            data: user.data
+          });
+      })
+      .catch((err) => {
+        res.status(400).json({
+          status: "Failed",
+          message: err.message,
+        });
+      });
+  },
+
+  updateNotif(req, res) {
+    userService
+      .updateNotif(req)
+      .then((user) => {
+        if(!user.data){
+            res.status(422).json({
+              status: user.status,
+              message: user.message,
+            });
+            return;
+          }
+  
+          res.status(200).json({
+            status: user.status,
+            message: user.message,
+            data: user.data
+          });
+      })
+      .catch((err) => {
+        res.status(400).json({
+          status: "Failed",
+          message: err.message,
+        });
+      });
+  },
+
   // Middleware async untuk memeriksa token kedaluwarsa
   async checkTokenExpiration(req, res, next) {
     const authHeader = req.headers.authorization;
