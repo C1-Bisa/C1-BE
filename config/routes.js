@@ -2,7 +2,6 @@ const express = require("express");
 const controllers = require("../app/controllers/api/v1");
 const controller = require("../app/controllers");
 const services = require("../app/services/userService") 
-const historyService = require("../app/services/historyService") 
 const auth = require ("../middleware/auth");
 const swaggerDocument = require('../docs/openapi.json');
 const swaggerUi = require('swagger-ui-express');
@@ -12,6 +11,10 @@ const apiRouter = express.Router();
 
 apiRouter.use('/api', swaggerUi.serve);
 apiRouter.get('/api', swaggerUi.setup(swaggerDocument));
+
+//Notification
+apiRouter.get("/api/v1/notification/user", auth, controllers.authController.getNotif);
+apiRouter.get("/api/v1/notification/updateNotif", auth, controllers.authController.updateNotif);
 
 // Reset Password
 apiRouter.put("/api/v1/user/createNewPassword",controllers.userController.updatepass);
@@ -33,7 +36,7 @@ apiRouter.post("/api/v1/user/login",controllers.authController.login);
 
 //FLIGHT
 apiRouter.post("/api/v1/flight/searchflight",controllers.flightController.searchFlight);
-apiRouter.post("/api/v1/flight/getflight", controllers.flightController.listflight);
+apiRouter.get("/api/v1/flight/getflight", controllers.flightController.listflight);
 apiRouter.post("/api/v1/flight/createflight", controllers.authController.authorizeAdmin, controllers.flightController.createflight);
 apiRouter.put("/api/v1/flight/updateflight/:id", controllers.authController.authorizeAdmin, controllers.flightController.updateflight);
 apiRouter.delete("/api/v1/flight/deleteflight/:id", controllers.authController.authorizeAdmin, controllers.flightController.deleteflight);
@@ -57,6 +60,7 @@ apiRouter.delete("/api/v1/airport/:id",controllers.authController.authorizeAdmin
 apiRouter.post("/api/v1/transaction",auth,controllers.transactionController.create);
 apiRouter.get("/api/v1/getHistoryTransaction",auth,controllers.transactionController.getHistory);
 apiRouter.put("/api/v1/transaction/update",auth,controllers.transactionController.update);
+apiRouter.post("/api/v1/getTransactionbyId",auth,controllers.transactionController.getById);
 
 
 apiRouter.get("/api/v1/errors", () => {

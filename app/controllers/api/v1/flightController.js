@@ -4,20 +4,20 @@ module.exports = {
 
 listflight(req, res) {
     flightService
-      .list(req.body, req.query)
-      .then(( flight) => {
-        res.status(200).json({
-          status: flight.status,
-          message: flight.message,
-          data: flight.data
-        });
-      })
-      .catch((err) => {
-        res.status(400).json({
-          status: "Failed",
-          message: err.message,
-        });
+    .listFlight(req.body, req.query)
+    .then(({ data, count }) => {
+      res.status(200).json({
+        status: "Success",
+        data: { flight: data },
+        meta: { total: count },
       });
+    })
+    .catch((err) => {
+      res.status(400).json({
+        status: "Failed",
+        message: err.message,
+      });
+    });
   },
 
 createflight(req, res) {

@@ -8,6 +8,20 @@ const { DATE } = require("sequelize");
 
 
 module.exports = {
+    async listFlight(){
+        try {
+            const flight = await flightRepository.findAll();
+            const flightCount = await flightRepository.getTotalFlight();
+
+            return {
+                data: flight,
+                count: flightCount,
+            };
+        } catch (err) {
+            throw err;
+        }
+    },
+
     async list(reqBody, reqQuery) {
         try {
             const {from,to,departure_date,departure_time,flight_class,returnDate} = reqBody

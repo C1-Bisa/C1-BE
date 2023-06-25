@@ -53,7 +53,6 @@ module.exports = {
               ]
 
             },
-           
           ]
         });
       },
@@ -70,7 +69,38 @@ module.exports = {
         const transaction = await Transaction.findByPk(transactionId);
         const flight = await Flight.findByPk(flightId);
 
+        // await transaction.addFlight(flight, { through: { transaction_type: transactionType } });
         return Transaction_Flight.create({transaction_id:transactionId,flight_id:flightId,transaction_type:transactionType});
+      },
+
+      getType(id){
+        return Transaction_Flight.findAll({
+          where: {transaction_id: id},
+          attributes: ['transaction_type'],
+          include: [
+            {
+                model: Flight,
+                attributes: ['departure_date', 'departure_time', 'arrival_time', 'arrival_date', 'from', 'to', 'duration', 'price', 'flight_class', 'description'],
+                include: [
+                  {
+                    model: Airport,
+                    as: "Airport_from",
+                    attributes: ['airport_name', 'airport_code', 'airport_location'],
+                  },
+                  {
+                    model: Airport,
+                    as: "Airport_to",
+                    attributes: ['airport_name', 'airport_code', 'airport_location'],
+                  },
+                  {
+                    model: Airline,
+                    as: "Airline",
+                    attributes: ['airline_name', 'airline_code'],
+                  },
+                ]
+            }
+          ]
+        })
       },
 
       getTransactionFlight(id) {   
@@ -78,6 +108,10 @@ module.exports = {
           where: {transaction_id: id},
           attributes: ['transaction_type'],
           include: [
+            {
+              model:Transaction,
+              attributes: ['amount']
+            },
             {
                 model: Flight,
                 attributes: ['departure_date', 'departure_time', 'arrival_time', 'arrival_date', 'from', 'to', 'duration', 'price', 'flight_class', 'description'],
@@ -106,7 +140,7 @@ module.exports = {
       findPassenger(transactionId){
         return Transaction.findOne({
           id: transactionId,
-          attributes: ['transaction_code', 'user_id', 'transaction_status', 'transaction_date'],
+          attributes: ['id', 'transaction_code', 'user_id', 'transaction_status', 'transaction_date'],
           include: [
             {
               model: Passenger,

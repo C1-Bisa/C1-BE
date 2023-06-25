@@ -4,7 +4,6 @@ const airlineController = require("./airlineController");
 const flightController = require("./flightController");
 const airportController = require("./airportController");
 const transactionController = require("./transactionController");
-const historyController = require("./historyController");
 
 
 module.exports = {
@@ -13,6 +12,5 @@ module.exports = {
   airlineController,
   flightController,
   airportController,
-  transactionController,
-  historyController
+  transactionController
 };

@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken")
 const {JWT_SIGNATURE_KEY} = process.env;
 const{Notification, User} = require("../models");
 const ApiError = require("../../utils/ApiError");
+const notificationRepository = require("../repositories/notificationRepository");
 
 const regexGmail = /[\w]*@*[a-z]*\.*[\w]{5,}(\.)*(@gmail\.com)/g;
 
@@ -53,6 +54,38 @@ module.exports = {
         data: users,
         count: userCount,
       };
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async notification(request) {
+    try {
+      const id = request.user.id
+
+      const notifUser = await notificationRepository.findAll(id);
+
+      return{
+        status : "Success",
+        message : "Success get all notif user",
+        data : notifUser
+      }
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  async updateNotif(request) {
+    try {
+      const id = request.user.id
+
+      const updateNotifUser = await notificationRepository.update(id, {isRead: true});
+
+      return{
+        status : "Success",
+        message : "Success update isRead all notif user",
+        data : updateNotifUser
+      }
     } catch (err) {
       throw err;
     }
