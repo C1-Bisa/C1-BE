@@ -162,87 +162,6 @@ module.exports = {
             data: dataDetailTransaction
         }
     },
-
-    // async transactionHistory(req) {
-    //     try{
-    //         const user = req.user.id;
-    //         const getAllHistory = await transactionRepository.findAll(user);
-
-    //         return{
-    //             status: "Ok",
-    //             message: "History Transaction",
-    //             data: getAllHistory
-    //         }
-
-    //     }catch(error){
-    //         throw error
-    //     }
-    // },
-
-    // async createTransaction(req){
-    //     try{
-    //         const user = req.user;
-    //         const {flights, passenger,amount} = req.body;
-    //         const transaction_code = generateCode()
-    //         const date= new Date();
-
-    //         const newTransaction = await transactionRepository.create({
-    //             user_id: user.id,
-    //             amount,
-    //             transaction_code,
-    //             transaction_date: date,
-    //             transaction_status: 'Unpaid'
-    //         })
-
-
-    //         for (let i = 0; i < passenger.length; i++) {
-    //             const bookPassenger = await transactionRepository.createPassenger({
-    //                 transaction_id: newTransaction.id,
-    //                 transactionCode: newTransaction.transaction_code,
-    //                 type: passenger[i].type,
-    //                 title: passenger[i].title,
-    //                 name: passenger[i].name,
-    //                 family_name: passenger[i].family_name,
-    //                 birthday: passenger[i].birthday,
-    //                 nationality: passenger[i].nationality,
-    //                 nik_paspor: passenger[i].nik,
-    //                 seat: passenger[i].seat
-    //             })
-    //         }
-
-    //         const findPassenger = await transactionRepository.findPassenger(newTransaction.id);
-
-    //         // Mengecek transaction_type deprature/arrival
-    //         const departureFlights = [...flights].filter((data)=>data.flight_type == 'Departure');
-    //         const arrivalFlights = [...flights].filter((data)=>data.flight_type == 'Arrival');
-
-    //         // Create departure transaction_type
-    //         const departureFlightId = await transactionRepository.createTransactionType(newTransaction.id,departureFlights[0].flight_id,'Departure')
-
-    //         // Create arrival transaction_type
-    //         const arrivalFlightId = arrivalFlights.length > 0? await transactionRepository.createTransactionType(newTransaction.id,arrivalFlights[0].flight_id,'Arrival'): []
-        
-    //         const departureFlight = await transactionRepository.getTransactionFlight(newTransaction.id)
-
-    //         const arrivalFlight = arrivalFlights.length > 0? await transactionRepository.getTransactionFlight(newTransaction.id) : []
-
-    //         const data = {
-    //           status: "Ok",
-    //           message: "Data successfully created",
-    //           data: {
-    //             transaction: findPassenger,
-    //             departure: departureFlight,
-    //             arrival: arrivalFlight,
-    //           }
-    //         };
-        
-    //         return data;
-                  
-    //     }catch(error){
-    //         throw error
-
-    //     }
-    // },
     
     async transactionHistory(req) {
         try{
@@ -371,6 +290,14 @@ module.exports = {
 
             const arrivalFlight = arrivalFlights.length > 0? await transactionRepository.getTransactionFlight(newTransaction.id) : []
 
+            // Create notifikasi order
+            await notificationRepository.create({
+                headNotif: "Pemesanan tiket",
+                message: "Segera lakukan pembayaran  untuk menyelesaikan proses transaksi",
+                userId: user.id,
+                isRead: false
+            });
+
             const data = {
               status: "Ok",
               message: "Data successfully created",
@@ -388,6 +315,71 @@ module.exports = {
 
         }
     },
+
+    // async createTransaction(req){
+    //     try{
+    //         const user = req.user;
+    //         const {flights, passenger,amount} = req.body;
+    //         const transaction_code = generateCode()
+    //         const date= new Date();
+
+    //         const newTransaction = await transactionRepository.create({
+    //             user_id: user.id,
+    //             amount,
+    //             transaction_code,
+    //             transaction_date: date,
+    //             transaction_status: 'Unpaid'
+    //         })
+
+
+    //         for (let i = 0; i < passenger.length; i++) {
+    //             const bookPassenger = await transactionRepository.createPassenger({
+    //                 transaction_id: newTransaction.id,
+    //                 transactionCode: newTransaction.transaction_code,
+    //                 type: passenger[i].type,
+    //                 title: passenger[i].title,
+    //                 name: passenger[i].name,
+    //                 family_name: passenger[i].family_name,
+    //                 birthday: passenger[i].birthday,
+    //                 nationality: passenger[i].nationality,
+    //                 nik_paspor: passenger[i].nik,
+    //                 seat: passenger[i].seat
+    //             })
+    //         }
+
+    //         const findPassenger = await transactionRepository.findPassenger(newTransaction.id);
+
+    //         // Mengecek transaction_type deprature/arrival
+    //         const departureFlights = [...flights].filter((data)=>data.flight_type == 'Departure');
+    //         const arrivalFlights = [...flights].filter((data)=>data.flight_type == 'Arrival');
+
+    //         // Create departure transaction_type
+    //         const departureFlightId = await transactionRepository.createTransactionType(newTransaction.id,departureFlights[0].flight_id,'Departure')
+
+    //         // Create arrival transaction_type
+    //         const arrivalFlightId = arrivalFlights.length > 0? await transactionRepository.createTransactionType(newTransaction.id,arrivalFlights[0].flight_id,'Arrival'): []
+        
+    //         const departureFlight = await transactionRepository.getTransactionFlight(newTransaction.id)
+
+    //         const arrivalFlight = arrivalFlights.length > 0? await transactionRepository.getTransactionFlight(newTransaction.id) : []
+
+    //         const data = {
+    //           status: "Ok",
+    //           message: "Data successfully created",
+    //           data: {
+    //             transaction: findPassenger,
+    //             departure: departureFlight,
+    //             arrival: arrivalFlight,
+    //           }
+    //         };
+        
+    //         return data;
+                  
+    //     }catch(error){
+    //         throw error
+
+    //     }
+    // },
     
 
 }
