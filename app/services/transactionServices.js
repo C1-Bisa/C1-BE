@@ -155,20 +155,16 @@ module.exports = {
                 typePassenger.push(findPassenger.Passengers[i].type)
             }
 
-            let adult;
-            let child;
+            let adult = 0;
+            let child = 0;
 
             for (let i = 0; i < typePassenger.length; i++) {
-                let adultCount = 0;
-                let childCount = 0;
                 if (typePassenger[i] == "Adult") {
-                    adultCount = adultCount + 1;
+                    adult = adult + 1;
                 }
                 if (typePassenger[i] == "Child") {
-                    childCount = childCount + 1;
+                    child = child + 1;
                 }
-                adult = adultCount
-                child = childCount
             }
 
 
@@ -378,7 +374,6 @@ module.exports = {
                 child.push(childCount)
             }
 
-
             let coreData = arrayDataPassenger.map((obj, index) => ({
                 transaction: obj,
                 type_passenger: {adult: adult[index], child: child[index]},
@@ -414,9 +409,6 @@ module.exports = {
             // Mengecek transaction_type deprature/arrival
             const departureFlights = [...flights].filter((data)=>data.flight_type == 'Departure');
             const arrivalFlights = [...flights].filter((data)=>data.flight_type == 'Arrival');
-
-            console.log(departureFlights);
-            console.log(departureFlights[0].flight_id);
 
             const departureFlightId = await Flight.findByPk(departureFlights[0].flight_id);
             const arrivalFlightId = arrivalFlights.length > 0? await Flight.findByPk(arrivalFlights[0].flight_id) : null;

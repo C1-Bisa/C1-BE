@@ -139,7 +139,7 @@ module.exports = {
 
       findPassenger(transactionId){
         return Transaction.findOne({
-          id: transactionId,
+          where:{id: transactionId},
           attributes: ['id', 'transaction_code', 'user_id', 'transaction_status', 'transaction_date'],
           include: [
             {
