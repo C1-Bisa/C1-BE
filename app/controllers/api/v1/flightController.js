@@ -124,6 +124,7 @@ deleteflight(req, res) {
         });
       });
   },
+  
 getDetail(req, res) {
     flightService
       .getDetail(req)
@@ -147,8 +148,5 @@ getDetail(req, res) {
           message: err.message,
         });
       });
-  },
-
-
-  
+  }, 
 };
