@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "https://kel1airplaneapi-production.up.railway.app/api/v1"
+      "url": "http://localhost:8000/api/v1"
     }
   ],
   "tags": [
@@ -25,6 +25,14 @@
     {
       "name": "flight",
       "description": "Everything about Data Flight"
+    },
+    {
+      "name": "transaction",
+      "description": "Everything about Data Transaction"
+    },
+    {
+      "name": "notification",
+      "description": "Everything about Data Nptification"
     }
   ],
   "paths": {
@@ -3198,6 +3206,722 @@
           }
         }
       }
+    },
+    "/transaction": {
+      "post": {
+        "tags": [
+          "transaction"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Create transaction by user",
+        "description": "user can create transaction",
+        "requestBody": {
+          "description": "send request to create transaction",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "flights": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Flight"
+                    },
+                    "minItems": 2
+                  },
+                  "amount": {
+                    "type": "integer",
+                    "example": 50000
+                  },
+                  "passenger": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Passenger"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "If data available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Ok"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data successfully created"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "transaction": {
+                          "$ref": "#/components/schemas/Transaction"
+                        },
+                        "ticket": {
+                          "$ref": "#/components/schemas/Ticket"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If wrong path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "if from or to location didn't found in database, if from not filled, if from and to location same, if airport id not match with from location will return 422 error code.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "from location did'nt found please choose the other location! "
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/history": {
+      "get": {
+        "tags": [
+          "transaction"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Get history transaction by user",
+        "description": "Get all history transaction",
+        "responses": {
+          "201": {
+            "description": "If data available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Ok"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data successfully created"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "transaction": {
+                          "$ref": "#/components/schemas/HistoryTransaction"
+                        },
+                        "type_passenger": {
+                          "type": "object",
+                          "properties": {
+                            "adult": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "child": {
+                              "type": "integer",
+                              "example": 2
+                            }
+                          }
+                        },
+                        "price": {
+                          "type": "object",
+                          "properties": {
+                            "departure": {
+                              "type": "integer",
+                              "example": 20000
+                            },
+                            "arrival": {
+                              "type": "integer",
+                              "example": 20000
+                            },
+                            "tax": {
+                              "type": "integer",
+                              "example": 15000
+                            },
+                            "total": {
+                              "type": "integer",
+                              "example": 5000000
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If wrong path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "if from or to location didn't found in database, if from not filled, if from and to location same, if airport id not match with from location will return 422 error code.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "from location did'nt found please choose the other location! "
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/update": {
+      "put": {
+        "tags": [
+          "transaction"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Update status transaction",
+        "description": "To update status transaction when user has been paid",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "transaction_code": {
+                    "type": "string",
+                    "example": "CPGVERP3M6"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "If data successfully updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Ok"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Successfuly Paid"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "example": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failed error because forbidden access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DontHavePermit"
+                    }
+                  ]
+                },
+                "examples": {
+                  "dontHavePermit": {
+                    "summary": "example invalid role access",
+                    "value": {
+                      "message": "You dont have permission"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If failed to retrive the data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Airline not found!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/getById": {
+      "post": {
+        "tags": [
+          "transaction"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Get detail transaction by Id",
+        "description": "user can get detail transaction by Id",
+        "requestBody": {
+          "description": "send transaction Id to get detail of transaction",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "transaction_id": {
+                    "type": "integer",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "If data successfully Get",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Ok"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Data successfully get"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "transaction": {
+                          "$ref": "#/components/schemas/Transaction"
+                        },
+                        "departure": {
+                          "type": "object",
+                          "properties": {
+                            "transaction_type": {
+                              "type": "string",
+                              "example": "Departure"
+                            },
+                            "Transaction": {
+                              "type": "object",
+                              "properties": {
+                                "amount": {
+                                  "type": "integer",
+                                  "example": 500000
+                                }
+                              }
+                            },
+                            "departure": {
+                              "$ref": "#/components/schemas/departure"
+                            },
+                            "passanger": {
+                              "type": "object",
+                              "properties": {
+                                "adult": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "child": {
+                                  "type": "integer",
+                                  "example": 2
+                                }
+                              }
+                            },
+                            "price": {
+                              "type": "object",
+                              "properties": {
+                                "departure": {
+                                  "type": "integer",
+                                  "example": 2000000
+                                },
+                                "arrival": {
+                                  "type": "integer",
+                                  "example": 200000
+                                },
+                                "totalPrice": {
+                                  "type": "integer",
+                                  "example": 4150000
+                                },
+                                "tax": {
+                                  "type": "integer",
+                                  "example": 150000
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If wrong path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "if from or to location didn't found in database, if from not filled, if from and to location same, if airport id not match with from location will return 422 error code.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Failed"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "from location did'nt found please choose the other location!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notification": {
+      "get": {
+        "tags": [
+          "notification"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Get notifikasi for user",
+        "description": "Get all notifikasi",
+        "responses": {
+          "201": {
+            "description": "If data available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Success get all notif user"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "headNotif": {
+                            "type": "string",
+                            "example": "Pemesanan tiket"
+                          },
+                          "message": {
+                            "type": "string",
+                            "example": "Segera lakukan pembayaran untuk menyelesaikan proses transaksi"
+                          },
+                          "userId": {
+                            "type": "integer",
+                            "example": 2
+                          },
+                          "isRead": {
+                            "type": "boolean",
+                            "example": false
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If wrong path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notification/update": {
+      "get": {
+        "tags": [
+          "notification"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Isread notification be 'true'",
+        "description": "change is read notifikasi be 'true'",
+        "responses": {
+          "201": {
+            "description": "If data available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Success"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Success update isRead all notif user"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "example": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "If Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If wrong path",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3230,6 +3954,281 @@
         },
         "xml": {
           "name": "users"
+        }
+      },
+      "Flight": {
+        "type": "object",
+        "properties": {
+          "flight_id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "flight_type": {
+            "type": "string",
+            "example": "Departure"
+          }
+        }
+      },
+      "Passenger": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "example": "Adult"
+          },
+          "title": {
+            "type": "string",
+            "example": "Mr."
+          },
+          "name": {
+            "type": "string",
+            "example": "Daffa Reynad Susanto"
+          },
+          "family_name": {
+            "type": "string",
+            "example": "Susanto"
+          },
+          "birthday": {
+            "type": "string",
+            "format": "date",
+            "example": "1996-09-29"
+          },
+          "nationality": {
+            "type": "string",
+            "example": "IDN"
+          },
+          "nik": {
+            "type": "integer",
+            "format": "int32",
+            "example": 1243522
+          },
+          "issued_country": {
+            "type": "string",
+            "example": "IDN"
+          },
+          "expired": {
+            "type": "string",
+            "format": "date",
+            "example": "2023-07-17"
+          },
+          "seat": {
+            "type": "string",
+            "example": "A3"
+          }
+        }
+      },
+      "FlightOrder": {
+        "type": "object",
+        "properties": {
+          "departure_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-23"
+          },
+          "departure_time": {
+            "type": "string",
+            "example": "11:00"
+          },
+          "arrival_time": {
+            "type": "string",
+            "example": "14:00"
+          },
+          "arrival_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-24"
+          },
+          "from": {
+            "type": "string",
+            "example": "Bali"
+          },
+          "to": {
+            "type": "string",
+            "example": "Jakarta"
+          },
+          "duration": {
+            "type": "integer",
+            "example": 2
+          },
+          "price": {
+            "type": "integer",
+            "example": 20000
+          },
+          "flight_class": {
+            "type": "string",
+            "example": "Bussiness"
+          },
+          "description": {
+            "type": "string",
+            "example": "Baggage 20 kg Cabin baggage 7 kg In Flight Entertainment"
+          },
+          "Airport_from": {
+            "$ref": "#/components/schemas/Airport"
+          },
+          "Airport_to": {
+            "$ref": "#/components/schemas/Airport"
+          },
+          "Airline": {
+            "$ref": "#/components/schemas/Airline"
+          }
+        }
+      },
+      "Airport": {
+        "type": "object",
+        "properties": {
+          "airport_name": {
+            "type": "string"
+          },
+          "airport_code": {
+            "type": "string"
+          },
+          "airport_location": {
+            "type": "string"
+          }
+        }
+      },
+      "Airline": {
+        "type": "object",
+        "properties": {
+          "airline_name": {
+            "type": "string"
+          },
+          "airline_code": {
+            "type": "string"
+          }
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "transactionCode": {
+            "type": "string",
+            "example": "DYS5YAISP1"
+          },
+          "user_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "transaction_status": {
+            "type": "string",
+            "example": "unpaid"
+          },
+          "transaction_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-25"
+          },
+          "Passengers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Passenger"
+            }
+          }
+        }
+      },
+      "HistoryTransaction": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "transactionCode": {
+            "type": "string",
+            "example": "DYS5YAISP1"
+          },
+          "user_id": {
+            "type": "integer",
+            "example": 1
+          },
+          "transaction_status": {
+            "type": "string",
+            "example": "unpaid"
+          },
+          "transaction_date": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2023-06-25"
+          },
+          "Passengers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Passenger"
+            }
+          },
+          "Flights": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FlightOrder"
+            }
+          },
+          "Transaction_Flight": {
+            "type": "object",
+            "properties": {
+              "transaction_id": {
+                "type": "integer",
+                "example": 1
+              },
+              "flight_id": {
+                "type": "integer",
+                "example": 2
+              },
+              "transaction_type": {
+                "type": "string",
+                "example": "Departure"
+              }
+            }
+          }
+        }
+      },
+      "departure": {
+        "type": "object",
+        "properties": {
+          "transaction_type": {
+            "type": "string",
+            "example": "Departure"
+          },
+          "Transaction": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "integer",
+                "example": 500000
+              }
+            }
+          },
+          "Flight": {
+            "$ref": "#/components/schemas/FlightOrder"
+          }
+        }
+      },
+      "Ticket": {
+        "type": "object",
+        "properties": {
+          "transaction_type": {
+            "type": "string",
+            "example": "Departure"
+          },
+          "Transaction": {
+            "$ref": "#/components/schemas/TransactionAmount"
+          },
+          "Flight": {
+            "$ref": "#/components/schemas/FlightOrder"
+          }
+        }
+      },
+      "TransactionAmount": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "example": 2000000
+          }
         }
       },
       "RequiredAuth": {

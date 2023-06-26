@@ -6,35 +6,44 @@ module.exports = {
 
     findAll() {
         return Flight.findAll({
+          // attributes: ['departure_date', 'departure_time', 'arrival_date', 'arrival_time', 'duration', 'price', 'flight_class', 'description'],
             include: [
                 {
-                    model: Airline 
+                    model: Airline,
+                    attributes: ['airline_code', 'airline_name'],
+
                 },   
                 {
                   model: Airport,
+                  attributes: ['airport_code', 'airport_name'],
                   as: "Airport_from"
               },   
               {
                   model: Airport,
+                  attributes: ['airport_code', 'airport_name'],
                   as: "Airport_to"
               }     
             ]
-            });
-      },
+          });
+    },
 
     findTicketFilter(id) {
         return Flight.findAll({
             where: {id:id},
+            attributes: ['departure_date', 'departure_time', 'arrival_date', 'arrival_time','duration','price','flight_class','description'],
             include: [
                 {
-                    model: Airline
+                    model: Airline,
+                    attributes: ['airline_code', 'airline_name']
                 },   
                 {
                     model: Airport,
+                    attributes: ['airport_code', 'airport_name'],
                     as: "Airport_from"
                 },   
                 {
                     model: Airport,
+                    attributes: ['airport_code', 'airport_name'],
                     as: "Airport_to"
                 }   
             ]
@@ -60,11 +69,11 @@ module.exports = {
             });
       },
 
-      findAirport(id) {
+    findAirport(id) {
         return Airport.findByPk(id);
       },
       
-      findFlight(id) {
+    findFlight(id) {
         return Flight.findOne({
           where: {id},
           attributes: ['departure_date', 'departure_time', 'arrival_time', 'arrival_date', 'from', 'to', 'duration', 'price', 'flight_class', 'description'],
@@ -89,15 +98,15 @@ module.exports = {
         });
       },
       
-      getTotalFlight() {
+    getTotalFlight() {
         return Flight.count();
       },
 
-      create(createArgs){
+    create(createArgs){
         return Flight.create(createArgs);
       },
   
-      update(id, updateArgs){
+    update(id, updateArgs){
         return Flight.update(updateArgs,{
             where: {
                 id,
@@ -105,7 +114,7 @@ module.exports = {
         })
       },
 
-      delete(id){
+    delete(id){
         return Flight.destroy({
             where: {
                 id,
@@ -113,7 +122,7 @@ module.exports = {
         })
       },
 
-      findLocation(loc){
+    findLocation(loc){
         return Airport.findOne({
           where : {airport_location: loc}
         })

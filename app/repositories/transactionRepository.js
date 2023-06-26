@@ -11,6 +11,13 @@ module.exports = {
     createPassenger(createArgs){
         return Passenger.create(createArgs);
       },
+
+    findById(code){
+      return Transaction.findOne({
+        where: {transaction_code: code},
+        // attributes: ['transaction_code, transaction_status, transaction_date']
+      })
+    },
   
     update(id,code, updateArgs){
         return Transaction.update(updateArgs,{
@@ -21,7 +28,7 @@ module.exports = {
         })
       },
 
-      findAll(id) {
+    findAll(id) {
         return Transaction.findAll({
           where: {user_id: id},
           attributes: ['transaction_code', 'user_id','amount', 'transaction_status', 'transaction_date'],
@@ -57,7 +64,7 @@ module.exports = {
         });
       },
 
-      async addFlight(transactionId,flightId,transactionType){
+    async addFlight(transactionId,flightId,transactionType){
         const transaction = await Transaction.findByPk(transactionId);
         const flight = await Flight.findByPk(flightId);
 
@@ -65,7 +72,7 @@ module.exports = {
 
       },
 
-     async createTransactionType(transactionId,flightId,transactionType){
+    async createTransactionType(transactionId,flightId,transactionType){
         const transaction = await Transaction.findByPk(transactionId);
         const flight = await Flight.findByPk(flightId);
 
@@ -73,7 +80,7 @@ module.exports = {
         return Transaction_Flight.create({transaction_id:transactionId,flight_id:flightId,transaction_type:transactionType});
       },
 
-      getType(id){
+    getType(id){
         return Transaction_Flight.findAll({
           where: {transaction_id: id},
           attributes: ['transaction_type'],
@@ -103,7 +110,7 @@ module.exports = {
         })
       },
 
-      getTransactionFlight(id) {   
+    getTransactionFlight(id) {   
         return Transaction_Flight.findAll({
           where: {transaction_id: id},
           attributes: ['transaction_type'],
@@ -137,9 +144,9 @@ module.exports = {
         });
       },
 
-      findPassenger(transactionId){
+    findPassenger(transactionId){
         return Transaction.findOne({
-          id: transactionId,
+          where: {id: transactionId},
           attributes: ['id', 'transaction_code', 'user_id', 'transaction_status', 'transaction_date'],
           include: [
             {
@@ -148,7 +155,7 @@ module.exports = {
             }
           ]
         })
-      }
+    }
 
 }  
       

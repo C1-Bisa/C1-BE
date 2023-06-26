@@ -95,6 +95,16 @@ module.exports = {
             const user = req.user
             const {transaction_code,norek} =  req.body
 
+            const dataTransaction = await transactionRepository.findById(transaction_code);
+
+            if(!dataTransaction){
+                return{
+                    status: "FAIL",
+                    message: "Data transaksi tidak ditemukan",
+                    data: null
+                }
+            }
+
             const updateTransaction =  await transactionRepository.update(user.id,transaction_code,{transaction_status:"Issued"});
 
             await notificationRepository.create({
@@ -117,6 +127,78 @@ module.exports = {
 
     },
 
+    // async transactionById(req){
+    //     try{
+    //         const user = req.user.id
+    //         const {transaction_id} =  req.body
+    //         const typePassenger = [];
+
+    //         const getTransaction = await transactionRepository.getTransactionFlight(transaction_id);
+    //         if (!getTransaction) {
+    //             return {
+    //                 status: "FAIL",
+    //                 message: "Data Failed Displayed",
+    //                 data: null
+    //               };
+    //         }
+    //         const findPassenger = await transactionRepository.findPassenger(transaction_id);
+    //         const totalPrice = getTransaction[0].Transaction.amount;
+    //         const tax = totalPrice * 0.1
+
+    //         let departureFlight;
+    //         let arrivalFlight;
+    //         let departurePrice;
+    //         let arrivalPrice;
+
+    //         if (getTransaction.length == 2) {
+    //             departureFlight = getTransaction[0]
+    //             arrivalFlight = getTransaction[1]
+    //             departurePrice = getTransaction[0].Flight.price
+    //             arrivalPrice = getTransaction[1].Flight.price
+    //         }else{
+    //             departureFlight = getTransaction[0]
+    //             arrivalFlight = {};
+    //             departurePrice = getTransaction[0].Flight.price
+    //         }
+
+    //         for (let i = 0; i < findPassenger.Passengers.length; i++) {
+    //             typePassenger.push(findPassenger.Passengers[i].type)
+    //         }
+
+    //         let adult;
+    //         let child;
+
+    //         for (let i = 0; i < typePassenger.length; i++) {
+    //             let adultCount = 0;
+    //             let childCount = 0;
+    //             if (typePassenger[i] == "Adult") {
+    //                 adultCount = adultCount + 1;
+    //             }
+    //             if (typePassenger[i] == "Child") {
+    //                 childCount = childCount + 1;
+    //             }
+    //             adult = adultCount
+    //             child = childCount
+    //         }
+
+
+    //         return {
+    //             status: "Ok",
+    //             message: "Data successfully Get",
+    //             data: {
+    //                 transaction: findPassenger,
+    //                 departure: departureFlight,
+    //                 arrival: arrivalFlight,
+    //                 passenger: {adult: adult, child:child},
+    //                 price:{departure: departurePrice, arrival: arrivalPrice, totalPrice: totalPrice, tax: tax}
+    //             }
+    //           };
+    //     }catch(error){
+    //         throw error
+    //     }
+
+    // },
+
     async transactionById(req){
         try{
             const user = req.user.id
@@ -124,7 +206,7 @@ module.exports = {
             const typePassenger = [];
 
             const getTransaction = await transactionRepository.getTransactionFlight(transaction_id);
-            if (!getTransaction) {
+            if (getTransaction.length < 1) {
                 return {
                     status: "FAIL",
                     message: "Data Failed Displayed",
@@ -155,20 +237,16 @@ module.exports = {
                 typePassenger.push(findPassenger.Passengers[i].type)
             }
 
-            let adult;
-            let child;
+            let adult = 0;
+            let child = 0;
 
             for (let i = 0; i < typePassenger.length; i++) {
-                let adultCount = 0;
-                let childCount = 0;
                 if (typePassenger[i] == "Adult") {
-                    adultCount = adultCount + 1;
+                    adult = adult + 1;
                 }
                 if (typePassenger[i] == "Child") {
-                    childCount = childCount + 1;
+                    child = child + 1;
                 }
-                adult = adultCount
-                child = childCount
             }
 
 
@@ -367,7 +445,7 @@ module.exports = {
                 isRead: false
             });
 
-            const findPassenger = await transactionRepository.findPassenger(newTransaction.id);
+            const transaction = await transactionRepository.findPassenger(newTransaction.id);
         
             const departureFlight = await transactionRepository.getTransactionFlight(newTransaction.id)
 
@@ -385,9 +463,8 @@ module.exports = {
               status: "Ok",
               message: "Data successfully created",
               data: {
-                transaction: findPassenger,
-                departure: departureFlight,
-                arrival: arrivalFlight,
+                transaction: transaction,
+                ticket: departureFlight,
               }
             };
         

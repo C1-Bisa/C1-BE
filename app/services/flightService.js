@@ -55,8 +55,10 @@ module.exports = {
             }
 
             // Mencari data penerbangan dan mengisinya ke dalam array
-            const flight = await flightRepository.findAll();
+            const flight = await flightRepository.findAll(to,from, departure_date,departure_time,flight_class);
             const array = [...flight];
+
+            console.log("DATA FLIGHT",array)
 
             if(!returnDate){
                 const flightSchedule = array.filter((data) => {
@@ -250,6 +252,168 @@ module.exports = {
         }
     },
     
+    // async search(reqBody, reqQuery) {
+    //     try {
+    //         // req body
+    //         const from  = reqBody.from;
+    //         const to = reqBody.to;
+    //         const departure_date = reqBody.departure_date;
+    //         const departure_time = reqBody.departure_time;
+    //         const flight_class = reqBody.flight_class;
+    //         const departure = new Date(departure_date);
+    //         const departureTomorrow = new Date(departure_date)
+    //         departureTomorrow.setDate(departureTomorrow.getDate() + 1);
+    //         const departureYesterday = new Date(departure_date)
+    //         departureYesterday.setDate(departureYesterday.getDate() - 1);
+    //         const returnDate = reqBody.returnDate;
+    //         const departureReturn = new Date(returnDate)
+
+
+    //         // query
+    //         const toLower = reqQuery.toLower;
+    //         const earlyDeparture = reqQuery.earlyDeparture;
+    //         const lastDeparture = reqQuery.lastDeparture;
+    //         const earlyArrive = reqQuery.earlyArrive;
+    //         const lastArrive = reqQuery.lastArrive;
+            
+    //         const departureAsc = reqQuery.departureAsc
+            
+    //         if (
+    //             !reqBody.from ||
+    //             !reqBody.to ||
+    //             !reqBody.departure_date ||
+    //             !reqBody.departure_time ||
+    //             !reqBody.flight_class
+    //         ) {
+    //             return {
+    //                 status: "Failed",
+    //                 message: "form search must be filled!",
+    //                 data: null,
+    //             };
+    //         }
+
+    //         const searchFrom = await flightRepository.findLocation(reqBody.from);
+    //         const searchTo = await flightRepository.findLocation(reqBody.to);
+
+    //         if(!searchFrom){
+    //             return {
+    //                 status: "Failed",
+    //                 message: "from location did'nt found please choose the other location!",
+    //                 data: null,
+    //             };
+    //         }
+
+    //         if(!searchTo){
+    //             return {
+    //                 status: "Failed",
+    //                 message: "To location did'nt found please choose the other location!",
+    //                 data: null,
+    //             };
+    //         }
+
+    //         if(reqBody.from.toLowerCase() === reqBody.to.toLowerCase()){
+    //             return {
+    //                 status: "Failed",
+    //                 message: "Location must be different!",
+    //                 data: null,
+    //             };
+    //         }
+
+    //         // const  flightschedule = await flightRepository.findSchedule(from, to, departure, yesterday);
+    //         const flight = await flightRepository.findAll();
+    //         const array = [];
+    //         const filter = flight.map(schedule => array.push({
+    //             id: schedule.id,
+    //             airline_id: schedule.airline_id,
+    //             airline: schedule.Airline.airline_name,
+    //             airlane_code: schedule.Airline.airline_code,
+    //             airport_id_from: schedule.airport_id_from,
+    //             from: schedule.from,
+    //             airport_from_code: schedule.Airport_from.airport_code,
+    //             airport_from: schedule.Airport_from.airport_name,
+    //             airport_id_to: schedule.airport_id_to,
+    //             to: schedule.to,
+    //             airport_to_code: schedule.Airport_to.airport_code,
+    //             airport_to: schedule.Airport_to.airport_name,
+    //             departure_date: schedule.departure_date,
+    //             departure_time: schedule.departure_time,
+    //             arrival_date: schedule.arrival_date,
+    //             arrival_time: schedule.arrival_time,
+    //             duration: schedule.duration,
+    //             price: schedule.price,
+    //             flight_class: schedule.flight_class,
+    //             description: schedule.description,
+    //         }));
+
+
+    //         if(!returnDate){
+    //             const search = array.filter((data) => {
+    //                 const date = new Date(data.departure_date);
+    //                 return (data.from === from && data.to === to && date > departureYesterday && date < departureTomorrow && data.flight_class === flight_class)
+
+    //                 // data.from === from && 
+    //                 // data.to === to && 
+    //                 // data.departure_date >= departure  && 
+    //                 // data.departure_time >= departure_time && 
+    //                 // data.flight_class === flight_class
+    //             })
+
+    //             if(toLower){
+    //                 const lowerPrice = search.sort((a, b) => a.price - b.price);
+    //                 return {
+    //                     status: "Success",
+    //                     message: "Result Search",
+    //                     data: lowerPrice,
+    //                 };
+    //             }
+    //             if(earlyDeparture){
+    //                 const earlyDepartured = search.sort((a, b) =>  a.departure_time.localeCompare(b.departure_time));
+    //                 return {
+    //                     status: "Success",
+    //                     message: "Result Search",
+    //                     data: earlyDepartured,
+    //                 };
+    //             }
+
+    //             if(lastDeparture){
+    //                 const lastDepartured = search.sort((a, b) =>  b.departure_time.localeCompare(a.departure_time));
+    //                 return {
+    //                     status: "Success",
+    //                     message: "Result Search",
+    //                     data: lastDepartured,
+    //                 };
+    //             }
+
+    //             if(earlyArrive){
+    //                 const earlyArrived = search.sort((a, b) =>  a.arrival_time.localeCompare(b.arrival_time));
+    //                 return {
+    //                     status: "Success",
+    //                     message: "Result Search",
+    //                     data: earlyArrived,
+    //                 };
+    //             }
+
+    //             if(lastArrive){
+    //                 const lastArrived = search.sort((a, b) =>  b.arrival_time.localeCompare(a.arrival_time));
+    //                 return {
+    //                     status: "Success",
+    //                     message: "Result Search",
+    //                     data: lastArrived,
+    //                 };
+    //             }
+                
+    //             return {
+    //                 status: "Success",
+    //                 message: "Result Searchh",
+    //                 data: search,
+    //             };
+    //         }
+
+    //     } catch (err) {
+    //         throw err;
+    //     }
+    // },
+
     async search(reqBody, reqQuery) {
         try {
             // req body
@@ -411,7 +575,6 @@ module.exports = {
             throw err;
         }
     },
-
     async update(id, reqBody) {
         try {
 
