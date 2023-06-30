@@ -177,6 +177,7 @@ module.exports = {
 
             let adult = 0;
             let child = 0;
+            let baby = 0;
 
             for (let i = 0; i < typePassenger.length; i++) {
                 if (typePassenger[i] == "Adult") {
@@ -184,6 +185,9 @@ module.exports = {
                 }
                 if (typePassenger[i] == "Child") {
                     child = child + 1;
+                }
+                if (typePassenger[i] == "Baby") {
+                    baby = baby + 1;
                 }
             }
 
@@ -195,7 +199,7 @@ module.exports = {
                     transaction: findPassenger,
                     departure: departureFlight,
                     arrival: arrivalFlight,
-                    passenger: {adult: adult, child:child},
+                    passenger: {adult: adult, child:child, baby:baby},
                     price:{departure: departurePrice, arrival: arrivalPrice, totalPrice: totalPrice, tax: tax}
                 }
               };

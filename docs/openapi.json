@@ -3383,6 +3383,10 @@
                             "child": {
                               "type": "integer",
                               "example": 2
+                            },
+                            "baby": {
+                              "type": "integer",
+                              "example": 2
                             }
                           }
                         },
@@ -3652,6 +3656,10 @@
                                 "child": {
                                   "type": "integer",
                                   "example": 2
+                                },
+                                "baby": {
+                                  "type": "integer",
+                                  "example": 1
                                 }
                               }
                             },
