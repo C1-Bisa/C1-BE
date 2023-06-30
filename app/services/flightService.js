@@ -344,6 +344,8 @@ module.exports = {
                     return (data.from === from && data.to === to && date > departureYesterday && date < departureTomorrow && data.flight_class === flight_class)
                 })
 
+                const firstSearch = search.sort((a, b) => a.price - b.price);
+
                 if(toLower){
                     const lowerPrice = search.sort((a, b) => a.price - b.price);
                     return {
@@ -391,7 +393,7 @@ module.exports = {
                 return {
                     status: "Success",
                     message: "Result Search",
-                    data: search,
+                    data: firstSearch,
                 };
             }
 
