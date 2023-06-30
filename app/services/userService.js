@@ -43,6 +43,7 @@ const createToken = (payload) => {
 }
 
 
+
 module.exports = {
 
   async list() {
@@ -64,11 +65,13 @@ module.exports = {
       const id = request.user.id
 
       const notifUser = await notificationRepository.findAll(id);
+      const countNotif = await notificationRepository.findNotifIsread(id);
 
       return{
         status : "Success",
         message : "Success get all notif user",
-        data : notifUser
+        data : notifUser,
+        count: countNotif,
       }
     } catch (err) {
       throw err;
@@ -90,10 +93,6 @@ module.exports = {
       throw err;
     }
   },
-
-  async get(id) {
-    return userRepository.find(id);
-},
 
   async login(requestBody){
     const {email,password} = requestBody;
@@ -222,19 +221,19 @@ module.exports = {
       Email: email,
       subject: "Email Verification",
       html: `
-      <img style="margin-left: 15%; margin-right: 20%; " src="https://i.imgur.com/zpVHDof.png"></img>
-      <div style="text-align:center;  display: block; max-width: 900px;margin-left: 20%; margin-right: 20%;">
-        <div style="text-align: left; margin: 0 auto; max-width: 600px;">
+      <img style="margin-left: 15%; margin-right: 15%; width: 70%; height: 10rem; " src="https://i.imgur.com/JehRqwE.jpg"></img>
+      <div style="text-align:center; border:1px; display: block; max-width: 900px;margin-left: 20%; margin-right: 20%;">
+        <div style="text-align: left; margin: 0 auto; max-width: 600px;  color:black;">
             <h1 style="font-size: 24px; margin-top: 20px; ">Hello, ${nama}</h1>
-            <p style="font-size: 16px; margin-top: 20px; margin-bottom: 5px;">
+            <p style="font-size: 16px; margin-top: 20px; margin-bottom: 20px;">
               Terimakasih telah menggunakan layanan kami. Masukkan kode OTP berikut untuk verifikasi akun anda. 
             </p>
-            <div style="text-align: center;">
+            <div style="text-align: center; margin-bottom: 15px;">
                 <a style="
                 font-size:18px;
                 text-align:center; 
                 font-weight: 900; 
-                background:#A06ECE; 
+                background:#003D20; 
                 border-radius: 10px; 
                 padding:0.5rem; 
                 color:white;
@@ -290,8 +289,6 @@ module.exports = {
           }
         });
       }
-
-      
     }catch(error){
       res.status(error.statusCode || 500).json({
         message: error.message,
@@ -335,7 +332,6 @@ module.exports = {
     // find otp in database
     const OTPdatabase = await userRepository.findOtp(OTPinput);
 
-    
     if(!OTPdatabase){
       return{
         data: null,
@@ -374,8 +370,8 @@ module.exports = {
       message: "Registrasi Berhasil",
       data: updateDataUser
     }
-    } catch (error) {
-      throw error
+    } catch{
+      throw new Error('Failed to verify OTP');
     }
   },
 
@@ -405,19 +401,19 @@ module.exports = {
         Email: userInfo.email,
         subject: "OTP Resend Code for Verification",
         html: `
-        <img style="margin-left: 15%; margin-right: 20%; " src="https://i.imgur.com/zpVHDof.png"></img>
+        <img style="margin-left: 15%; margin-right: 15%; width: 70%; height: 10rem; " src="https://i.imgur.com/JehRqwE.jpg"></img>
         <div style="text-align:center;  display: block; max-width: 900px;margin-left: 20%; margin-right: 20%;">
-          <div style="text-align: left; margin: 0 auto; max-width: 600px;">
-              <h1 style="font-size: 24px; margin-top: 20px; ">Hello</h1>
-              <p style="font-size: 16px; margin-top: 20px;">
+          <div style="text-align: left; margin: 0 auto; max-width: 600px; color:black;">
+              <h1 style="font-size: 24px; margin-top: 20px; ">Hello, ${userInfo.nama}</h1>
+              <p style="font-size: 16px; margin-top: 20px; margin-bottom: 20px;">
                 Terimakasih telah menggunakan layanan kami. Masukkan kode OTP berikut untuk verifikasi akun anda. 
               </p>
-              <div style="text-align: center;">
+              <div style="text-align: center; margin-bottom: 15px;">
                   <a style="
                   font-size:18px;
                   text-align:center; 
                   font-weight: 900; 
-                  background:#A06ECE; 
+                  background:#003D20; 
                   border-radius: 10px; 
                   padding:0.5rem; 
                   color:white;
@@ -481,19 +477,19 @@ module.exports = {
           Email: findEmail.email,
           subject: "Reset your password",
           html: `
-          <img style="margin-left: 15%; margin-right: 20%; " src="https://i.imgur.com/zpVHDof.png"></img>
+          <img style="margin-left: 15%; margin-right: 15%; width: 70%; height: 10rem; " src="https://i.imgur.com/JehRqwE.jpg"></img>
           <div style="text-align:center;  display: block; max-width: 900px;margin-left: 20%; margin-right: 20%;">
-            <div style="text-align: left; margin: 0 auto; max-width: 600px;">
+            <div style="text-align: left; margin: 0 auto; max-width: 600px; color:black;">
                 <h1 style="font-size: 24px; margin-top: 20px; ">Hello, ${emailReset}</h1>
                 <p style="font-size: 16px; margin-top: 20px; margin-bottom: 20px;">
                   Terimakasih telah menggunakan layanan kami. Masukkan kode OTP berikut untuk verifikasi akun anda. 
                 </p>
-                <div style="text-align: center;">
+                <div style="text-align: center; margin-bottom: 20px;">
                     <a href="${currentUrl}/resetpage/?token=${addIdToken}" style="
                     font-size:18px;
                     text-align:center; 
                     font-weight: 900; 
-                    background:#A06ECE; 
+                    background:#003D20; 
                     border-radius: 10px; 
                     padding:0.5rem; 
                     color:white;

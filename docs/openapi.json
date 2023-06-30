@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8000/api/v1"
+      "url": "https://kel1airplaneapi-production.up.railway.app/api/v1"
     }
   ],
   "tags": [
@@ -3735,6 +3735,99 @@
                     "message": {
                       "type": "string",
                       "example": "from location did'nt found please choose the other location!"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/transaction/printticket": {
+      "post": {
+        "tags": [
+          "transaction"
+        ],
+        "security": [
+          {
+            "bearerToken": []
+          }
+        ],
+        "summary": "Print ticket transaction",
+        "description": "After user pay the ticket, user can print the ticket",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "transaction_id": {
+                    "type": "string",
+                    "example": 1
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "If data successfully print and send to user email",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "Ok"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Ticket has been send to your email!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Failed error because forbidden access",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/DontHavePermit"
+                    }
+                  ]
+                },
+                "examples": {
+                  "dontHavePermit": {
+                    "summary": "example invalid role access",
+                    "value": {
+                      "message": "You dont have permission"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "If failed to retrive the data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "FAIL"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Route not found!"
                     }
                   }
                 }

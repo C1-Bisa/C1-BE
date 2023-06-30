@@ -6,74 +6,46 @@ module.exports = {
 
     findAll() {
         return Flight.findAll({
-          // attributes: ['departure_date', 'departure_time', 'arrival_date', 'arrival_time', 'duration', 'price', 'flight_class', 'description'],
             include: [
                 {
-                    model: Airline,
-                    attributes: ['airline_code', 'airline_name'],
-
+                    model: Airline 
                 },   
                 {
                   model: Airport,
-                  attributes: ['airport_code', 'airport_name'],
                   as: "Airport_from"
               },   
               {
                   model: Airport,
-                  attributes: ['airport_code', 'airport_name'],
                   as: "Airport_to"
               }     
-            ]
-          });
-    },
-
-    findTicketFilter(id) {
-        return Flight.findAll({
-            where: {id:id},
-            attributes: ['departure_date', 'departure_time', 'arrival_date', 'arrival_time','duration','price','flight_class','description'],
-            include: [
-                {
-                    model: Airline,
-                    attributes: ['airline_code', 'airline_name']
-                },   
-                {
-                    model: Airport,
-                    attributes: ['airport_code', 'airport_name'],
-                    as: "Airport_from"
-                },   
-                {
-                    model: Airport,
-                    attributes: ['airport_code', 'airport_name'],
-                    as: "Airport_to"
-                }   
             ]
             });
       },
 
-    findSchedule(from, to, departure_date, yesterday) {
-      console.log(yesterday);
+    findTicketFilter(id) {
         return Flight.findAll({
-            where: {
-              to, 
-              departure_date: departure_date >= yesterday
-            },
+            where: {id:id},
             include: [
                 {
                     model: Airline
                 },   
                 {
                     model: Airport,
-                    where: {airport_location: from}
+                    as: "Airport_from"
+                },   
+                {
+                    model: Airport,
+                    as: "Airport_to"
                 }   
             ]
             });
       },
 
-    findAirport(id) {
+      findAirport(id) {
         return Airport.findByPk(id);
       },
       
-    findFlight(id) {
+      findFlight(id) {
         return Flight.findOne({
           where: {id},
           attributes: ['departure_date', 'departure_time', 'arrival_time', 'arrival_date', 'from', 'to', 'duration', 'price', 'flight_class', 'description'],
@@ -97,16 +69,41 @@ module.exports = {
           
         });
       },
+
+      findFlightData(id) {
+        return Flight.findOne({
+          where: {id},
+          attributes: ['departure_date', 'departure_time', 'arrival_time', 'arrival_date', 'from', 'to', 'duration', 'price', 'flight_class', 'description'],
+          include: [ 
+                  {
+                    model: Airport,
+                    as: "Airport_from",
+                    attributes: ['id', 'airport_name', 'airport_code', 'airport_location'],
+                  },
+                  {
+                    model: Airport,
+                    as: "Airport_to",
+                    attributes: ['id', 'airport_name', 'airport_code', 'airport_location'],
+                  },
+                  {
+                    model: Airline,
+                    as: "Airline",
+                    attributes: ['airline_name', 'airline_code'],
+                  },
+          ]
+          
+        });
+      },
       
-    getTotalFlight() {
+      getTotalFlight() {
         return Flight.count();
       },
 
-    create(createArgs){
+      create(createArgs){
         return Flight.create(createArgs);
       },
   
-    update(id, updateArgs){
+      update(id, updateArgs){
         return Flight.update(updateArgs,{
             where: {
                 id,
@@ -114,7 +111,7 @@ module.exports = {
         })
       },
 
-    delete(id){
+      delete(id){
         return Flight.destroy({
             where: {
                 id,
@@ -122,7 +119,7 @@ module.exports = {
         })
       },
 
-    findLocation(loc){
+      findLocation(loc){
         return Airport.findOne({
           where : {airport_location: loc}
         })

@@ -7,12 +7,6 @@ module.exports = {
   findAll() {
     return User.findAll();
   },
-
-  find(id) {
-    return User.findByPk(id,{
-      paranoid:false
-    });
-  },
   
   getTotalUser() {
     return User.count();
@@ -55,11 +49,6 @@ module.exports = {
       where : {id : id}
     });
   },
-  deleteUser(id){
-    return User.destroy({
-      where : {id : id}
-    });
-  },
 
   createNotif(createnotifArgs){
     return Notification.create(createnotifArgs);
@@ -97,9 +86,9 @@ module.exports = {
     });
   },
 
-  findById(id){
-    return User.findByPk(id);
-  },
+  // findById(id){
+  //   return User.findByPk(id);
+  // },
 
   finsUserByEmail(email) {
     return User.findOne({

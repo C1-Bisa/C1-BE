@@ -11,9 +11,11 @@
         "db:migrate": "sequelize db:migrate",
         "db:migrate:undo:all": "sequelize db:migrate:undo:all",
         "db:seed": "sequelize db:seed:undo:all && sequelize db:seed:all",
-        "db:reset": "yarn db:drop && yarn db:create && yarn db:migrate && yarn db:seed"
+        "db:reset": "yarn db:drop && yarn db:create && yarn db:migrate && yarn db:seed",
+        "test": "jest --detectOpenHandles --forceExit"
     },
     "dependencies": {
+        "bcrypt": "^5.1.0",
         "bcryptjs": "^2.4.3",
         "body-parser": "^1.20.2",
         "cloudinary": "^1.36.4",

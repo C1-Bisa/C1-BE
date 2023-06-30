@@ -63,7 +63,8 @@ module.exports = {
 
         res.status(200).json({
           status: code.status,
-          message: code.message
+          message: code.message,
+          otp: code.otp
         });
       })
       .catch((err) => {
@@ -99,28 +100,28 @@ module.exports = {
       });
   },
 
-  update(req, res) {
-    userService
-      .updateProfile(req.body)
-      .then((updateUser) => {
-        res.status(200).json({
-          status: "OK",
-          message: user.message
-        });
-      })
-      .catch((err) => {
-        res.status(422).json({
-          status: "FAIL",
-          message: err.message,
-        });
-      });
-  },
+  // update(req, res) {
+  //   userService
+  //     .updateProfile(req.body)
+  //     .then((updateUser) => {
+  //       res.status(200).json({
+  //         status: "OK",
+  //         message: user.message
+  //       });
+  //     })
+  //     .catch((err) => {
+  //       res.status(422).json({
+  //         status: "FAIL",
+  //         message: err.message,
+  //       });
+  //     });
+  // },
 
   destroy(req, res) {
     userService
       .delete(req.params.id)
       .then((user) => {
-        res.status(201).json({
+        res.status(200).json({
           status: "OK",
           message: user.message
         });
@@ -145,7 +146,6 @@ module.exports = {
           });
           return;
         }
-
         res.status(200).json({
           subject: verify.subject,
           message: verify.message,
@@ -186,26 +186,26 @@ module.exports = {
       });
   },
 
-  checkUser(req, res, next) {
-    const id = req.params.id;
-    userService.get(id)
-      .then(userPayload => {
-        if (!userPayload) {
-          res.status(404).json({
-            status: "FAIL",
-            message: `user not found!`,
-          });
-          return;
-        }
-        req.user = userPayload;
-        next();
-      })
-      .catch(err => {
-        res.status(500).json({
-          status: "FAIL",
-          message: "server error!",
-        });
-      });
-  },  
+  // checkUser(req, res, next) {
+  //   const id = req.params.id;
+  //   userService.get(id)
+  //     .then(userPayload => {
+  //       if (!userPayload) {
+  //         res.status(404).json({
+  //           status: "FAIL",
+  //           message: `user not found!`,
+  //         });
+  //         return;
+  //       }
+  //       req.user = userPayload;
+  //       next();
+  //     })
+  //     .catch(err => {
+  //       res.status(500).json({
+  //         status: "FAIL",
+  //         message: "server error!",
+  //       });
+  //     });
+  // },  
   
 };

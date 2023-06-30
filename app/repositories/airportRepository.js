@@ -16,8 +16,9 @@ module.exports = {
     update(id, updateArgs) {
         return Airport.update(updateArgs, {
           where: {
-            id
+            id: id
           },
+          attributes: ['id', 'airport_code', 'airport_name', 'airport_location']
         });
     },
 

@@ -11,13 +11,6 @@ module.exports = {
     createPassenger(createArgs){
         return Passenger.create(createArgs);
       },
-
-    findById(code){
-      return Transaction.findOne({
-        where: {transaction_code: code},
-        // attributes: ['transaction_code, transaction_status, transaction_date']
-      })
-    },
   
     update(id,code, updateArgs){
         return Transaction.update(updateArgs,{
@@ -28,7 +21,7 @@ module.exports = {
         })
       },
 
-    findAll(id) {
+      findAll(id) {
         return Transaction.findAll({
           where: {user_id: id},
           attributes: ['transaction_code', 'user_id','amount', 'transaction_status', 'transaction_date'],
@@ -64,7 +57,7 @@ module.exports = {
         });
       },
 
-    async addFlight(transactionId,flightId,transactionType){
+      async addFlight(transactionId,flightId,transactionType){
         const transaction = await Transaction.findByPk(transactionId);
         const flight = await Flight.findByPk(flightId);
 
@@ -72,45 +65,45 @@ module.exports = {
 
       },
 
-    async createTransactionType(transactionId,flightId,transactionType){
-        const transaction = await Transaction.findByPk(transactionId);
-        const flight = await Flight.findByPk(flightId);
+    //  async createTransactionType(transactionId,flightId,transactionType){
+    //     const transaction = await Transaction.findByPk(transactionId);
+    //     const flight = await Flight.findByPk(flightId);
 
-        // await transaction.addFlight(flight, { through: { transaction_type: transactionType } });
-        return Transaction_Flight.create({transaction_id:transactionId,flight_id:flightId,transaction_type:transactionType});
-      },
+    //     // await transaction.addFlight(flight, { through: { transaction_type: transactionType } });
+    //     return Transaction_Flight.create({transaction_id:transactionId,flight_id:flightId,transaction_type:transactionType});
+    //   },
 
-    getType(id){
-        return Transaction_Flight.findAll({
-          where: {transaction_id: id},
-          attributes: ['transaction_type'],
-          include: [
-            {
-                model: Flight,
-                attributes: ['departure_date', 'departure_time', 'arrival_time', 'arrival_date', 'from', 'to', 'duration', 'price', 'flight_class', 'description'],
-                include: [
-                  {
-                    model: Airport,
-                    as: "Airport_from",
-                    attributes: ['airport_name', 'airport_code', 'airport_location'],
-                  },
-                  {
-                    model: Airport,
-                    as: "Airport_to",
-                    attributes: ['airport_name', 'airport_code', 'airport_location'],
-                  },
-                  {
-                    model: Airline,
-                    as: "Airline",
-                    attributes: ['airline_name', 'airline_code'],
-                  },
-                ]
-            }
-          ]
-        })
-      },
+      // getType(id){
+      //   return Transaction_Flight.findAll({
+      //     where: {transaction_id: id},
+      //     attributes: ['transaction_type'],
+      //     include: [
+      //       {
+      //           model: Flight,
+      //           attributes: ['departure_date', 'departure_time', 'arrival_time', 'arrival_date', 'from', 'to', 'duration', 'price', 'flight_class', 'description'],
+      //           include: [
+      //             {
+      //               model: Airport,
+      //               as: "Airport_from",
+      //               attributes: ['airport_name', 'airport_code', 'airport_location'],
+      //             },
+      //             {
+      //               model: Airport,
+      //               as: "Airport_to",
+      //               attributes: ['airport_name', 'airport_code', 'airport_location'],
+      //             },
+      //             {
+      //               model: Airline,
+      //               as: "Airline",
+      //               attributes: ['airline_name', 'airline_code'],
+      //             },
+      //           ]
+      //       }
+      //     ]
+      //   })
+      // },
 
-    getTransactionFlight(id) {   
+      getTransactionFlight(id) {   
         return Transaction_Flight.findAll({
           where: {transaction_id: id},
           attributes: ['transaction_type'],
@@ -144,18 +137,18 @@ module.exports = {
         });
       },
 
-    findPassenger(transactionId){
+      findPassenger(transactionId){
         return Transaction.findOne({
-          where: {id: transactionId},
+          where:{id: transactionId},
           attributes: ['id', 'transaction_code', 'user_id', 'transaction_status', 'transaction_date'],
           include: [
             {
               model: Passenger,
-              attributes: ['name', 'title', 'type', 'transactionCode', 'nik_paspor'],
+              attributes: ['name', 'title', 'type', 'seat', 'transactionCode', 'nik_paspor'],
             }
           ]
         })
-    }
+      }
 
 }  
       

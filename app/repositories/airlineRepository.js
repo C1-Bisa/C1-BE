@@ -7,7 +7,9 @@ module.exports = {
     },
 
     findAll() {
-        return Airline.findAll();
+        return Airline.findAll({
+          attributes: ['id','airline_code', 'airline_name']
+        });
     },
 
     find(id) {

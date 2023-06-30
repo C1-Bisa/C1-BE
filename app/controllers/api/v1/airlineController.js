@@ -6,8 +6,9 @@ module.exports = {
           .create(req)
           .then((airline) => {
             res.status(201).json({
-              status: "OK",
-              data: airline,
+              status: airline.status,
+              message: airline.message,
+              data: airline.data,
             });
           })
           .catch((err) => {
@@ -39,15 +40,21 @@ module.exports = {
       airlineService
         .getById(req.params.id)
         .then(( airline ) => {
+          if(!airline.data){
+            res.status(422).json({
+              status: "Airline not found",
+            });
+            return;
+          }
           res.status(200).json({
             status: "Airline found!",
-            data: airline,
+            data: airline.data
+            
           });
         })
         .catch((err) => {
-          res.status(400).json({
-            status: "FAIL",
-            message: err.message,
+          res.status(422).json({
+            status: "FAIL"
           });
         });
     },
@@ -56,15 +63,21 @@ module.exports = {
       airlineService
         .update(req.params.id, req.body)
         .then((airline) => {
+          if(!airline.data){
+            res.status(422).json({
+              status: "FAIL",
+              massage: "Airline not found!"
+            });
+            return;
+          }
           res.status(200).json({
             status: airline.status,
             massage: airline.message
           });
         })
-        .catch((err) => {
-          res.status(422).json({
-            status: "FAIL",
-            message: err.message,
+        .catch((error) => {
+          res.status(error.statusCode || 500).json({
+          message: error.message,
           });
         });
     },
@@ -72,41 +85,25 @@ module.exports = {
     destroy(req, res) {
       airlineService
         .delete(req.params.id)
-        .then(() => {
-          res.status(201).json({
-            status: "OK",
-            message: "Airplane successfully deleted!"
+        .then((airline) => {
+          if(!airline.data){
+            res.status(422).json({
+              status: airline.status,
+              message: airline.message
+            });
+            return;
+          }
+          res.status(200).json({
+            status: airline.status,
+            message: airline.message
           });
         })
         .catch((error) => {
           res.status(422).json({
-            status: "FAIL",
-            message: error.message
+            status: "FAIL"
           });
         });
     },
     
-    checkAirline(req, res, next) {
-      airlineService
-        .get(req.params.id)
-        .then((airlinePayload) => {
-          if (!airlinePayload) {
-            res.status(404).json({
-              status: "FAIL",
-              message: "airline not found!"
-            });
-            return;
-          }
-    
-          req.airline = airlinePayload;
-          next();
-        })
-        .catch((error) => {
-          res.status(500).json({
-            status: "FAIL",
-            message: "server error!"
-          });
-        });
-    }
     
 }

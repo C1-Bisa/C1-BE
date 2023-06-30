@@ -1,16 +1,12 @@
 const flightRepository = require("../repositories/flightRepository");
-const airlineRepository = require("../repositories/airlineRepository");
-const { Flight, Airline,Airport } = require("../models");
 
-
-const dayjs = require("dayjs");
-const { DATE } = require("sequelize");
 
 
 module.exports = {
     async listFlight(){
         try {
             const flight = await flightRepository.findAll();
+            //add get total count notif isread false
             const flightCount = await flightRepository.getTotalFlight();
 
             return {
@@ -22,124 +18,122 @@ module.exports = {
         }
     },
 
-    async list(reqBody, reqQuery) {
-        try {
-            const {from,to,departure_date,departure_time,flight_class,returnDate} = reqBody
-            const {lowPrice,earlyDeparture,lastDeparture,earlyArrive,lastArrive } = reqQuery;
+    // async list(reqBody, reqQuery) {
+    //     try {
+    //         const {from,to,departure_date,departure_time,flight_class,returnDate} = reqBody
+    //         const {lowPrice,earlyDeparture,lastDeparture,earlyArrive,lastArrive } = reqQuery;
 
-            const departureTomorrow = new Date(departure_date)
-            departureTomorrow.setDate(departureTomorrow.getDate() + 1);
-            const departureYesterday = new Date(departure_date)
-            departureYesterday.setDate(departureYesterday.getDate() - 1);
+    //         const departureTomorrow = new Date(departure_date)
+    //         departureTomorrow.setDate(departureTomorrow.getDate() + 1);
+    //         const departureYesterday = new Date(departure_date)
+    //         departureYesterday.setDate(departureYesterday.getDate() - 1);
 
-            if(
-                !from ||
-                !to ||
-                !departure_date ||
-                !departure_time ||
-                !flight_class
-            ) {
-                return {
-                    status: "Failed",
-                    message: "form search must be filled!",
-                    data: null,
-                };
-            }
+    //         if(
+    //             !from ||
+    //             !to ||
+    //             !departure_date ||
+    //             !departure_time ||
+    //             !flight_class
+    //         ) {
+    //             return {
+    //                 status: "Failed",
+    //                 message: "form search must be filled!",
+    //                 data: null,
+    //             };
+    //         }
 
-            if(reqBody.from.toLowerCase() === reqBody.to.toLowerCase()){
-                return {
-                    status: "Failed",
-                    message: "Location must be different!",
-                    data: null,
-                };
-            }
+    //         if(reqBody.from.toLowerCase() === reqBody.to.toLowerCase()){
+    //             return {
+    //                 status: "Failed",
+    //                 message: "Location must be different!",
+    //                 data: null,
+    //             };
+    //         }
 
-            // Mencari data penerbangan dan mengisinya ke dalam array
-            const flight = await flightRepository.findAll(to,from, departure_date,departure_time,flight_class);
-            const array = [...flight];
+    //         // Mencari data penerbangan dan mengisinya ke dalam array
+    //         const flight = await flightRepository.findAll();
+    //         const array = [...flight];
 
-            console.log("DATA FLIGHT",array)
+    //         if(!returnDate){
+    //             const flightSchedule = array.filter((data) => {
+    //             const date = new Date(data.departure_date);
+    //                 return (
+    //                     data.from === from &&
+    //                     data.to === to &&
+    //                     date > departureYesterday &&
+    //                     date < departureTomorrow &&
+    //                     data.flight_class === flight_class
+    //                 )
+    //             });
 
-            if(!returnDate){
-                const flightSchedule = array.filter((data) => {
-                const date = new Date(data.departure_date);
-                    return (
-                        data.from === from &&
-                        data.to === to &&
-                        date > departureYesterday &&
-                        date < departureTomorrow &&
-                        data.flight_class === flight_class
-                    )
-                });
+    //             if (flightSchedule.length === 0) {
+    //                 return {
+    //                   status: "Failed",
+    //                   message: "Data tidak ditemukan",
+    //                   data: null,
+    //                 };
+    //             }
 
-                if (flightSchedule.length === 0) {
-                    return {
-                      status: "Failed",
-                      message: "Data tidak ditemukan",
-                      data: null,
-                    };
-                }
+    //             // Filter early departure
+    //             if(earlyDeparture){
+    //                 const earlyDepartured = flightSchedule.sort((a, b) =>  a.departure_time.localeCompare(b.departure_time));
+    //                 return {
+    //                     status: "Success",
+    //                     message: "Result Search",
+    //                     data: earlyDepartured,
+    //                 };
+    //             }
 
-                // Filter early departure
-                if(earlyDeparture){
-                    const earlyDepartured = flightSchedule.sort((a, b) =>  a.departure_time.localeCompare(b.departure_time));
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: earlyDepartured,
-                    };
-                }
+    //             // Filter last departure
+    //             if(lastDeparture){
+    //                 const lastDepartured = flightSchedule.sort((a, b) =>  b.departure_time.localeCompare(a.departure_time));
+    //                 return {
+    //                     status: "Success",
+    //                     message: "Result Search",
+    //                     data: lastDepartured,
+    //                 };
+    //             }
 
-                // Filter last departure
-                if(lastDeparture){
-                    const lastDepartured = flightSchedule.sort((a, b) =>  b.departure_time.localeCompare(a.departure_time));
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: lastDepartured,
-                    };
-                }
+    //             // Filter harga terendah
+    //             if(lowPrice){
+    //                 const lowerPrice = flightSchedule.sort((a, b) => a.price - b.price);
+    //                 return {
+    //                     status: "Success",
+    //                     message: "Result Search",
+    //                     data: lowerPrice,
+    //                 };
+    //             }
 
-                // Filter harga terendah
-                if(lowPrice){
-                    const lowerPrice = flightSchedule.sort((a, b) => a.price - b.price);
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: lowerPrice,
-                    };
-                }
+    //             // Filter early arrival
+    //             if(earlyArrive){
+    //                 const earlyArrived = flightSchedule.sort((a, b) =>  a.arrival_time.localeCompare(b.arrival_time));
+    //                 return {
+    //                     status: "Success",
+    //                     message: "Result Search",
+    //                     data: earlyArrived,
+    //                 };
+    //             }
 
-                // Filter early arrival
-                if(earlyArrive){
-                    const earlyArrived = flightSchedule.sort((a, b) =>  a.arrival_time.localeCompare(b.arrival_time));
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: earlyArrived,
-                    };
-                }
-
-                // Filter las arrival
-                if(lastArrive){
-                    const lastArrived = flightSchedule.sort((a, b) =>  b.arrival_time.localeCompare(a.arrival_time));
-                    return {
-                        status: "Success",
-                        message: "Result Search",
-                        data: lastArrived,
-                    };
-                }
+    //             // Filter las arrival
+    //             if(lastArrive){
+    //                 const lastArrived = flightSchedule.sort((a, b) =>  b.arrival_time.localeCompare(a.arrival_time));
+    //                 return {
+    //                     status: "Success",
+    //                     message: "Result Search",
+    //                     data: lastArrived,
+    //                 };
+    //             }
                 
-                return {
-                    status: "Success",
-                    message: "Result Search",
-                    data: flightSchedule,
-                };
-            }   
-        } catch (err) {
-            throw err;
-        }
-    },
+    //             return {
+    //                 status: "Success",
+    //                 message: "Result Search",
+    //                 data: flightSchedule,
+    //             };
+    //         }   
+    //     } catch (err) {
+    //         throw err;
+    //     }
+    // },
 
     async create(reqBody) {
         try {
@@ -183,7 +177,6 @@ module.exports = {
             
             const duration = Number(`${hours.toString().padStart(2, '0')}9${minutes.toString().padStart(2, '0')}`);
 
-            console.log(duration);
             if(!searchFrom){
                 return {
                     status: "Failed",
@@ -252,168 +245,6 @@ module.exports = {
         }
     },
     
-    // async search(reqBody, reqQuery) {
-    //     try {
-    //         // req body
-    //         const from  = reqBody.from;
-    //         const to = reqBody.to;
-    //         const departure_date = reqBody.departure_date;
-    //         const departure_time = reqBody.departure_time;
-    //         const flight_class = reqBody.flight_class;
-    //         const departure = new Date(departure_date);
-    //         const departureTomorrow = new Date(departure_date)
-    //         departureTomorrow.setDate(departureTomorrow.getDate() + 1);
-    //         const departureYesterday = new Date(departure_date)
-    //         departureYesterday.setDate(departureYesterday.getDate() - 1);
-    //         const returnDate = reqBody.returnDate;
-    //         const departureReturn = new Date(returnDate)
-
-
-    //         // query
-    //         const toLower = reqQuery.toLower;
-    //         const earlyDeparture = reqQuery.earlyDeparture;
-    //         const lastDeparture = reqQuery.lastDeparture;
-    //         const earlyArrive = reqQuery.earlyArrive;
-    //         const lastArrive = reqQuery.lastArrive;
-            
-    //         const departureAsc = reqQuery.departureAsc
-            
-    //         if (
-    //             !reqBody.from ||
-    //             !reqBody.to ||
-    //             !reqBody.departure_date ||
-    //             !reqBody.departure_time ||
-    //             !reqBody.flight_class
-    //         ) {
-    //             return {
-    //                 status: "Failed",
-    //                 message: "form search must be filled!",
-    //                 data: null,
-    //             };
-    //         }
-
-    //         const searchFrom = await flightRepository.findLocation(reqBody.from);
-    //         const searchTo = await flightRepository.findLocation(reqBody.to);
-
-    //         if(!searchFrom){
-    //             return {
-    //                 status: "Failed",
-    //                 message: "from location did'nt found please choose the other location!",
-    //                 data: null,
-    //             };
-    //         }
-
-    //         if(!searchTo){
-    //             return {
-    //                 status: "Failed",
-    //                 message: "To location did'nt found please choose the other location!",
-    //                 data: null,
-    //             };
-    //         }
-
-    //         if(reqBody.from.toLowerCase() === reqBody.to.toLowerCase()){
-    //             return {
-    //                 status: "Failed",
-    //                 message: "Location must be different!",
-    //                 data: null,
-    //             };
-    //         }
-
-    //         // const  flightschedule = await flightRepository.findSchedule(from, to, departure, yesterday);
-    //         const flight = await flightRepository.findAll();
-    //         const array = [];
-    //         const filter = flight.map(schedule => array.push({
-    //             id: schedule.id,
-    //             airline_id: schedule.airline_id,
-    //             airline: schedule.Airline.airline_name,
-    //             airlane_code: schedule.Airline.airline_code,
-    //             airport_id_from: schedule.airport_id_from,
-    //             from: schedule.from,
-    //             airport_from_code: schedule.Airport_from.airport_code,
-    //             airport_from: schedule.Airport_from.airport_name,
-    //             airport_id_to: schedule.airport_id_to,
-    //             to: schedule.to,
-    //             airport_to_code: schedule.Airport_to.airport_code,
-    //             airport_to: schedule.Airport_to.airport_name,
-    //             departure_date: schedule.departure_date,
-    //             departure_time: schedule.departure_time,
-    //             arrival_date: schedule.arrival_date,
-    //             arrival_time: schedule.arrival_time,
-    //             duration: schedule.duration,
-    //             price: schedule.price,
-    //             flight_class: schedule.flight_class,
-    //             description: schedule.description,
-    //         }));
-
-
-    //         if(!returnDate){
-    //             const search = array.filter((data) => {
-    //                 const date = new Date(data.departure_date);
-    //                 return (data.from === from && data.to === to && date > departureYesterday && date < departureTomorrow && data.flight_class === flight_class)
-
-    //                 // data.from === from && 
-    //                 // data.to === to && 
-    //                 // data.departure_date >= departure  && 
-    //                 // data.departure_time >= departure_time && 
-    //                 // data.flight_class === flight_class
-    //             })
-
-    //             if(toLower){
-    //                 const lowerPrice = search.sort((a, b) => a.price - b.price);
-    //                 return {
-    //                     status: "Success",
-    //                     message: "Result Search",
-    //                     data: lowerPrice,
-    //                 };
-    //             }
-    //             if(earlyDeparture){
-    //                 const earlyDepartured = search.sort((a, b) =>  a.departure_time.localeCompare(b.departure_time));
-    //                 return {
-    //                     status: "Success",
-    //                     message: "Result Search",
-    //                     data: earlyDepartured,
-    //                 };
-    //             }
-
-    //             if(lastDeparture){
-    //                 const lastDepartured = search.sort((a, b) =>  b.departure_time.localeCompare(a.departure_time));
-    //                 return {
-    //                     status: "Success",
-    //                     message: "Result Search",
-    //                     data: lastDepartured,
-    //                 };
-    //             }
-
-    //             if(earlyArrive){
-    //                 const earlyArrived = search.sort((a, b) =>  a.arrival_time.localeCompare(b.arrival_time));
-    //                 return {
-    //                     status: "Success",
-    //                     message: "Result Search",
-    //                     data: earlyArrived,
-    //                 };
-    //             }
-
-    //             if(lastArrive){
-    //                 const lastArrived = search.sort((a, b) =>  b.arrival_time.localeCompare(a.arrival_time));
-    //                 return {
-    //                     status: "Success",
-    //                     message: "Result Search",
-    //                     data: lastArrived,
-    //                 };
-    //             }
-                
-    //             return {
-    //                 status: "Success",
-    //                 message: "Result Searchh",
-    //                 data: search,
-    //             };
-    //         }
-
-    //     } catch (err) {
-    //         throw err;
-    //     }
-    // },
-
     async search(reqBody, reqQuery) {
         try {
             // req body
@@ -481,7 +312,6 @@ module.exports = {
                 };
             }
 
-            // const  flightschedule = await flightRepository.findSchedule(from, to, departure, yesterday);
             const flight = await flightRepository.findAll();
             const array = [];
             const filter = flight.map(schedule => array.push({
@@ -512,12 +342,6 @@ module.exports = {
                 const search = array.filter((data) => {
                     const date = new Date(data.departure_date);
                     return (data.from === from && data.to === to && date > departureYesterday && date < departureTomorrow && data.flight_class === flight_class)
-
-                    // data.from === from && 
-                    // data.to === to && 
-                    // data.departure_date >= departure  && 
-                    // data.departure_time >= departure_time && 
-                    // data.flight_class === flight_class
                 })
 
                 if(toLower){
@@ -575,6 +399,7 @@ module.exports = {
             throw err;
         }
     },
+
     async update(id, reqBody) {
         try {
 
@@ -582,9 +407,9 @@ module.exports = {
             const to = reqBody.to;
             const airportIdFrom = reqBody.airport_id_from;
             const airportIdTo = reqBody.airport_id_to;
-            const data = await flightRepository.findFlight(id);
-            const getdataAirportFrom = await flightRepository.findAirport(data.airport_id_from);
-            const getdataAirportTo = await flightRepository.findAirport(data.airport_id_to);
+            const data = await flightRepository.findFlightData(id);
+            const getdataAirportFrom = await flightRepository.findAirport(data.Airport_from.id);
+            const getdataAirportTo = await flightRepository.findAirport(data.Airport_to.id);
 
             if(to && from && airportIdFrom && airportIdTo){
                 const searchTo = await flightRepository.findLocation(to);
@@ -780,7 +605,7 @@ module.exports = {
                 if(!getDataFlight){
                     return{
                         status: "FAIL",
-                        message: "Upss data tidak ada  lhoo",
+                        message: "Upss data tidak ada lhoo",
                         data: null
                     }
                 }
@@ -788,7 +613,7 @@ module.exports = {
                 if(!getDataFlightDua){
                     return{
                         status: "FAIL",
-                        message: "Upss data tidak ada  lhoo",
+                        message: "Upss data tidak ada lhoo",
                         data: null
                     }
                 }

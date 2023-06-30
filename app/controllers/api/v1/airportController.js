@@ -23,6 +23,13 @@ module.exports = {
         airportService
           .getById(req.params.id)
           .then(( airport ) => {
+            if(!airport.data){
+              res.status(422).json({
+                status: "FAIL",
+                massage: "Aiport not found!"
+              });
+              return;
+            }
             res.status(200).json({
               status: "Airport found!",
               data: airport,
@@ -57,9 +64,17 @@ module.exports = {
       airportService
         .update(req.params.id, req.body)
         .then((airport) => {
+          if(!airport.data){
+            res.status(422).json({
+              status: "FAIL",
+              massage: "Aiport not found!"
+            });
+            return;
+          }
           res.status(200).json({
             status: "OK",
-            massage: airport.message
+            massage: airport.message,
+            data: airport.data
           });
         })
         .catch((err) => {
@@ -74,9 +89,16 @@ module.exports = {
       airportService
         .delete(req.params.id)
         .then((airport) => {
-          res.status(201).json({
-            status: "OK",
-            message: "Airport successfully deleted!"
+          if(!airport.data){
+            res.status(422).json({
+              status: airport.status,
+              message: airport.message,
+            });
+            return;
+          }
+          res.status(200).json({
+            status: airport.status,
+            message: airport.message,
           });
         })
         .catch((error) => {
@@ -87,34 +109,34 @@ module.exports = {
         });
     },
 
-    checkAirport(req, res, next) {
-      try {
-        const id = req.params.id;
-        airportService.get(id)
-          .then((airportPayload) => {
-            if (!airportPayload) {
-              res.status(404).json({
-                status: "FAIL",
-                message: "Airport not found!"
-              });
-              return;
-            }
+    // checkAirport(req, res, next) {
+    //   try {
+    //     const id = req.params.id;
+    //     airportService.get(id)
+    //       .then((airportPayload) => {
+    //         if (!airportPayload) {
+    //           res.status(404).json({
+    //             status: "FAIL",
+    //             message: "Airport not found!"
+    //           });
+    //           return;
+    //         }
     
-            req.airport = airportPayload;
-            next();
-          })
-          .catch((error) => {
-            res.status(500).json({
-              status: "FAIL",
-              message: "Server error!"
-            });
-          });
-      } catch (error) {
-        res.status(500).json({
-          status: "FAIL",
-          message: "Server error!"
-        });
-      }
-    }
+    //         req.airport = airportPayload;
+    //         next();
+    //       })
+    //       .catch((error) => {
+    //         res.status(500).json({
+    //           status: "FAIL",
+    //           message: "Server error!"
+    //         });
+    //       });
+    //   } catch (error) {
+    //     res.status(500).json({
+    //       status: "FAIL",
+    //       message: "Server error!"
+    //     });
+    //   }
+    // }
     
 }

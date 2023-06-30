@@ -7,6 +7,12 @@ module.exports = {
         });
       },
 
+    findNotifIsread(id) {
+        return Notification.count({
+            where:{userId: id, isRead: false}
+        });
+      },
+
     create(createArgs){
         return Notification.create(createArgs);
     },

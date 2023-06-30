@@ -3,73 +3,54 @@ const jwt = require("jsonwebtoken")
 const {JWT_SIGNATURE_KEY} = process.env;
 require('dotenv').config()
 
-// Fungsi async untuk memeriksa apakah token telah kadaluwarsa
-const isTokenExpired = async(token) =>{
-  try {
-    const decodedToken = jwt.verify(token, JWT_SIGNATURE_KEY);
-    const currentTime = Math.floor(Date.now() / 1000); // Waktu saat ini dalam detik
-
-    if (decodedToken.exp < currentTime) {
-      // Token telah kadaluwarsa
-      return true;
-    } else {
-      // Token masih berlaku
-      return false;
-    }
-  } catch (err) {
-    // Terjadi kesalahan dalam verifikasi token
-    throw new Error('Failed to verify token');
-  }
-
-}
 
 module.exports ={
 
   // middleware authorization
-  authorize(req,res,next) {
-    try{
-    // meendapatkan token 
-    const bearerToken = req.headers.authorization; 
-    const token = bearerToken.split("Bearer ")[1];
+  // authorize(req,res,next) {
+  //   try{
+  //   // meendapatkan token 
+  //   const bearerToken = req.headers.authorization; 
+  //   const token = bearerToken.split("Bearer ")[1];
 
-    const tokenPayload = jwt.verify(token,JWT_SIGNATURE_KEY);
+  //   const tokenPayload = jwt.verify(token,JWT_SIGNATURE_KEY);
 
-    req.user = tokenPayload;
+  //   req.user = tokenPayload;
 
-    next();
-    }catch(err){
-      console.log(err);
-      res.cookie('jwt', '', { expires: new Date(0) });
-      res.status(401).json({
-        message: "Sesi login berakhir, harap login kembali!",
-      });
+  //   next();
+  //   }catch(err){
+  //     console.log(err);
+  //     res.cookie('jwt', '', { expires: new Date(0) });
+  //     res.status(401).json({
+  //       message: "Sesi login berakhir, harap login kembali!",
+  //     });
     
-    }
-  },
+  //   }
+  // },
 
-  auth(req, res, next) {
-    try {
-      const bearerToken = req.headers.authorization;
-      const token = bearerToken.split("Bearer ")[1];
+  // auth(req, res, next) {
+  //   try {
+  //     const bearerToken = req.headers.authorization;
+  //     const token = bearerToken.split("Bearer ")[1];
       
-      if (!bearerToken) {
-        return res.status(401).json({
-          status: 'failed',
-          message: 'Required authorization',
-        });
-      }
-      const tokenPayload = jwt.verify(token, JWT_SIGNATURE_KEY);
-      Users.findByPk(tokenPayload.id).then((instance) => {
-        req.user = instance;
-        next();
-      });
-    } catch {
-      res.status(401).json({
-        status: 'failed',
-        message: 'Invalid token',
-      });
-    }
-  },
+  //     if (!bearerToken) {
+  //       return res.status(401).json({
+  //         status: 'failed',
+  //         message: 'Required authorization',
+  //       });
+  //     }
+  //     const tokenPayload = jwt.verify(token, JWT_SIGNATURE_KEY);
+  //     Users.findByPk(tokenPayload.id).then((instance) => {
+  //       req.user = instance;
+  //       next();
+  //     });
+  //   } catch {
+  //     res.status(401).json({
+  //       status: 'failed',
+  //       message: 'Invalid token',
+  //     });
+  //   }
+  // },
 
   authorizeAdmin(req,res,next) {
     userService
@@ -170,7 +151,8 @@ module.exports ={
           res.status(200).json({
             status: user.status,
             message: user.message,
-            data: user.data
+            data: user.data,
+            meta: { total: user.count },
           });
       })
       .catch((err) => {
@@ -208,25 +190,25 @@ module.exports ={
   },
 
   // Middleware async untuk memeriksa token kedaluwarsa
-  async checkTokenExpiration(req, res, next) {
-    const authHeader = req.headers.authorization;
-    if (!authHeader.split("Bearer ")[1]) {
-      return res.status(402).json({ message: 'Unauthorizeddd' });
-    }
+  // async checkTokenExpiration(req, res, next) {
+  //   const authHeader = req.headers.authorization;
+  //   if (!authHeader.split("Bearer ")[1]) {
+  //     return res.status(402).json({ message: 'Unauthorizeddd' });
+  //   }
 
-    const token = authHeader.split('Bearer ')[1];
-    try {
-      if (isTokenExpired(token)) {
-        res.cookie('jwt', '', { expires: new Date(0) });
-        // Hapus token dari cookie
-        return res.status(401).json({ message: 'Login session end. Please log in again.' });
-      }
+  //   const token = authHeader.split('Bearer ')[1];
+  //   try {
+  //     if (isTokenExpired(token)) {
+  //       res.cookie('jwt', '', { expires: new Date(0) });
+  //       // Hapus token dari cookie
+  //       return res.status(401).json({ message: 'Login session end. Please log in again.' });
+  //     }
 
-      next();
-    } catch (err) {
-      return res.status(500).json({ message: 'Internal Server Error' });
-    }
-  }
+  //     next();
+  //   } catch (err) {
+  //     return res.status(500).json({ message: 'Internal Server Error' });
+  //   }
+  // }
 
 
 }

@@ -5,46 +5,26 @@ module.exports = {
 
     async list() {
         try {
-          const payload = await airportRepository.findAll();
-  
-          const airportPayload =
-          (await payload.length) < 1
-            ? []
-            : payload.map((airport) => {
-                return {
-                  id: airport?.dataValues?.id,
-                  airport_code: airport?.dataValues?.airport_code,
-                  airport_name: airport?.dataValues?.airport_name,
-                  airport_location: airport?.dataValues?.airport_location,
-                  createdAt: airport?.dataValues?.createdAt,
-                  updatedAt: airport?.dataValues?.updatedAt,
-                };
-              });
-    
-          return {
-            data:airportPayload,
-          };
+          const airport = await airportRepository.findAll();
+            return {
+              data:airport,
+            };
         } catch (err) {
-          throw err;
+          throw new Error("Failed to get airports");
         }
     },
 
     async getById(id) {
         try {
-          const payload = await airportRepository.find(id);
-         
-          const airportPayload = {
-              id: payload?.id,
-              airport_code: payload?.airport_code,
-              airport_name: payload?.airport_name,
-              airport_location: payload?.airport_location,
-              createdAt: payload?.createdAt,
-              updatedAt: payload?.updatedAt,
+          const airport = await airportRepository.find(id);
+            return{
+              status: "Ok",
+              message: "Success",
+              data: airport
             }
-            return airportPayload;
-          
         } catch (error) {
-          throw new Error("Car not found!");
+          throw new Error("Failed to get airport");
+
         }
     },
 
@@ -60,19 +40,32 @@ module.exports = {
         }
         
         newAirport = await airportRepository.create({airport_code, airport_name, airport_location});
-        if(airport_code || airport_name || airport_location){
           return{
             data: newAirport,
           }
-        }
     },
 
     async update(id, requestBody) {
       try {
-        const updatedAirport = await airportRepository.update(id, requestBody);
-        return { message: 'Airport updated successfully', data: updatedAirport };
+        const airportId = await airportRepository.find(id);
+        
+        if(airportId){
+          const airport = await airportRepository.update(id, requestBody);
+          return{
+            status: "Ok",
+            message: "Success",
+            data: airport
+          }
+        }else{
+          return{
+            status: "FAIL",
+            message: "Airline not found!",
+            data: null
+          }
+
+        }
       } catch (error) {
-        throw new Error("Failed to update user");
+        throw new Error("Failed to update airport");
       }
     },
 
@@ -82,13 +75,25 @@ module.exports = {
 
     async delete (airportId) {
       try {
-        await airportRepository.update(airportId);
-        return await airportRepository.delete(airportId);
-        
-      } catch (error) {
-        return{
-          message: ( "failed delete airport!")
+        const airport = await airportRepository.delete(airportId);
+        if(airport){
+          return{
+            status: "Ok",
+            message: "Success",
+            data: airport
+          }
+        }else{
+          return{
+            status: "FAIL",
+            message: "Airport not found!",
+            data: null
+          }
+
         }
+        
+      } catch {
+        throw new Error("Failed to delete airport");
+
       }
     },
 
