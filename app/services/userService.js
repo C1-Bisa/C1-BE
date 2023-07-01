@@ -106,12 +106,21 @@ module.exports = {
       }
     }
 
-    const isPasswordCorrect = await comparePassword(password, user.password)
+    const isPasswordCorrect = await comparePassword(password, user.password);
+   
 
     if(!isPasswordCorrect){
       return{
         isValid : false,
         message : "Password not corret",
+        data : null
+      }
+    }
+
+    if(user.isVerified == false){
+      return{
+        isValid : false,
+        message : "Akun tidak ditemukan",
         data : null
       }
     }

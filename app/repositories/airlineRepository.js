@@ -8,12 +8,14 @@ module.exports = {
 
     findAll() {
         return Airline.findAll({
-          attributes: ['id','airline_code', 'airline_name']
+          attributes: ['id','airline_code', 'airline_name', 'image']
         });
     },
 
     find(id) {
-        return Airline.findByPk(id);
+        return Airline.findByPk(id, {
+          attributes: ['id','airline_code', 'airline_name', 'image']
+        });
     },
 
     update(id, updateArgs) {
@@ -30,11 +32,5 @@ module.exports = {
           id: carId 
         }
       });
-    },
-
-    findAirline(id){
-      return Airline.findOne({
-        where: {id}
-      })
     },
 }

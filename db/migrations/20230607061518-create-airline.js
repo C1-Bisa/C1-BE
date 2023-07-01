@@ -15,6 +15,9 @@ module.exports = {
       airline_name: {
         type: Sequelize.STRING
       },
+      image: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
