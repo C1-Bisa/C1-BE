@@ -233,7 +233,7 @@ module.exports = {
                 description: reqBody.description,
             });
 
-            const flight = await flightRepository.findTicketFilter(ticket.id);
+            const flight = await flightRepository.findFlightData(ticket.id);
 
             return {
                 status: "Success",

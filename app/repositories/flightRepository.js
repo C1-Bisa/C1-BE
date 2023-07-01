@@ -8,15 +8,21 @@ module.exports = {
         return Flight.findAll({
             include: [
                 {
-                    model: Airline 
+                    model: Airline,
+                    attributes: ['airline_name', 'airline_code', 'image'],
+
                 },   
                 {
                   model: Airport,
-                  as: "Airport_from"
+                  as: "Airport_from",
+                  attributes: ['airport_name', 'airport_code', 'airport_location'],
+
               },   
               {
                   model: Airport,
-                  as: "Airport_to"
+                  as: "Airport_to",
+                  attributes: ['airport_name', 'airport_code', 'airport_location'],
+
               }     
             ]
             });
