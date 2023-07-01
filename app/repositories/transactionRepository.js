@@ -28,7 +28,7 @@ module.exports = {
           include: [
             {
                 model: Passenger,
-                attributes: ['name', 'title', 'type', 'transactionCode', 'nik_paspor'],
+                attributes: ['name', 'title', 'type', 'transactionCode', 'nik_paspor', 'seatDeparture', 'seatReturn'],
             },
             {
               model: Flight,
@@ -48,7 +48,7 @@ module.exports = {
                 {
                   model: Airline,
                   as: "Airline",
-                  attributes: ['airline_name', 'airline_code'],
+                  attributes: ['airline_name', 'airline_code', 'image'],
                 },
               ]
 
@@ -64,14 +64,6 @@ module.exports = {
         await transaction.addFlight(flight, { through: { transaction_type: transactionType } });
 
       },
-
-    //  async createTransactionType(transactionId,flightId,transactionType){
-    //     const transaction = await Transaction.findByPk(transactionId);
-    //     const flight = await Flight.findByPk(flightId);
-
-    //     // await transaction.addFlight(flight, { through: { transaction_type: transactionType } });
-    //     return Transaction_Flight.create({transaction_id:transactionId,flight_id:flightId,transaction_type:transactionType});
-    //   },
 
       // getType(id){
       //   return Transaction_Flight.findAll({
@@ -129,7 +121,7 @@ module.exports = {
                   {
                     model: Airline,
                     as: "Airline",
-                    attributes: ['airline_name', 'airline_code'],
+                    attributes: ['airline_name', 'airline_code', 'image'],
                   },
                 ]
             }
@@ -144,7 +136,7 @@ module.exports = {
           include: [
             {
               model: Passenger,
-              attributes: ['name', 'title', 'type', 'seatDeparture','seatReturn', 'transactionCode', 'nik_paspor'],
+              attributes: ['name', 'title', 'type', 'seatDeparture','seatReturn', 'transactionCode', 'nik_paspor', 'seatDeparture', 'seatReturn'],
             }
           ]
         })
