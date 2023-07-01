@@ -505,15 +505,21 @@ module.exports = {
                         <h1 style="font-size: 20px; margin-top: 20px; text-align: center;">BOARDING PASS</h1>
                         <h1 style="font-size: 16px; text-align: center;">FlyId Airways</h1>
                         <h1 style="font-size: 16px; margin-top: 20px; text-align: start;">BOOKING CODE: <br>${findPassenger.transaction_code}</h1>
-                        <h1 style="font-size: 20px; text-align: start;">
-                            ${departureFlight.Flight.from}
+                        <h1 style="font-size: 20px; text-align: end;">
+                            ${departureFlight.Flight.to} (${departureFlight.Flight.Airport_to.airport_code})
                         </h1>
+                        <h3 style="font-size: 16px; text-align: end;">
+                            Bandara Nasional ${departureFlight.Flight.Airport_to.airport_name}
+                        </h3>
                         <div style="text-align: center;">
                             <img style="width: 8rem; height: 4rem;" src="https://i.imgur.com/yC1odNq.png"></img>
                         </div>
-                        <h1 style="font-size: 20px;  text-align: end;">
-                            ${departureFlight.Flight.to}
+                        <h1 style="font-size: 20px;  text-align: start;">
+                            ${departureFlight.Flight.from} (${departureFlight.Flight.Airport_from.airport_code})
                         </h1>
+                        <h3 style="font-size: 16px; text-align: start;">
+                            Bandara Nasional ${departureFlight.Flight.Airport_from.airport_name}
+                        </h3>
                     <div style="text-align: center; widht:100%;">
                           <a style="
                           font-size:18px;
@@ -543,15 +549,18 @@ module.exports = {
                             }).join('')}
                         </table>
                       </div>
+                    <h1 style="font-size: 13px;">
+                      AIRLINE: ${departureFlight.Flight.Airline.airline_name} (${departureFlight.Flight.Airline.airline_code})
+                    </h1>
                     <div style="display: flex; margin-top: 1rem;">
                         <h1 style="font-size: 12px; margin-right: 7rem;">
                             DATE:   <br>${reformatDate(departureFlight.Flight.departure_date)}
                         </h1>
                         <h1 style="font-size: 12px; margin-right: 7rem;">
-                            BOARDING:   <br>${fixedHour(departureFlight.Flight.departure_time)}
+                            DEPARTURE:   <br>${fixedHour(departureFlight.Flight.departure_time)}
                         </h1>
                         <h1 style="font-size: 12px; margin-right: 7rem;">
-                            DEPARTURE:   <br>${fixedHour(departureFlight.Flight.arrival_time)}
+                            ARRIVAL:   <br>${fixedHour(departureFlight.Flight.arrival_time)}
                         </h1>
                     </div>
                         <p style="font-weight:700;">Have a nice flights and Remember to always smile!</p>
@@ -570,15 +579,21 @@ module.exports = {
                         <h1 style="font-size: 20px; margin-top: 20px; text-align: center;">BOARDING PASS</h1>
                         <h1 style="font-size: 16px; text-align: center;">FlyId Airways</h1>
                         <h1 style="font-size: 16px; margin-top: 20px; text-align: start;">BOOKING CODE: <br>${findPassenger.transaction_code}</h1>
-                        <h1 style="font-size: 20px; text-align: start;">
-                            ${departureFlight.Flight.from}
+                        <h1 style="font-size: 20px; text-align: end;">
+                            ${departureFlight.Flight.to} (${departureFlight.Flight.Airport_to.airport_code})
                         </h1>
+                        <h3 style="font-size: 16px; text-align: end;">
+                            Bandara Nasional ${departureFlight.Flight.Airport_to.airport_name}
+                        </h3>
                         <div style="text-align: center;">
                             <img style="width: 8rem; height: 4rem;" src="https://i.imgur.com/yC1odNq.png"></img>
                         </div>
-                        <h1 style="font-size: 20px;  text-align: end;">
-                            ${departureFlight.Flight.to}
+                        <h1 style="font-size: 20px;  text-align: start;">
+                            ${departureFlight.Flight.from} (${departureFlight.Flight.Airport_from.airport_code})
                         </h1>
+                        <h3 style="font-size: 16px; text-align: start;">
+                            Bandara Nasional ${departureFlight.Flight.Airport_from.airport_name}
+                        </h3>
                         <div style="text-align: center; widht:100%;">
                         <a style="
                         font-size:18px;
@@ -611,27 +626,36 @@ module.exports = {
                     <h1 style="font-size: 15px; margin-top: 1rem;">
                       Departure
                     </h1>
+                    <h1 style="font-size: 12px;">
+                        AIRLINE: ${departureFlight.Flight.Airline.airline_name} (${departureFlight.Flight.Airline.airline_code})
+                    </h1>
                     <div style="display: flex;">
                         <h1 style="font-size: 12px; margin-right: 7rem;">
                             DATE:   <br>${reformatDate(departureFlight.Flight.departure_date)}
                         </h1>
                         <h1 style="font-size: 12px; margin-right: 7rem;">
-                            BOARDING:   <br>${fixedHour(departureFlight.Flight.departure_time)}
+                            DEPARTURE:   <br>${fixedHour(departureFlight.Flight.departure_time)}
                         </h1>
                         <h1 style="font-size: 12px; margin-right: 7rem;">
-                            DEPARTURE:   <br>${fixedHour(departureFlight.Flight.arrival_time)}
+                            ARRIVAL:   <br>${fixedHour(departureFlight.Flight.arrival_time)}
                         </h1>
                     </div>
                     <br>
-                    <h1 style="font-size: 20px; text-align: end;">
-                            ${arrivalFlight.Flight?.from}
+                        <h1 style="font-size: 20px; text-align: end;">
+                            ${arrivalFlight.Flight?.to} (${arrivalFlight.Flight?.Airport_to.airport_code})
                         </h1>
+                        <h3 style="font-size: 16px; text-align: end;">
+                            Bandara Nasional ${arrivalFlight.Flight?.Airport_to.airport_name}
+                        </h3>
                         <div style="text-align: center;">
                             <img style="width: 8rem; height: 4rem; transform: scaleX(-1);" src="https://i.imgur.com/yC1odNq.png"></img>
                         </div>
                         <h1 style="font-size: 20px;  text-align: start;">
-                            ${arrivalFlight.Flight?.to}
+                            ${arrivalFlight.Flight?.from} (${arrivalFlight.Flight?.Airport_from.airport_code})
                         </h1>
+                        <h3 style="font-size: 16px; text-align: start;">
+                            Bandara Nasional ${arrivalFlight.Flight?.Airport_from.airport_name}
+                        </h3>
                         <div style="text-align: center; widht:100%;">
                           <a style="
                           font-size:18px;
@@ -664,15 +688,18 @@ module.exports = {
                         <h1 style="font-size: 15px;">
                             Arrival
                         </h1>
+                        <h1 style="font-size: 12px;">
+                        AIRLINE: ${arrivalFlight.Flight?.Airline.airline_name} (${arrivalFlight.Flight?.Airline.airline_code})
+                        </h1>
                     <div style="display: flex;">
                         <h1 style="font-size: 12px; margin-right: 7rem;">
                             DATE:   <br>${arrivalFlight.Flight && reformatDate(arrivalFlight.Flight?.departure_date)}
                         </h1>
                         <h1 style="font-size: 12px; margin-right: 7rem;">
-                            BOARDING:   <br>${arrivalFlight.Flight && fixedHour(arrivalFlight.Flight?.departure_time)}
+                            DEPARTURE:   <br>${arrivalFlight.Flight && fixedHour(arrivalFlight.Flight?.departure_time)}
                         </h1>
                         <h1 style="font-size: 12px; margin-right: 7rem;">
-                            DEPARTURE:   <br>${arrivalFlight.Flight && fixedHour(arrivalFlight.Flight?.arrival_time)}
+                            ARRIVAL:   <br>${arrivalFlight.Flight && fixedHour(arrivalFlight.Flight?.arrival_time)}
                         </h1>
                     </div>
                         <p style="font-weight:700;">Have a nice flights and Remember to always smile!</p>
