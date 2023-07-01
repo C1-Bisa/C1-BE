@@ -377,20 +377,40 @@ module.exports = {
 
             const arrival=  arrivalFlights.length > 0? await newTransaction.addFlight(arrivalFlightId, { through: { transaction_type: 'Arrival' } }): []
 
-            for (let i = 0; i < passenger.length; i++) {
-                const bookPassenger = await transactionRepository.createPassenger({
-                    transaction_id: newTransaction.id,
-                    transactionCode: newTransaction.transaction_code,
-                    type: passenger[i].type,
-                    title: passenger[i].title,
-                    name: passenger[i].name,
-                    family_name: passenger[i].family_name,
-                    birthday: passenger[i].birthday,
-                    nationality: passenger[i].nationality,
-                    nik_paspor: passenger[i].nik,
-                    seat: passenger[i].seat
-                })
+
+            if(arrivalFlights.length > 0){
+                for (let i = 0; i < passenger.length; i++) {
+                    const bookPassenger = await transactionRepository.createPassenger({
+                        transaction_id: newTransaction.id,
+                        transactionCode: newTransaction.transaction_code,
+                        type: passenger[i].type,
+                        title: passenger[i].title,
+                        name: passenger[i].name,
+                        family_name: passenger[i].family_name,
+                        birthday: passenger[i].birthday,
+                        nationality: passenger[i].nationality,
+                        nik_paspor: passenger[i].nik,
+                        seatDeparture: passenger[i].seatDeparture,
+                        seatReturn: passenger[i].seatReturn
+                    })
+                }
+            }else{
+                for (let i = 0; i < passenger.length; i++) {
+                    const bookPassenger = await transactionRepository.createPassenger({
+                        transaction_id: newTransaction.id,
+                        transactionCode: newTransaction.transaction_code,
+                        type: passenger[i].type,
+                        title: passenger[i].title,
+                        name: passenger[i].name,
+                        family_name: passenger[i].family_name,
+                        birthday: passenger[i].birthday,
+                        nationality: passenger[i].nationality,
+                        nik_paspor: passenger[i].nik,
+                        seatDeparture: passenger[i].seatDeparture,
+                    })
+                }
             }
+            
 
             await notificationRepository.create({
                 headNotif: "Pemesanan tiket",
@@ -505,28 +525,23 @@ module.exports = {
                           color:white;
                           border:none;
                           widht: 100%;
-                          ">NAME OF PASSENGER:</a>
+                          ">NAME OF PASSENGER AND SEAT:</a>
+                        <table style="text-align: center; width:100%; border: 1px solid black; cellpadding: 0; cellspacing:0; margin-left: auto; margin-right: auto; border-collapse: collapse; margin-top:1rem;">
+                          <tr style=" background: #17594A; color:white;">
+                            <th >NO</th>
+                            <th >PASSENGER</th>
+                            <th >SEAT</th>
+                          </tr>
                         ${(findPassenger.Passengers).map((element, index) => {
                             return `
-                            <div>
-                                <p style="font-size: 16px;" key=${index}>${index+1}. ${element.name}</p>
-                            </div>
-                            `
-                        }).join('')}
-                        <h1 style="font-size: 16px; font-weight: 900; margin-top: 1rem; background: #17594A; 
-                        border-radius: 10px; 
-                        padding:0.5rem; 
-                        color:white; widht: 100%;">
-                           SEAT:
-                        </h1>
-                        ${(findPassenger.Passengers).map((element, index) => {
-                            return `
-                                <span style="font-size: 16px; font-weight: 800;  margin-right: 2rem;  background: #17594A; 
-                                border-radius: 10px; 
-                                padding:0.5rem; 
-                                color:white; widht: 100%;">${element.seat}</span>
-                            `
-                        }).join('')}
+                                <tr key=${index} style="padding:1rem; font-weight:800; ">
+                                    <td>${index + 1}</</td>
+                                    <td>${element.name}</</td>
+                                    <td>${element.seatDeparture}</td>
+                                </tr>
+                                `
+                            }).join('')}
+                        </table>
                       </div>
                     <div style="display: flex; margin-top: 1rem;">
                         <h1 style="font-size: 12px; margin-right: 7rem;">
@@ -564,39 +579,35 @@ module.exports = {
                         <h1 style="font-size: 20px;  text-align: end;">
                             ${departureFlight.Flight.to}
                         </h1>
-                    <div style="text-align: center; widht:100%;">
-                          <a style="
-                          font-size:18px;
-                          text-align:center; 
-                          font-weight: 900; 
-                          background: #17594A; 
-                          border-radius: 10px; 
-                          padding:0.5rem; 
-                          color:white;
-                          border:none;
-                          ">NAME OF PASSENGER:</a>
-                        ${(findPassenger.Passengers).map((element, index) => {
-                            return `
-                            <div>
-                                <p style="font-size: 16px;" key=${index}>${index+1}. ${element.name}</p>
-                            </div>
-                            `
-                        }).join('')}
-                        <h1 style="font-size: 16px; font-weight: 900; margin-top: 1rem; background: #17594A; 
+                        <div style="text-align: center; widht:100%;">
+                        <a style="
+                        font-size:18px;
+                        text-align:center; 
+                        font-weight: 900; 
+                        background: #17594A; 
                         border-radius: 10px; 
                         padding:0.5rem; 
-                        color:white; widht: 100%;">
-                           SEAT:
-                        </h1>
-                        ${(findPassenger.Passengers).map((element, index) => {
-                            return `
-                                <span style="font-size: 16px; font-weight: 800;  margin-right: 2rem;  background: #17594A; 
-                                border-radius: 10px; 
-                                padding:0.5rem; 
-                                color:white; widht: 100%;">${element.seat}</span>
-                            `
-                        }).join('')}
-                      </div>
+                        color:white;
+                        border:none;
+                        widht: 100%;
+                        ">NAME OF PASSENGER AND SEAT:</a>
+                      <table style="text-align: center; width:100%; border: 1px solid black; cellpadding: 0; cellspacing:0; margin-left: auto; margin-right: auto; border-collapse: collapse; margin-top:1rem;">
+                        <tr style=" background: #17594A; color:white;">
+                          <th >NO</th>
+                          <th >PASSENGER</th>
+                          <th >SEAT</th>
+                        </tr>
+                      ${(findPassenger.Passengers).map((element, index) => {
+                          return `
+                              <tr key=${index} style="padding:1rem; font-weight:800; ">
+                                  <td>${index + 1}</</td>
+                                  <td>${element.name}</</td>
+                                  <td>${element.seatDeparture}</td>
+                              </tr>
+                              `
+                          }).join('')}
+                      </table>
+                    </div>
                     <h1 style="font-size: 15px; margin-top: 1rem;">
                       Departure
                     </h1>
@@ -621,6 +632,35 @@ module.exports = {
                         <h1 style="font-size: 20px;  text-align: start;">
                             ${arrivalFlight.Flight?.to}
                         </h1>
+                        <div style="text-align: center; widht:100%;">
+                          <a style="
+                          font-size:18px;
+                          text-align:center; 
+                          font-weight: 900; 
+                          background: #17594A; 
+                          border-radius: 10px; 
+                          padding:0.5rem; 
+                          color:white;
+                          border:none;
+                          widht: 100%;
+                          ">NAME OF PASSENGER AND SEAT:</a>
+                        <table style="text-align: center; width:100%; border: 1px solid black; cellpadding: 0; cellspacing:0; margin-left: auto; margin-right: auto; border-collapse: collapse; margin-top:1rem;">
+                          <tr style=" background: #17594A; color:white;">
+                            <th >NO</th>
+                            <th >PASSENGER</th>
+                            <th >SEAT</th>
+                          </tr>
+                        ${(findPassenger.Passengers).map((element, index) => {
+                            return `
+                                <tr key=${index} style="padding:1rem; font-weight:800; ">
+                                    <td>${index + 1}</</td>
+                                    <td>${element.name}</</td>
+                                    <td>${element.seatReturn}</td>
+                                </tr>
+                                `
+                            }).join('')}
+                        </table>
+                      </div>
                         <h1 style="font-size: 15px;">
                             Arrival
                         </h1>

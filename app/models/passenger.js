@@ -29,7 +29,8 @@ module.exports = (sequelize, DataTypes) => {
     birthday: DataTypes.DATE,
     nationality: DataTypes.STRING,
     nik_paspor: DataTypes.STRING,
-    seat: DataTypes.STRING
+    seatDeparture: DataTypes.STRING,
+    seatReturn: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Passenger',
