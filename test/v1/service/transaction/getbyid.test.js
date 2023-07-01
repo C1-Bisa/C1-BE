@@ -26,7 +26,8 @@ describe("POST /api/v1/transaction/getById",() => {
                     birthday: "2001-09-15",
                     nationality: "IDN",
                     nik: 2421412,
-                    seat: "J3"
+                    seatDeparture: "A3",
+                    seatReturn: "J3"
                 },
                 {
                     type: "Child",
@@ -36,7 +37,8 @@ describe("POST /api/v1/transaction/getById",() => {
                     birthday: "2001-09-15",
                     nationality: "IDN",
                     nik: 2421412,
-                    seat: "J3"
+                    seatDeparture: "B3",
+                    seatReturn: "H3"
                 }
             ]
         }
