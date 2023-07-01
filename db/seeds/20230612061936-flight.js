@@ -135,7 +135,7 @@ const flight = [
     from: "Bali",
     to: "Jakarta",
     duration: 3900,
-    price: 2000000,
+    price: 5000000,
     flight_class: "Economy",
     description: "Baggage 10 kg Cabin baggage 7 kg In Flight Entertainment ",
     createdAt: new Date(),

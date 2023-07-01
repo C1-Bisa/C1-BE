@@ -44,7 +44,10 @@ module.exports = {
       nik_paspor: {
         type: Sequelize.STRING
       },
-      seat: {
+      seatDeparture: {
+        type: Sequelize.STRING
+      },
+      seatReturn: {
         type: Sequelize.STRING
       },
       createdAt: {

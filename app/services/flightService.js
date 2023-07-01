@@ -316,14 +316,12 @@ module.exports = {
             const array = [];
             const filter = flight.map(schedule => array.push({
                 id: schedule.id,
-                airline_id: schedule.airline_id,
                 airline: schedule.Airline.airline_name,
                 airlane_code: schedule.Airline.airline_code,
-                airport_id_from: schedule.airport_id_from,
+                airline_image: schedule.Airline.image,
                 from: schedule.from,
                 airport_from_code: schedule.Airport_from.airport_code,
                 airport_from: schedule.Airport_from.airport_name,
-                airport_id_to: schedule.airport_id_to,
                 to: schedule.to,
                 airport_to_code: schedule.Airport_to.airport_code,
                 airport_to: schedule.Airport_to.airport_name,
@@ -343,6 +341,8 @@ module.exports = {
                     const date = new Date(data.departure_date);
                     return (data.from === from && data.to === to && date > departureYesterday && date < departureTomorrow && data.flight_class === flight_class)
                 })
+
+                const firstSearch = search.sort((a, b) => a.price - b.price);
 
                 if(toLower){
                     const lowerPrice = search.sort((a, b) => a.price - b.price);
@@ -391,7 +391,7 @@ module.exports = {
                 return {
                     status: "Success",
                     message: "Result Search",
-                    data: search,
+                    data: firstSearch,
                 };
             }
 
