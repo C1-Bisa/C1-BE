@@ -144,7 +144,7 @@ module.exports = {
           include: [
             {
               model: Passenger,
-              attributes: ['name', 'title', 'type', 'seat', 'transactionCode', 'nik_paspor'],
+              attributes: ['name', 'title', 'type', 'seatDeparture','seatReturn', 'transactionCode', 'nik_paspor'],
             }
           ]
         })

@@ -31,7 +31,8 @@ describe("POST /api/v1/transaction",() => {
                         birthday: "2001-09-15",
                         nationality: "IDN",
                         nik: 2421412,
-                        seat: "J3"
+                        seatDeparture: "A3",
+                        seatReturn: "J3"
                     },
                     {
                         type: "Child",
@@ -41,7 +42,8 @@ describe("POST /api/v1/transaction",() => {
                         birthday: "2001-09-15",
                         nationality: "IDN",
                         nik: 2421412,
-                        seat: "J3"
+                        seatDeparture: "K3",
+                        seatReturn: "H3"
                     }
                 ]
         }
@@ -71,7 +73,8 @@ describe("POST /api/v1/transaction",() => {
                         birthday: "2001-09-15",
                         nationality: "IDN",
                         nik: 2421412,
-                        seat: "J3"
+                        seatDeparture: "A3",
+                        seatReturn: "J3"
                     },
                     {
                         type: "Child",
@@ -81,7 +84,8 @@ describe("POST /api/v1/transaction",() => {
                         birthday: "2001-09-15",
                         nationality: "IDN",
                         nik: 2421412,
-                        seat: "J3"
+                        seatDeparture: "K3",
+                        seatReturn: "H3"
                     }
                 ]
         }
@@ -110,7 +114,8 @@ describe("POST /api/v1/transaction",() => {
                         birthday: "2001-09-15",
                         nationality: "IDN",
                         nik: 2421412,
-                        seat: "J3"
+                        seatDeparture: "A3",
+                        seatReturn: "J3"
                     },
                     {
                         type: "Child",
@@ -120,7 +125,8 @@ describe("POST /api/v1/transaction",() => {
                         birthday: "2001-09-15",
                         nationality: "IDN",
                         nik: 2421412,
-                        seat: "J3"
+                        seatDeparture: "K3",
+                        seatReturn: "H3"
                     }
                 ]
         }
