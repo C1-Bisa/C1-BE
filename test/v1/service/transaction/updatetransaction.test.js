@@ -27,7 +27,8 @@ describe("PUT /api/v1/transaction/update",() => {
                     birthday: "2001-09-15",
                     nationality: "IDN",
                     nik: 2421412,
-                    seat: "J3"
+                    seatDeparture: "A3",
+                    seatReturn: "J3"
                 },
                 {
                     type: "Child",
@@ -37,7 +38,8 @@ describe("PUT /api/v1/transaction/update",() => {
                     birthday: "2001-09-15",
                     nationality: "IDN",
                     nik: 2421412,
-                    seat: "J3"
+                    seatDeparture: "K3",
+                    seatReturn: "U3"
                 }
             ]
         }
