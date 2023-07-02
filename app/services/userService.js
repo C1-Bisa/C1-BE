@@ -230,7 +230,7 @@ module.exports = {
       Email: email,
       subject: "Email Verification",
       html: `
-      <img style="margin-left: 15%; margin-right: 15%; width: 70%; height: 10rem; " src="https://i.imgur.com/JehRqwE.jpg"></img>
+      <img style="margin-left: 15%; margin-right: 15%; width: 70%; height: 10rem; " src="https://i.imgur.com/LG231w6.jpg"></img>
       <div style="text-align:center; border:1px; display: block; max-width: 900px;margin-left: 20%; margin-right: 20%;">
         <div style="text-align: left; margin: 0 auto; max-width: 600px;  color:black;">
             <h1 style="font-size: 24px; margin-top: 20px; ">Hello, ${nama}</h1>
@@ -410,7 +410,7 @@ module.exports = {
         Email: userInfo.email,
         subject: "OTP Resend Code for Verification",
         html: `
-        <img style="margin-left: 15%; margin-right: 15%; width: 70%; height: 10rem; " src="https://i.imgur.com/JehRqwE.jpg"></img>
+        <img style="margin-left: 15%; margin-right: 15%; width: 70%; height: 10rem; " src="https://i.imgur.com/LG231w6.jpg"></img>
         <div style="text-align:center;  display: block; max-width: 900px;margin-left: 20%; margin-right: 20%;">
           <div style="text-align: left; margin: 0 auto; max-width: 600px; color:black;">
               <h1 style="font-size: 24px; margin-top: 20px; ">Hello, ${userInfo.nama}</h1>
@@ -486,7 +486,7 @@ module.exports = {
           Email: findEmail.email,
           subject: "Reset your password",
           html: `
-          <img style="margin-left: 15%; margin-right: 15%; width: 70%; height: 10rem; " src="https://i.imgur.com/JehRqwE.jpg"></img>
+          <img style="margin-left: 15%; margin-right: 15%; width: 70%; height: 10rem; " src="https://i.imgur.com/LG231w6.jpg"></img>
           <div style="text-align:center;  display: block; max-width: 900px;margin-left: 20%; margin-right: 20%;">
             <div style="text-align: left; margin: 0 auto; max-width: 600px; color:black;">
                 <h1 style="font-size: 24px; margin-top: 20px; ">Hello, ${emailReset}</h1>
@@ -546,14 +546,6 @@ module.exports = {
           status: "Failed"
         }
       }
-
-      // if(findToken.userId != id){
-      //   return{
-      //     data: null,
-      //     message: "Token and user id not match",
-      //     status: "Failed"
-      //   }
-      // }
 
       if(findToken){
         if(newPasswords.length <= 8){
