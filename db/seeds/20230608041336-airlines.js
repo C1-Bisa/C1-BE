@@ -41,7 +41,7 @@ const airlines = [
     {
         airline_code: "JT",
         airline_name: "Lion Air",
-        image: "https://i.imgur.com/jx9jkTs.png",
+        image: "https://i.imgur.com/rGz584e.png",
         createdAt: new Date(),
         updatedAt: new Date(),
     },
