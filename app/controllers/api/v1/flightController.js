@@ -28,10 +28,10 @@ createflight(req, res) {
             res.status(422).json({
               status: flight.status,
               message: flight.message,
-              data: null
             });
             return;
           }
+  
           res.status(201).json({
             status: flight.status,
             message: flight.message,

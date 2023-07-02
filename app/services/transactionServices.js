@@ -549,6 +549,7 @@ module.exports = {
                             }).join('')}
                         </table>
                       </div>
+                    <img style="width: 6rem; height: 3rem;" src=${departureFlight.Flight.Airline.image}img>
                     <h1 style="font-size: 13px;">
                       AIRLINE: ${departureFlight.Flight.Airline.airline_name} (${departureFlight.Flight.Airline.airline_code})
                     </h1>
@@ -626,6 +627,7 @@ module.exports = {
                     <h1 style="font-size: 15px; margin-top: 1rem;">
                       Departure
                     </h1>
+                    <img style="width: 6rem; height: 3rem;" src=${departureFlight.Flight.Airline.image}img>
                     <h1 style="font-size: 12px;">
                         AIRLINE: ${departureFlight.Flight.Airline.airline_name} (${departureFlight.Flight.Airline.airline_code})
                     </h1>
@@ -688,6 +690,7 @@ module.exports = {
                         <h1 style="font-size: 15px;">
                             Arrival
                         </h1>
+                        <img style="width: 6rem; height: 3rem;" src=${arrivalFlight.Flight?.Airline.image}img>
                         <h1 style="font-size: 12px;">
                         AIRLINE: ${arrivalFlight.Flight?.Airline.airline_name} (${arrivalFlight.Flight?.Airline.airline_code})
                         </h1>

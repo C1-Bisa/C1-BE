@@ -26,7 +26,8 @@ describe("POST /api/v1/transaction/printticket",() => {
                     birthday: "2001-09-15",
                     nationality: "IDN",
                     nik: 2421412,
-                    seat: "J3"
+                    seatDeparture: "G3",
+                    seatReturn: "J3"
                 },
                 {
                     type: "Child",
@@ -36,7 +37,8 @@ describe("POST /api/v1/transaction/printticket",() => {
                     birthday: "2001-09-15",
                     nationality: "IDN",
                     nik: 2421412,
-                    seat: "J3"
+                    seatDeparture: "T3",
+                    seatReturn: "W3"
                 }
             ]
         }
