@@ -1,0 +1,36 @@
+name: Send Notification Pull Request
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: deps-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - run: npm install
+      - run: npm ci
+      - run: npm run build --if-present
+      - name: send discord message on pull request
+        uses: rjstone/discord-webhook-notify@v1
+        with:
+          severity: info
+          details: OY KAWANKU ADA YANG MAU MERGE KE MAIN NIHH!!
+          webhookUrl: ${{ secrets.URL_WEBHOOK_DC }}
