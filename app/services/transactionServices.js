@@ -450,7 +450,7 @@ module.exports = {
                   <div style="text-align: left; margin: 0 auto; max-width: 600px;">
                         <h1 style="font-size: 20px; margin-top: 20px; text-align: center;">BOARDING PASS</h1>
                         <h1 style="font-size: 16px; text-align: center;">FlyId Airways</h1>
-                        <h1 style="font-size: 16px; margin-top: 20px; text-align: start;">BOOKING CODE: <br>${getTransactionPass.transaction_code}</h1>
+                        <h1 style="font-size: 14px; margin-top: 20px; text-align: start;">BOOKING CODE: <br>${getTransactionPass.transaction_code}</h1>
                         <h1 style="font-size: 20px; text-align: end;">
                             ${departureFlight.Flight.to} (${departureFlight.Flight.Airport_to.airport_code})
                         </h1>
