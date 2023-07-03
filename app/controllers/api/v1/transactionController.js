@@ -3,7 +3,7 @@ const transactionService = require("../../../services/transactionServices")
 module.exports = {
     create(req, res) {
         transactionService
-          .createTransaction(req)
+          .create(req)
           .then((transaction) => {
             if(!transaction.data){
               res.status(422).json({
@@ -68,11 +68,11 @@ module.exports = {
             message: err.message,
           });
         });
-  },
+    },
 
     getById(req, res) {
     transactionService
-      .transactionById(req)
+      .getById(req)
       .then((transaction) => {
         if(!transaction.data){
           res.status(422).json({
@@ -94,30 +94,30 @@ module.exports = {
           message: err.message,
         });
       });
-  },
+    },
 
-  printTicket(req, res) {
-    transactionService
-      .transactionPrint(req)
-      .then((transaction) => {
-        if(!transaction.data){
-          res.status(422).json({
+    printTicket(req, res) {
+      transactionService
+        .printTicket(req)
+        .then((transaction) => {
+          if(!transaction.data){
+            res.status(422).json({
+              status: transaction.status,
+              message: transaction.message,
+            });
+            return;
+          }
+
+          res.status(201).json({
             status: transaction.status,
             message: transaction.message,
           });
-          return;
-        }
-
-        res.status(201).json({
-          status: transaction.status,
-          message: transaction.message,
+        })
+        .catch((err) => {
+          res.status(422).json({
+            status: "FAIL",
+            message: err.message,
+          });
         });
-      })
-      .catch((err) => {
-        res.status(422).json({
-          status: "FAIL",
-          message: err.message,
-        });
-      });
-  },
+    },
 }

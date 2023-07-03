@@ -19,89 +19,6 @@ const reformatDate = (date, option = { day: 'numeric', month: 'long', year: 'num
 
 module.exports = {
 
-    // async create(req) { 
-    //     const user = req.user;
-    //     const {flight_id, amount, passenger} = req.body;
-    //     const transaction_code = generateCode()
-    //     let flight_type;
-    //     const flight= [];
-    //     const date= new Date();
-    //     const bookCodeTransaction = []
-
-    //     if (flight_id.length === 2) {
-    //         for (let i = 0; i < flight_id.length; i++) {
-    //             flight.push(flight_id[i]);
-    //         }
-    //         flight_type = "Two Way";
-    //     }else{
-    //         flight.push(flight_id[0]);
-    //         flight_type = "One Way";
-    //     }
-
-    //     const newTransaction = await transactionRepository.create({
-    //         flight_id: flight,
-    //         user_id: user.id,
-    //         amount,
-    //         transaction_code,
-    //         flight_type,
-    //         transaction_date: date,
-    //         transaction_status: 'Unpaid'
-    //     })
-
-    //     for (let i = 0; i < passenger.length; i++) {
-    //         const bookPassenger = await transactionRepository.createPassenger({
-    //             transaction_id: newTransaction.id,
-    //             transactionCode: newTransaction.transaction_code,
-    //             type: passenger[i].type,
-    //             title: passenger[i].title,
-    //             name: passenger[i].name,
-    //             family_name: passenger[i].family_name,
-    //             birthday: passenger[i].birthday,
-    //             nationality: passenger[i].nationality,
-    //             nik_paspor: passenger[i].nik,
-    //             seat: passenger[i].seat
-    //         })
-    //         bookCodeTransaction.push(bookPassenger)
-    //     }
-
-        
-
-    //     await notificationRepository.create({
-    //         headNotif: "Pemesanan tiket",
-    //         message: "Segera lakukan pembayaran  untuk menyelesaikan proses transaksi",
-    //         userId: user.id,
-    //         isRead: false
-    //     });
-
-    //     const getDataFlight = await flightRepository.findFlight(flight[0])
-    //     const getDataFlightDua = await flightRepository.findFlight(flight[1])
-
-    //     if (flight.length === 2) {
-    //         return {
-    //             status: "Ok",
-    //             message: "Data succesfuly created",
-    //             data: {
-    //                 transaction: newTransaction, 
-    //                 berangkat: getDataFlight,
-    //                 pulang: getDataFlightDua,
-    //                 dataPassenger: bookCodeTransaction,
-    //             }
-    //         }
-    //     }else{
-    //         return {
-    //             status: "Ok",
-    //             message: "Data succesfuly created",
-    //             data: {
-    //                 transaction: newTransaction, 
-    //                 berangkat: getDataFlight,
-    //                 pulang: [],
-    //                 dataPassenger: bookCodeTransaction,
-
-    //             }
-    //         }
-    //     }
-    // },
-
     async update(req){
         try{
             const user = req.user
@@ -137,7 +54,7 @@ module.exports = {
 
     },
 
-    async transactionById(req){
+    async getById(req){
         try{
             const user = req.user.id
             const {transaction_id} =  req.body
@@ -151,7 +68,7 @@ module.exports = {
                     data: null
                   };
             }
-            const findPassenger = await transactionRepository.findPassenger(transaction_id);
+            const getTransactionPass = await transactionRepository.getTransactionPass(transaction_id);
             const totalPrice = getTransaction[0].Transaction.amount;
             const tax = totalPrice * 0.1
 
@@ -171,8 +88,8 @@ module.exports = {
                 departurePrice = getTransaction[0].Flight.price
             }
 
-            for (let i = 0; i < findPassenger.Passengers.length; i++) {
-                typePassenger.push(findPassenger.Passengers[i].type)
+            for (let i = 0; i < getTransactionPass.Passengers.length; i++) {
+                typePassenger.push(getTransactionPass.Passengers[i].type)
             }
 
             let adult = 0;
@@ -196,7 +113,7 @@ module.exports = {
                 status: "Ok",
                 message: "Data successfully Get",
                 data: {
-                    transaction: findPassenger,
+                    transaction: getTransactionPass,
                     departure: departureFlight,
                     arrival: arrivalFlight,
                     passenger: {adult: adult, child:child, baby:baby},
@@ -209,52 +126,6 @@ module.exports = {
 
     },
 
-    // async history(req) { 
-    //     id = req.user.id;
-    //     const getAllHistory = await transactionRepository.findAll(id);
-    //     const arrayDataTransaction = [];
-    //     const arrayFlightDeparture = [];
-    //     const arrayFlightReturn = [];
-    
-    //     const data = getAllHistory.map(detail => arrayDataTransaction.push({
-    //         transaction_id: detail.id,
-    //         transaction_code: detail.transaction_code,
-    //         flight_id: detail.flight_id,
-    //         user_id: detail.user_id,
-    //         amount: detail.amount,
-    //         transaction_status: detail.transaction_status,
-    //         transaction_date: detail.transaction_date,
-    //         flight_type: detail.flight_type,
-    //         passenger: detail.passengers
-    //     }));
-
-    //     for (let i = 0; i < arrayDataTransaction.length; i++) {
-    //         if (arrayDataTransaction[i].flight_id.length === 2) {
-    //             const getDataFlight = await flightRepository.findTicketFilter(arrayDataTransaction[i].flight_id[0])
-    //             const getDataFlightDua = await flightRepository.findTicketFilter(arrayDataTransaction[i].flight_id[1])
-
-    //             arrayFlightDeparture.push(getDataFlight);
-    //             arrayFlightReturn.push(getDataFlightDua);
-
-    //         }else{
-    //             const getDataFlight = await flightRepository.findTicketFilter(arrayDataTransaction[i].flight_id[0])
-    //             arrayFlightDeparture.push(getDataFlight); 
-    //         }
-    //     }
-
-    //     let dataDetailTransaction = arrayDataTransaction.map((obj, index) => ({
-    //         ...obj,
-    //         flight_departure: arrayFlightDeparture[index],
-    //         flight_return: arrayFlightReturn[index]
-    //       }));
-
-    //       return {
-    //         status: "Ok",
-    //         message: "Data succesfuly get",
-    //         data: dataDetailTransaction
-    //     }
-    // },
-    
     async transactionHistory(req) {
         try{
             const user = req.user.id;
@@ -342,7 +213,7 @@ module.exports = {
         }
     },
 
-    async createTransaction(req){
+    async create(req){
         try{
             const user = req.user;
             const {flights, passenger,amount} = req.body;
@@ -419,7 +290,7 @@ module.exports = {
                 isRead: false
             });
 
-            const findPassenger = await transactionRepository.findPassenger(newTransaction.id);
+            const getTransactionPass = await transactionRepository.getTransactionPass(newTransaction.id);
         
             const departureFlight = await transactionRepository.getTransactionFlight(newTransaction.id)
 
@@ -429,7 +300,7 @@ module.exports = {
               status: "Ok",
               message: "Data successfully created",
               data: {
-                transaction: findPassenger,
+                transaction: getTransactionPass,
                 departure: departureFlight,
                 arrival: arrivalFlight,
               }
@@ -443,7 +314,7 @@ module.exports = {
         }
     },
     
-    async transactionPrint(req){
+    async printTicket(req){
         try {
             const user = req.user;
             const {transaction_id} =  req.body
@@ -457,7 +328,7 @@ module.exports = {
                     data: null
                   };
             }
-            const findPassenger = await transactionRepository.findPassenger(transaction_id);
+            const getTransactionPass = await transactionRepository.getTransactionPass(transaction_id);
             const totalPrice = getTransaction[0].Transaction.amount;
             const tax = totalPrice * 0.1
 
@@ -477,8 +348,8 @@ module.exports = {
                 departurePrice = getTransaction[0].Flight.price
             }
 
-            for (let i = 0; i < findPassenger.Passengers.length; i++) {
-                typePassenger.push(findPassenger.Passengers[i].type)
+            for (let i = 0; i < getTransactionPass.Passengers.length; i++) {
+                typePassenger.push(getTransactionPass.Passengers[i].type)
             }
 
             let adult = 0;
@@ -504,7 +375,7 @@ module.exports = {
                   <div style="text-align: left; margin: 0 auto; max-width: 600px;">
                         <h1 style="font-size: 20px; margin-top: 20px; text-align: center;">BOARDING PASS</h1>
                         <h1 style="font-size: 16px; text-align: center;">FlyId Airways</h1>
-                        <h1 style="font-size: 16px; margin-top: 20px; text-align: start;">BOOKING CODE: <br>${findPassenger.transaction_code}</h1>
+                        <h1 style="font-size: 16px; margin-top: 20px; text-align: start;">BOOKING CODE: <br>${getTransactionPass.transaction_code}</h1>
                         <h1 style="font-size: 20px; text-align: end;">
                             ${departureFlight.Flight.to} (${departureFlight.Flight.Airport_to.airport_code})
                         </h1>
@@ -538,7 +409,7 @@ module.exports = {
                             <th >PASSENGER</th>
                             <th >SEAT</th>
                           </tr>
-                        ${(findPassenger.Passengers).map((element, index) => {
+                        ${(getTransactionPass.Passengers).map((element, index) => {
                             return `
                                 <tr key=${index} style="padding:1rem; font-weight:800; ">
                                     <td>${index + 1}</</td>
@@ -579,7 +450,7 @@ module.exports = {
                   <div style="text-align: left; margin: 0 auto; max-width: 600px;">
                         <h1 style="font-size: 20px; margin-top: 20px; text-align: center;">BOARDING PASS</h1>
                         <h1 style="font-size: 16px; text-align: center;">FlyId Airways</h1>
-                        <h1 style="font-size: 16px; margin-top: 20px; text-align: start;">BOOKING CODE: <br>${findPassenger.transaction_code}</h1>
+                        <h1 style="font-size: 14px; margin-top: 20px; text-align: start;">BOOKING CODE: <br>${getTransactionPass.transaction_code}</h1>
                         <h1 style="font-size: 20px; text-align: end;">
                             ${departureFlight.Flight.to} (${departureFlight.Flight.Airport_to.airport_code})
                         </h1>
@@ -613,7 +484,7 @@ module.exports = {
                           <th >PASSENGER</th>
                           <th >SEAT</th>
                         </tr>
-                      ${(findPassenger.Passengers).map((element, index) => {
+                      ${(getTransactionPass.Passengers).map((element, index) => {
                           return `
                               <tr key=${index} style="padding:1rem; font-weight:800; ">
                                   <td>${index + 1}</</td>
@@ -676,7 +547,7 @@ module.exports = {
                             <th >PASSENGER</th>
                             <th >SEAT</th>
                           </tr>
-                        ${(findPassenger.Passengers).map((element, index) => {
+                        ${(getTransactionPass.Passengers).map((element, index) => {
                             return `
                                 <tr key=${index} style="padding:1rem; font-weight:800; ">
                                     <td>${index + 1}</</td>
@@ -721,7 +592,7 @@ module.exports = {
               return {
                 status: "Ok",
                 message: "Ticket has been send to your email!",
-                data: findPassenger
+                data: getTransactionPass
               };
         } catch (error) {
             throw error

@@ -54,7 +54,6 @@ module.exports = {
     return Notification.create(createnotifArgs);
   },
 
-
   deleteNotif(userId){
     return Notification.destroy({
       where: {
@@ -66,7 +65,6 @@ module.exports = {
   createVerified(reqBody){
     return verified.create(reqBody)
   },
-
 
   findOtp(token){
     return verified.findOne({
@@ -85,11 +83,7 @@ module.exports = {
       where : {userId : id}
     });
   },
-
-  // findById(id){
-  //   return User.findByPk(id);
-  // },
-
+  
   finsUserByEmail(email) {
     return User.findOne({
       where : {email}
