@@ -120,7 +120,7 @@ module.exports = {
     if(user.isVerified == false){
       return{
         isValid : false,
-        message : "Akun tidak ditemukan",
+        message : "Account not found!",
         data : null
       }
     }
@@ -235,7 +235,7 @@ module.exports = {
         <div style="text-align: left; margin: 0 auto; max-width: 600px;  color:black;">
             <h1 style="font-size: 24px; margin-top: 20px; ">Hello, ${nama}</h1>
             <p style="font-size: 16px; margin-top: 20px; margin-bottom: 20px;">
-              Terimakasih telah menggunakan layanan kami. Masukkan kode OTP berikut untuk verifikasi akun anda. 
+              Thank you for using our service. Enter the otp code below to verify your account. 
             </p>
             <div style="text-align: center; margin-bottom: 15px;">
                 <a style="
@@ -250,8 +250,8 @@ module.exports = {
                 ">${verify.verifiedToken}</a>
             </div>
             <p style="font-weight:700; margin-top:20px;">OTP akan kadaluwarsa dalam waktu 1 menit</p>
-            <p>Abaikan email ini jika kamu tidak melakukan proses verifikasi</p>
-            <p style="margin-top: 1.5px;">Thanks,<br> Tiketku team</p>
+            <p>Ignore this email if you don't want to go through the verification process.</p>
+            <p style="margin-top: 1.5px;">Thanks,<br> FlyId team</p>
         </div>   
       </div>`
     }
@@ -262,7 +262,7 @@ module.exports = {
       return{
         status: "Success",
         data: newUser,
-        message: "Tautan Verifikasi Telah Dikirim!",
+        message: "Verification Link Has been Send!",
         otp: verify.verifiedToken
       }
     }
@@ -280,10 +280,10 @@ module.exports = {
     } = req.body;
 
     try{
-      if (email) throw new ApiError(400, 'Email tidak boleh Diganti.');
-      if (password) throw new ApiError(400, 'Password tidak boleh Diganti.');
-      if (!nama) throw new ApiError(400, 'Nama tidak boleh kosong.');
-      if (!phone) throw new ApiError(400, 'Telepon tidak boleh kosong.');
+      if (email) throw new ApiError(400, 'Email cant be change.');
+      if (password) throw new ApiError(400, 'Password cant be change.');
+      if (!nama) throw new ApiError(400, 'Name cant be empty.');
+      if (!phone) throw new ApiError(400, 'Number phone cant be empty.');
 
       const updateUser = await userRepository.update(id,{nama,email,phone,password});
       if(updateUser){
@@ -369,14 +369,14 @@ module.exports = {
 
     const createNotification = await userRepository.createNotif({
       headNotif: "Registrasion Success",
-      message: "Proses verifikasi akun berhasil, order tiket pesawat sakpenakmu",
+      message: "Account verification process successful, order airline ticket as much as you like",
       userId: OTPdatabase.userId,
       isRead: false
     })
 
     return{
       subject: "Verification OTP",
-      message: "Registrasi Berhasil",
+      message: "Registrasi Success",
       data: updateDataUser
     }
     } catch{
@@ -415,7 +415,7 @@ module.exports = {
           <div style="text-align: left; margin: 0 auto; max-width: 600px; color:black;">
               <h1 style="font-size: 24px; margin-top: 20px; ">Hello, ${userInfo.nama}</h1>
               <p style="font-size: 16px; margin-top: 20px; margin-bottom: 20px;">
-                Terimakasih telah menggunakan layanan kami. Masukkan kode OTP berikut untuk verifikasi akun anda. 
+                Thank you for using our service. Enter the otp code below to verify your account.  
               </p>
               <div style="text-align: center; margin-bottom: 15px;">
                   <a style="
@@ -430,8 +430,8 @@ module.exports = {
                   ">${verify.verifiedToken}</a>
               </div>
               <p style="font-weight:700;">OTP akan kadaluwarsa dalam waktu 1 menit</p>
-              <p>Abaikan email ini jika kamu tidak melakukan proses verifikasi</p>
-              <p style="margin-top: 1.5px;">Thanks,<br> Tiketku team</p>
+              <p>Ignore this email if you don't want to go through the verification process.</p>
+              <p style="margin-top: 1.5px;">Thanks,<br> FlyId team</p>
           </div>   
         </div>`
       }
@@ -441,7 +441,7 @@ module.exports = {
       return{
         data: {
           subject: "Resend OTP",
-          message: "Tautan Verifikasi Telah Dikirim!",
+          message: "Verification Link Has Been Send!",
           otp: verify.verifiedToken
         },
       }
@@ -491,7 +491,7 @@ module.exports = {
             <div style="text-align: left; margin: 0 auto; max-width: 600px; color:black;">
                 <h1 style="font-size: 24px; margin-top: 20px; ">Hello, ${emailReset}</h1>
                 <p style="font-size: 16px; margin-top: 20px; margin-bottom: 20px;">
-                  Terimakasih telah menggunakan layanan kami. Masukkan kode OTP berikut untuk verifikasi akun anda. 
+                  Thank you for using our service. Click this button below to reset your password account. 
                 </p>
                 <div style="text-align: center; margin-bottom: 20px;">
                     <a href="${currentUrl}/resetpage/?token=${addIdToken}" style="
@@ -506,8 +506,8 @@ module.exports = {
                     text-decoration: none;
                     ">Reset Your Password</a>
                 </div>
-                <p style="margin-top: 20px;">Abaikan email ini jika kamu tidak melakukan proses verifikasi</p>
-                <p style="margin-top: 1.5px;">Thanks,<br> Tiketku team</p>
+                <p style="margin-top: 20px;">Ignore this email if you don't want to go through reset password process.</p>
+                <p style="margin-top: 1.5px;">Thanks,<br> FlyId team</p>
             </div>   
           </div>`
         }

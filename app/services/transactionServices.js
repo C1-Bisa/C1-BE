@@ -380,7 +380,7 @@ module.exports = {
                             ${departureFlight.Flight.to} (${departureFlight.Flight.Airport_to.airport_code})
                         </h1>
                         <h3 style="font-size: 16px; text-align: end;">
-                            Bandara Nasional ${departureFlight.Flight.Airport_to.airport_name}
+                            National Airport ${departureFlight.Flight.Airport_to.airport_name}
                         </h3>
                         <div style="text-align: center;">
                             <img style="width: 8rem; height: 4rem;" src="https://i.imgur.com/yC1odNq.png"></img>
@@ -389,7 +389,7 @@ module.exports = {
                             ${departureFlight.Flight.from} (${departureFlight.Flight.Airport_from.airport_code})
                         </h1>
                         <h3 style="font-size: 16px; text-align: start;">
-                            Bandara Nasional ${departureFlight.Flight.Airport_from.airport_name}
+                            National Airport ${departureFlight.Flight.Airport_from.airport_name}
                         </h3>
                     <div style="text-align: center; widht:100%;">
                           <a style="
@@ -455,7 +455,7 @@ module.exports = {
                             ${departureFlight.Flight.to} (${departureFlight.Flight.Airport_to.airport_code})
                         </h1>
                         <h3 style="font-size: 16px; text-align: end;">
-                            Bandara Nasional ${departureFlight.Flight.Airport_to.airport_name}
+                            National Airport ${departureFlight.Flight.Airport_to.airport_name}
                         </h3>
                         <div style="text-align: center;">
                             <img style="width: 8rem; height: 4rem;" src="https://i.imgur.com/yC1odNq.png"></img>
@@ -464,7 +464,7 @@ module.exports = {
                             ${departureFlight.Flight.from} (${departureFlight.Flight.Airport_from.airport_code})
                         </h1>
                         <h3 style="font-size: 16px; text-align: start;">
-                            Bandara Nasional ${departureFlight.Flight.Airport_from.airport_name}
+                            National Airport ${departureFlight.Flight.Airport_from.airport_name}
                         </h3>
                         <div style="text-align: center; widht:100%;">
                         <a style="
@@ -518,7 +518,7 @@ module.exports = {
                             ${arrivalFlight.Flight?.to} (${arrivalFlight.Flight?.Airport_to.airport_code})
                         </h1>
                         <h3 style="font-size: 16px; text-align: end;">
-                            Bandara Nasional ${arrivalFlight.Flight?.Airport_to.airport_name}
+                            National Airport ${arrivalFlight.Flight?.Airport_to.airport_name}
                         </h3>
                         <div style="text-align: center;">
                             <img style="width: 8rem; height: 4rem; transform: scaleX(-1);" src="https://i.imgur.com/yC1odNq.png"></img>
@@ -527,7 +527,7 @@ module.exports = {
                             ${arrivalFlight.Flight?.from} (${arrivalFlight.Flight?.Airport_from.airport_code})
                         </h1>
                         <h3 style="font-size: 16px; text-align: start;">
-                            Bandara Nasional ${arrivalFlight.Flight?.Airport_from.airport_name}
+                            National Airport ${arrivalFlight.Flight?.Airport_from.airport_name}
                         </h3>
                         <div style="text-align: center; widht:100%;">
                           <a style="
