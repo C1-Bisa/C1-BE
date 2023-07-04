@@ -100,7 +100,7 @@ module.exports = {
 
   getTransactionPass(transactionId){
     return Transaction.findOne({
-      where:{id: transactionId},
+      where: {id : transactionId},
       attributes: ['id', 'transaction_code', 'user_id', 'transaction_status', 'transaction_date'],
       include: [
         {
