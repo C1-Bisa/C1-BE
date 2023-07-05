@@ -249,7 +249,7 @@ module.exports = {
                 border:none;
                 ">${verify.verifiedToken}</a>
             </div>
-            <p style="font-weight:700; margin-top:20px;">OTP akan kadaluwarsa dalam waktu 1 menit</p>
+            <p style="font-weight:700; margin-top:20px;">OTP will be expired in one minutes</p>
             <p>Ignore this email if you don't want to go through the verification process.</p>
             <p style="margin-top: 1.5px;">Thanks,<br> FlyId team</p>
         </div>   
@@ -429,7 +429,7 @@ module.exports = {
                   border:none;
                   ">${verify.verifiedToken}</a>
               </div>
-              <p style="font-weight:700;">OTP akan kadaluwarsa dalam waktu 1 menit</p>
+              <p style="font-weight:700;">OTP will be expired in one minutes</p>
               <p>Ignore this email if you don't want to go through the verification process.</p>
               <p style="margin-top: 1.5px;">Thanks,<br> FlyId team</p>
           </div>   
