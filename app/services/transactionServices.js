@@ -560,7 +560,7 @@ module.exports = {
                                                     <td>${index + 1}</</td>
                                                     <td>${element.name}</</td>
                                                     <td>${element.nik_paspor}</</td>
-                                                    <td>${element.seatDeparture}</td>
+                                                    <td>${element.seatReturn}</td>
                                                 </tr>
                                                 `
                                             }).join('')}
