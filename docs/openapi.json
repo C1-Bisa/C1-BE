@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:8000/api/v1"
+      "url": "http://kel1airplaneapi-production.up.railway.app/api/v1"
     }
   ],
   "tags": [
@@ -1184,7 +1184,7 @@
         }
       }
     },
-    "/aiport": {
+    "/airport": {
       "post": {
         "tags": [
           "Airport"
