@@ -1,5 +1,5 @@
 # c1-be
-This repository contains the endpoints of the fluid applications..
+This repository contains the endpoints of the fluid applications.
 
 Member: 
 1. Maulana Hassan S
